@@ -1,0 +1,569 @@
+<!-- Popular Categories Section -->
+{%- style -%}
+  #PopCat-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+  }
+
+  /* Header */
+  #PopCat-{{ section.id }} .pc-subtitle {
+    display: block;
+    color: {{ section.settings.subtitle_color }};
+    font-size: {{ section.settings.subtitle_font_size }}px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  #PopCat-{{ section.id }} .pc-heading {
+    color: {{ section.settings.heading_color }};
+    font-size: {{ section.settings.heading_font_size }}px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  /* Slider wrapper */
+  #PopCat-{{ section.id }} .pc-slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 36px;
+  }
+  #PopCat-{{ section.id }} .pc-track-outer {
+    overflow: hidden;
+    flex: 1;
+    min-width: 0;
+  }
+  #PopCat-{{ section.id }} .pc-track {
+    display: flex;
+    gap: {{ section.settings.item_gap }}px;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+
+  /* Slides — desktop */
+  #PopCat-{{ section.id }} .pc-slide {
+    flex: 0 0 calc((100% - ({{ section.settings.desktop_cols | minus: 1 }} * {{ section.settings.item_gap }}px)) / {{ section.settings.desktop_cols }});
+    min-width: calc((100% - ({{ section.settings.desktop_cols | minus: 1 }} * {{ section.settings.item_gap }}px)) / {{ section.settings.desktop_cols }});
+  }
+  /* Tablet */
+  @media (max-width: 991px) {
+    #PopCat-{{ section.id }} .pc-slide {
+      flex: 0 0 calc((100% - ({{ section.settings.tablet_cols | minus: 1 }} * {{ section.settings.item_gap }}px)) / {{ section.settings.tablet_cols }});
+      min-width: calc((100% - ({{ section.settings.tablet_cols | minus: 1 }} * {{ section.settings.item_gap }}px)) / {{ section.settings.tablet_cols }});
+    }
+  }
+  /* Mobile */
+  @media (max-width: 575px) {
+    #PopCat-{{ section.id }} .pc-slide {
+      flex: 0 0 calc((100% - ({{ section.settings.mobile_cols | minus: 1 }} * {{ section.settings.item_gap }}px)) / {{ section.settings.mobile_cols }});
+      min-width: calc((100% - ({{ section.settings.mobile_cols | minus: 1 }} * {{ section.settings.item_gap }}px)) / {{ section.settings.mobile_cols }});
+    }
+    #PopCat-{{ section.id }} .pc-heading {
+      font-size: calc({{ section.settings.heading_font_size }}px * 0.72);
+    }
+  }
+
+  /* Card */
+  #PopCat-{{ section.id }} .pc-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: {{ section.settings.card_bg }};
+    border-radius: {{ section.settings.card_radius }}px;
+    padding: 20px 14px 16px;
+    text-decoration: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    height: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+    cursor: pointer;
+  }
+  #PopCat-{{ section.id }} .pc-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  }
+  #PopCat-{{ section.id }} .pc-img-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  #PopCat-{{ section.id }} .pc-img-wrap img,
+  #PopCat-{{ section.id }} .pc-img-wrap .placeholder-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+  #PopCat-{{ section.id }} .pc-card:hover .pc-img-wrap img {
+    transform: scale(1.05);
+  }
+  #PopCat-{{ section.id }} .pc-card-title {
+    color: {{ section.settings.card_title_color }};
+    font-size: {{ section.settings.card_title_size }}px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.4;
+    margin: 0;
+    transition: color 0.2s;
+  }
+  #PopCat-{{ section.id }} .pc-card:hover .pc-card-title {
+    color: {{ section.settings.card_title_hover_color }};
+  }
+
+  /* Nav buttons — hidden by default, visible on wrapper hover */
+  #PopCat-{{ section.id }} .pc-nav-btn {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: {{ section.settings.nav_btn_bg }};
+    color: {{ section.settings.nav_btn_color }};
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    opacity: 0;
+    pointer-events: none;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s, opacity 0.25s;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+  }
+  #PopCat-{{ section.id }} .pc-slider-wrapper:hover .pc-nav-btn {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #PopCat-{{ section.id }} .pc-nav-btn:hover {
+    background-color: {{ section.settings.nav_btn_bg_hover }};
+    color: {{ section.settings.nav_btn_color_hover }};
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  }
+  @media (max-width: 575px) {
+    #PopCat-{{ section.id }} .pc-nav-btn {
+      width: 36px;
+      height: 36px;
+      font-size: 14px;
+      /* Always visible on touch devices — no hover state */
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #PopCat-{{ section.id }} .pc-slider-wrapper {
+      gap: 8px;
+      margin-top: 24px;
+    }
+  }
+{%- endstyle -%}
+
+<section id="PopCat-{{ section.id }}" class="popular-categories-section">
+  <div class="container">
+
+    <!-- Section Header -->
+    <div class="text-center">
+      {% if section.settings.subtitle != blank %}
+        <span class="pc-subtitle">{{ section.settings.subtitle }}</span>
+      {% endif %}
+      {% if section.settings.heading != blank %}
+        <h2 class="pc-heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+    </div>
+
+    <!-- Slider -->
+    {%- assign pc_collections = section.settings.collections -%}
+
+    {% if pc_collections.size > 0 %}
+      <div class="pc-slider-wrapper">
+
+        <!-- Prev Button -->
+        <button
+          class="pc-nav-btn pc-prev-btn"
+          id="PcPrev-{{ section.id }}"
+          aria-label="Previous categories"
+        >
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <!-- Track -->
+        <div class="pc-track-outer" id="PcOuter-{{ section.id }}">
+          <div class="pc-track" id="PcTrack-{{ section.id }}">
+            {% for col in pc_collections limit: section.settings.items_limit %}
+              <div class="pc-slide">
+                <a href="{{ col.url }}" class="pc-card">
+                  <div class="pc-img-wrap">
+                    {%- if col.image -%}
+                      <img
+                        src="{{ col.image | image_url: width: 400 }}"
+                        alt="{{ col.title | escape }}"
+                        loading="lazy"
+                        width="200"
+                        height="200"
+                      >
+                    {%- elsif col.products.first != blank and col.products.first.featured_image -%}
+                      <img
+                        src="{{ col.products.first.featured_image | image_url: width: 400 }}"
+                        alt="{{ col.title | escape }}"
+                        loading="lazy"
+                        width="200"
+                        height="200"
+                      >
+                    {%- else -%}
+                      {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    {%- endif -%}
+                  </div>
+                  <span class="pc-card-title">{{ col.title }}</span>
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Next Button -->
+        <button
+          class="pc-nav-btn pc-next-btn"
+          id="PcNext-{{ section.id }}"
+          aria-label="Next categories"
+        >
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+      </div>
+    {% else %}
+      <!-- Dummy placeholder cards when no collections are set -->
+      {%- assign dummy_labels = 'Electrical,Boat Outfitting,Paddlesports,Automotive/RV,Marine Navigation' | split: ',' -%}
+      <div class="pc-slider-wrapper">
+        <button class="pc-nav-btn pc-prev-btn" id="PcPrev-{{ section.id }}" aria-label="Previous categories">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div class="pc-track-outer" id="PcOuter-{{ section.id }}">
+          <div class="pc-track" id="PcTrack-{{ section.id }}">
+            {% for i in (1..5) %}
+              <div class="pc-slide">
+                <a href="#" class="pc-card">
+                  <div class="pc-img-wrap">
+                    {{ 'collection-' | append: i | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                  <span class="pc-card-title">{{ dummy_labels[forloop.index0] }}</span>
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <button class="pc-nav-btn pc-next-btn" id="PcNext-{{ section.id }}" aria-label="Next categories">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+    {% endif %}
+
+
+  </div>
+</section>
+
+<script>
+(function () {
+  var id       = '{{ section.id }}';
+  var track    = document.getElementById('PcTrack-' + id);
+  var outer    = document.getElementById('PcOuter-' + id);
+  var prevBtn  = document.getElementById('PcPrev-' + id);
+  var nextBtn  = document.getElementById('PcNext-' + id);
+
+  if (!track || !outer || !prevBtn || !nextBtn) return;
+
+  var gap      = {{ section.settings.item_gap }};
+  var deskCols = {{ section.settings.desktop_cols }};
+  var tabCols  = {{ section.settings.tablet_cols }};
+  var mobCols  = {{ section.settings.mobile_cols }};
+  var current  = 0;
+  var isAnimating = false;
+
+  // --- Clone slides for infinite loop ---
+  var realSlides = Array.from(track.querySelectorAll('.pc-slide'));
+  var totalReal  = realSlides.length;
+  if (totalReal === 0) return;
+
+  // Append clones of all real slides at the end (for looping forward)
+  realSlides.forEach(function (s) {
+    track.appendChild(s.cloneNode(true));
+  });
+  // Prepend clones of all real slides at the start (for looping backward)
+  var prependFrag = document.createDocumentFragment();
+  realSlides.forEach(function (s) {
+    prependFrag.appendChild(s.cloneNode(true));
+  });
+  track.insertBefore(prependFrag, track.firstChild);
+
+  var allSlides = Array.from(track.querySelectorAll('.pc-slide'));
+
+  function getCols() {
+    if (window.innerWidth <= 575) return mobCols;
+    if (window.innerWidth <= 991) return tabCols;
+    return deskCols;
+  }
+
+  function getSlideWidth() {
+    return allSlides[0] ? allSlides[0].offsetWidth : 0;
+  }
+
+  function setPosition(idx, animated) {
+    var slideW = getSlideWidth();
+    track.style.transition = animated ? 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)' : 'none';
+    track.style.transform  = 'translateX(-' + (idx * (slideW + gap)) + 'px)';
+  }
+
+  // Start at first real slide (after the prepended clones)
+  current = totalReal;
+  setPosition(current, false);
+
+  function goTo(idx) {
+    if (isAnimating) return;
+    isAnimating = true;
+    current = idx;
+    setPosition(current, true);
+
+    // After transition ends, silently jump to real position if on clone
+    setTimeout(function () {
+      if (current < totalReal) {
+        // Was on prepended clone — jump to real end
+        current = current + totalReal;
+        setPosition(current, false);
+      } else if (current >= totalReal * 2) {
+        // Was on appended clone — jump to real start
+        current = current - totalReal;
+        setPosition(current, false);
+      }
+      isAnimating = false;
+    }, 420);
+  }
+
+  prevBtn.addEventListener('click', function () { goTo(current - 1); });
+  nextBtn.addEventListener('click', function () { goTo(current + 1); });
+
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      setPosition(current, false);
+    }, 100);
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Popular Categories",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Content"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "POPULAR CATEGORIES"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What Are You Shopping For?"
+    },
+    {
+      "type": "collection_list",
+      "id": "collections",
+      "label": "Collections",
+      "limit": 24
+    },
+    {
+      "type": "range",
+      "id": "items_limit",
+      "label": "Max items to show",
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Columns Per Row"
+    },
+    {
+      "type": "range",
+      "id": "desktop_cols",
+      "label": "Desktop columns (visible at once)",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "tablet_cols",
+      "label": "Tablet columns (visible at once)",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "mobile_cols",
+      "label": "Mobile columns (visible at once)",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "label": "Gap between cards (px)",
+      "min": 4,
+      "max": 40,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#0b3d77"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#93c5fd"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_font_size",
+      "label": "Subtitle Font Size (px)",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "label": "Heading Font Size (px)",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Card Styling"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card Border Radius (px)",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card Title Color",
+      "default": "#1e40af"
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "label": "Card Title Font Size (px)",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "card_title_hover_color",
+      "label": "Card Title Hover Color",
+      "default": "#f59e0b"
+    },
+    {
+      "type": "header",
+      "content": "Navigation Buttons"
+    },
+    {
+      "type": "color",
+      "id": "nav_btn_bg",
+      "label": "Button Background",
+      "default": "#f59e0b"
+    },
+    {
+      "type": "color",
+      "id": "nav_btn_color",
+      "label": "Button Icon Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "nav_btn_bg_hover",
+      "label": "Button Hover Background",
+      "default": "#d97706"
+    },
+    {
+      "type": "color",
+      "id": "nav_btn_color_hover",
+      "label": "Button Hover Icon Color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Popular Categories"
+    }
+  ]
+}
+{% endschema %}
