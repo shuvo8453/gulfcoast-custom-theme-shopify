@@ -502,17 +502,19 @@
 /* Mobile Bottom Navigation Bar Styles */
 .mobile-bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 30px);
   height: 60px;
   background-color: var(--mobile-bottom-nav-bg, #ffffff);
-  border-top: 1px solid var(--mobile-bottom-nav-border, #e5e7eb);
+  border: 1px solid var(--mobile-bottom-nav-border, #e5e7eb);
   display: flex;
   justify-content: space-around;
   align-items: center;
-  z-index: 999;
-  box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.08);
+  z-index: 10000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 
 .mobile-bottom-nav-item {
@@ -552,9 +554,19 @@
   object-fit: contain;
 }
 
-/* Prevent layout overlapping by giving padding to body on mobile screen viewports */
-@media (max-width: 991px) {
+/* Show bottom nav on mobile and tablet (up to 1199px) */
+@media (max-width: 1199px) {
+  .mobile-bottom-nav {
+    display: flex !important;
+  }
   body {
-    padding-bottom: 60px !important;
+    padding-bottom: 90px !important;
+  }
+}
+
+/* Hide bottom nav on desktop (1200px and above) */
+@media (min-width: 1200px) {
+  .mobile-bottom-nav {
+    display: none !important;
   }
 }

@@ -746,11 +746,10 @@
 </div>
 
 <!-- 5. Mobile Bottom Sticky Navigation Bar -->
-{% if section.settings.show_mobile_bottom_nav %}
-  <div class="mobile-bottom-nav d-lg-none">
+<div class="mobile-bottom-nav">
     <!-- Home tab -->
     <a
-      href="{{ section.settings.mobile_bottom_nav_home_link | default: routes.root_url }}"
+      href="{{ section.settings.mobile_bottom_nav_home_link | default: '#' }}"
       class="mobile-bottom-nav-item {% if request.path == '/' or request.path == routes.root_url %}active{% endif %}"
     >
       <div class="mobile-bottom-nav-icon">
@@ -772,7 +771,7 @@
 
     <!-- Shop tab -->
     <a
-      href="{{ section.settings.mobile_bottom_nav_shop_link | default: routes.all_products_collection_url }}"
+      href="{{ section.settings.mobile_bottom_nav_shop_link | default: '#' }}"
       class="mobile-bottom-nav-item {% if request.path contains '/collections/' %}active{% endif %}"
     >
       <div class="mobile-bottom-nav-icon">
@@ -794,7 +793,7 @@
 
     <!-- Cart tab -->
     <a
-      href="{{ section.settings.mobile_bottom_nav_cart_link | default: routes.cart_url }}"
+      href="{{ section.settings.mobile_bottom_nav_cart_link | default: '#' }}"
       class="mobile-bottom-nav-item {% if request.path == routes.cart_url %}active{% endif %}"
     >
       <div class="mobile-bottom-nav-icon">
@@ -822,7 +821,7 @@
 
     <!-- My Account tab -->
     <a
-      href="{{ section.settings.mobile_bottom_nav_account_link | default: routes.account_url }}"
+      href="{{ section.settings.mobile_bottom_nav_account_link | default: '#' }}"
       class="mobile-bottom-nav-item {% if request.path contains '/account' %}active{% endif %}"
     >
       <div class="mobile-bottom-nav-icon">
@@ -841,8 +840,7 @@
       </div>
       <span>{{ section.settings.mobile_bottom_nav_account_label | default: 'My account' }}</span>
     </a>
-  </div>
-{% endif %}
+</div>
 
 <script src="{{ 'header.js' | asset_url }}" defer="defer"></script>
 
