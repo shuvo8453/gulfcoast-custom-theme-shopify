@@ -1,47 +1,274 @@
-<section class="featured-products-section gcf-section-padding bg-white">
+{%- style -%}
+  #FeatProd-{{ section.id }} {
+    background-color: {{ section.settings.bg_color | default: '#ffffff' }};
+    padding: {{ section.settings.padding_top | default: 60 }}px 0 {{ section.settings.padding_bottom | default: 60 }}px;
+  }
+  #FeatProd-{{ section.id }} .fp-header {
+    text-align: {{ section.settings.heading_align | default: 'center' }};
+    margin-bottom: {{ section.settings.header_gap | default: 40 }}px;
+  }
+  #FeatProd-{{ section.id }} .fp-subtitle {
+    display: block;
+    color: {{ section.settings.subtitle_color | default: '#0d6efd' }};
+    font-size: {{ section.settings.subtitle_size | default: 12 }}px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  #FeatProd-{{ section.id }} .fp-title {
+    color: {{ section.settings.heading_color | default: '#1f2937' }};
+    font-size: {{ section.settings.heading_size | default: 36 }}px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+  @media (max-width: 767px) {
+    #FeatProd-{{ section.id }} .fp-title {
+      font-size: calc({{ section.settings.heading_size | default: 36 }}px * 0.75);
+    }
+  }
+  /* View All button */
+  #FeatProd-{{ section.id }} .fp-view-all-btn {
+    background-color: {{ section.settings.btn_bg | default: '#0b3d77' }};
+    color: {{ section.settings.btn_color | default: '#ffffff' }};
+    border: 2px solid {{ section.settings.btn_bg | default: '#0b3d77' }};
+    padding: 12px 40px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  #FeatProd-{{ section.id }} .fp-view-all-btn:hover {
+    background-color: {{ section.settings.btn_bg_hover | default: '#f59e0b' }};
+    border-color: {{ section.settings.btn_bg_hover | default: '#f59e0b' }};
+    color: {{ section.settings.btn_color_hover | default: '#ffffff' }};
+    transform: translateY(-2px);
+  }
+{%- endstyle -%}
+
+<section id="FeatProd-{{ section.id }}" class="featured-products-section">
   <div class="container">
     <!-- Section Header -->
-    <div class="row mb-5">
-      <div class="col-12 text-center">
-        {% if section.settings.subtitle != blank %}
-          <span class="d-block gcf-section-subtitle">{{ section.settings.subtitle | escape }}</span>
-        {% endif %}
-        {% if section.settings.title != blank %}
-          <h2 class="gcf-section-title mb-0 fw-bold">{{ section.settings.title | escape }}</h2>
-        {% endif %}
-      </div>
+    <div class="fp-header">
+      {% if section.settings.subtitle != blank %}
+        <span class="fp-subtitle">{{ section.settings.subtitle | escape }}</span>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <h2 class="fp-title">{{ section.settings.title | escape }}</h2>
+      {% endif %}
     </div>
 
     <!-- Product Grid -->
     {% assign featured_collection = collections[section.settings.collection] %}
-    {% if featured_collection != blank and featured_collection.products.size > 0 %}
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-{{ section.settings.columns }} g-4">
-        {% for product in featured_collection.products limit: section.settings.limit %}
+    {% assign display_products = featured_collection.products %}
+    
+    {% if featured_collection == blank or featured_collection.products.size == 0 %}
+      {% assign display_products = collections['all'].products %}
+    {% endif %}
+
+    {% if display_products.size > 0 %}
+      <div class="row row-cols-{{ section.settings.mobile_columns | default: 1 }} row-cols-sm-{{ section.settings.tablet_columns | default: 2 }} row-cols-lg-{{ section.settings.columns | default: 4 }} g-{{ section.settings.card_gap | default: 4 }}">
+        {% assign limit_val = section.settings.limit | default: 8 %}
+        {% for product in display_products limit: limit_val %}
           <div class="col">
-            {% render 'product-card', product: product %}
+            <div
+              class="product-card card h-100 border-0 rounded-4 overflow-hidden shadow-sm"
+              data-product-id="{{ product.id }}"
+            >
+              <!-- Product Image Area -->
+              <div class="product-card-image position-relative bg-white p-4 d-flex align-items-center justify-content-center">
+                <!-- Status Badge -->
+                <span
+                  class="badge bg-success position-absolute top-0 start-0 m-3 rounded-pill px-3 py-2 fw-bold"
+                  style="z-index: 2; font-size: 13px;"
+                >
+                  {% if product.available %}
+                    In Stock
+                  {% else %}
+                    Out of Stock
+                  {% endif %}
+                </span>
+
+                <a
+                  href="{{ product.url | within: collection }}"
+                  class="d-flex align-items-center justify-content-center w-100"
+                  style="height: 220px;"
+                >
+                  {% if product.featured_image != blank %}
+                    <img
+                      src="{{ product.featured_image | image_url: width: 500, height: 500 }}"
+                      alt="{{ product.title | escape }}"
+                      class="img-fluid"
+                      loading="lazy"
+                      height="auto"
+                      width="auto"
+                      style="max-height: 100%; width: auto; object-fit: contain;"
+                    >
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg img-fluid' }}
+                  {% endif %}
+                </a>
+              </div>
+
+              <!-- Product Details Info -->
+              <div class="product-card-info p-4 d-flex flex-column flex-grow-1" style="background-color: #eff3f6;">
+                <!-- Title -->
+                <h6 class="product-card-title mb-3">
+                  <a
+                    href="{{ product.url | within: collection }}"
+                    class="text-dark text-decoration-none fw-bold"
+                    style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 15px; line-height: 1.4;"
+                  >
+                    {{ product.title }}
+                  </a>
+                </h6>
+
+                <!-- Stock Status -->
+                {% assign total_inventory = 0 %}
+                {% assign is_tracked = false %}
+                {% for variant in product.variants %}
+                  {% if variant.inventory_management == 'shopify' %}
+                    {% assign is_tracked = true %}
+                    {% if variant.inventory_quantity > 0 %}
+                      {% assign total_inventory = total_inventory | plus: variant.inventory_quantity %}
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+
+                <div
+                  class="product-stock-status mb-3 fw-semibold d-flex align-items-center gap-2"
+                  style="font-size: 14px;"
+                >
+                  {% if product.available %}
+                    {% if is_tracked and total_inventory > 0 and total_inventory < 10 %}
+                      <span style="color: #0d945e;"
+                        ><i
+                          class="fa-solid fa-bolt rounded-circle border border-success p-1"
+                          style="font-size: 10px;"
+                        ></i>
+                        Only {{ total_inventory }} left!</span
+                      >
+                    {% else %}
+                      <span style="color: #0d945e;"
+                        ><i class="fa-regular fa-circle-check fs-5 align-middle"></i> In stock</span
+                      >
+                    {% endif %}
+                  {% else %}
+                    <span class="text-danger"
+                      ><i class="fa-regular fa-circle-xmark fs-5 align-middle"></i> Out of stock</span
+                    >
+                  {% endif %}
+                </div>
+
+                <!-- Pricing -->
+                <div class="product-card-price mb-4">
+                  <span class="fw-bold" style="color: #4a8deb; font-size: 24px;">{{ product.price | money }}</span>
+                  {% if product.compare_at_price > product.price %}
+                    <span class="text-muted text-decoration-line-through small ms-2">
+                      {{- product.compare_at_price | money -}}
+                    </span>
+                  {% endif %}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="product-card-actions mt-auto d-flex align-items-center gap-2">
+                  <button
+                    class="btn bg-white rounded-circle shadow-sm border-0 wishlist-btn-toggle flex-shrink-0 d-flex align-items-center justify-content-center"
+                    data-handle="{{ product.handle }}"
+                    aria-label="Add to Wishlist"
+                    style="width: 42px; height: 42px;"
+                  >
+                    <i class="fa-regular fa-heart text-dark fs-6"></i>
+                  </button>
+                  <button
+                    class="btn bg-white rounded-circle shadow-sm border-0 compare-btn-toggle flex-shrink-0 d-flex align-items-center justify-content-center"
+                    data-handle="{{ product.handle }}"
+                    aria-label="Compare Product"
+                    style="width: 42px; height: 42px;"
+                  >
+                    <i class="fa-solid fa-right-left text-dark fs-6"></i>
+                  </button>
+                  <form action="/cart/add" method="post" enctype="multipart/form-data" class="w-100 m-0">
+                    <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                    <button
+                      type="submit"
+                      class="btn text-white w-100 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2 rounded-pill"
+                      style="background-color: #3b4cca; padding: 10px 16px;"
+                      {% unless product.available %}
+                        disabled
+                      {% endunless %}
+                    >
+                      <i class="fa-solid fa-cart-shopping fs-6"></i> Add To Cart
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
           </div>
         {% endfor %}
       </div>
-      
-      <!-- CTA Button -->
+
+      <!-- View All Button -->
       {% if section.settings.show_view_all %}
-        <div class="text-center mt-5">
-          <a href="{{ featured_collection.url }}" class="btn btn-primary btn-lg rounded-pill px-5 py-3 text-uppercase fw-semibold">
-            View All Products
+        <div class="text-{{ section.settings.heading_align | default: 'center' }} mt-5">
+          <a href="{{ featured_collection.url | default: '/collections/all' }}" class="fp-view-all-btn">
+            {{ section.settings.view_all_text | default: 'View All Products' }}
           </a>
         </div>
       {% endif %}
+
     {% else %}
-      <!-- Placeholder grid when empty -->
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-        {% for i in (1..4) %}
+      <!-- Placeholder grid when store has completely no products -->
+      <div class="row row-cols-{{ section.settings.mobile_columns | default: 1 }} row-cols-sm-{{ section.settings.tablet_columns | default: 2 }} row-cols-lg-{{ section.settings.columns | default: 4 }} g-{{ section.settings.card_gap | default: 4 }}">
+        {% assign limit_val = section.settings.columns | default: 4 %}
+        {% for i in (1..limit_val) %}
           <div class="col">
-            <div class="card h-100 border-0 shadow-sm p-3">
-              <div class="bg-light rounded d-flex align-items-center justify-content-center mb-3" style="height: 200px;">
-                <i class="fa-solid fa-image fa-3x text-muted"></i>
+            <div class="product-card card h-100 border-0 rounded-4 overflow-hidden shadow-sm">
+              <!-- Product Image Area -->
+              <div class="product-card-image position-relative bg-white p-4 d-flex align-items-center justify-content-center">
+                <span class="badge bg-success position-absolute top-0 start-0 m-3 rounded-pill px-3 py-2 fw-bold" style="z-index: 2; font-size: 13px;">
+                  In Stock
+                </span>
+
+                <a href="#" class="d-flex align-items-center justify-content-center w-100" style="height: 220px;">
+                  {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                  {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg img-fluid w-100 h-100' }}
+                </a>
               </div>
-              <h6 class="fw-bold mb-2">Example Product Title</h6>
-              <span class="text-primary fw-bold">$19.99</span>
+
+              <!-- Product Details Info -->
+              <div class="product-card-info p-4 d-flex flex-column flex-grow-1" style="background-color: #eff3f6;">
+                <h6 class="product-card-title mb-3">
+                  <a href="#" class="text-dark text-decoration-none fw-bold" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 15px; line-height: 1.4;">
+                    Example Product Title {{ i }}
+                  </a>
+                </h6>
+
+                <div class="product-stock-status mb-3 fw-semibold d-flex align-items-center gap-2" style="font-size: 14px;">
+                  <span style="color: #0d945e;"><i class="fa-regular fa-circle-check fs-5 align-middle"></i> In stock</span>
+                </div>
+
+                <div class="product-card-price mb-4">
+                  <span class="fw-bold" style="color: #4a8deb; font-size: 24px;">$19.99</span>
+                </div>
+
+                <div class="product-card-actions mt-auto d-flex align-items-center gap-2">
+                  <button class="btn bg-white rounded-circle shadow-sm border-0 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                    <i class="fa-regular fa-heart text-dark fs-6"></i>
+                  </button>
+                  <button class="btn bg-white rounded-circle shadow-sm border-0 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                    <i class="fa-solid fa-right-left text-dark fs-6"></i>
+                  </button>
+                  <button class="btn text-white w-100 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2 rounded-pill" style="background-color: #3b4cca; padding: 10px 16px;">
+                    <i class="fa-solid fa-cart-shopping fs-6"></i> Add To Cart
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         {% endfor %}
@@ -55,9 +282,13 @@
   "name": "Featured Products",
   "settings": [
     {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
       "type": "text",
       "id": "subtitle",
-      "label": "Sub-title",
+      "label": "Subtitle",
       "default": "New Arrivals"
     },
     {
@@ -67,6 +298,30 @@
       "default": "Popular Gear & Accessories"
     },
     {
+      "type": "select",
+      "id": "heading_align",
+      "label": "Header alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "header_gap",
+      "label": "Gap below header (px)",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Collection & Products"
+    },
+    {
       "type": "collection",
       "id": "collection",
       "label": "Select Collection"
@@ -74,26 +329,154 @@
     {
       "type": "range",
       "id": "limit",
-      "min": 4,
-      "max": 16,
-      "step": 4,
+      "min": 2,
+      "max": 24,
+      "step": 1,
       "label": "Product count limit",
       "default": 8
     },
     {
+      "type": "header",
+      "content": "Columns per row"
+    },
+    {
       "type": "range",
       "id": "columns",
-      "min": 3,
-      "max": 5,
+      "min": 2,
+      "max": 6,
       "step": 1,
-      "label": "Columns on desktop",
+      "label": "Desktop columns",
       "default": 4
+    },
+    {
+      "type": "range",
+      "id": "tablet_columns",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Tablet columns",
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "Mobile columns",
+      "options": [
+        { "value": "1", "label": "1 Column" },
+        { "value": "2", "label": "2 Columns" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "label": "Gap between cards (Bootstrap scale 1–6)",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#0d6efd"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle Font Size (px)",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#1f2937"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Font Size (px)",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "View All Button"
     },
     {
       "type": "checkbox",
       "id": "show_view_all",
       "label": "Show 'View All' Button",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "Button Label",
+      "default": "View All Products"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Button Background",
+      "default": "#0b3d77"
+    },
+    {
+      "type": "color",
+      "id": "btn_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_hover",
+      "label": "Button Hover Background",
+      "default": "#f59e0b"
+    },
+    {
+      "type": "color",
+      "id": "btn_color_hover",
+      "label": "Button Hover Text Color",
+      "default": "#ffffff"
     }
   ],
   "presets": [
