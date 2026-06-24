@@ -1,0 +1,290 @@
+{%- style -%}
+  .about-us-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  .about-us-{{ section.id }} .about-us-subtitle {
+    color: {{ section.settings.subtitle_color }};
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+  .about-us-{{ section.id }} .about-us-title {
+    color: {{ section.settings.title_color }};
+    font-family: 'Outfit', sans-serif;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+  .about-us-{{ section.id }} .about-us-text {
+    color: {{ section.settings.text_color }};
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  .about-us-{{ section.id }} .about-us-btn {
+    background-color: {{ section.settings.btn_bg_color }};
+    color: {{ section.settings.btn_text_color }};
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    padding: 12px 36px;
+    border-radius: 50px;
+    font-size: 15px;
+    display: inline-block;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+    border: none;
+  }
+  .about-us-{{ section.id }} .about-us-btn:hover {
+    background-color: {{ section.settings.btn_hover_bg_color }};
+    color: {{ section.settings.btn_text_color }};
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+  .about-us-{{ section.id }} .about-us-image-wrapper {
+    position: relative;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+    background-color: #f7f7f7;
+    width: 100%;
+  }
+  .about-us-{{ section.id }} .about-us-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .about-us-{{ section.id }} .about-us-image-wrapper:hover .about-us-img {
+    transform: scale(1.03);
+  }
+  .about-us-{{ section.id }} .about-us-placeholder-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    background-color: #e9ecef;
+  }
+  .about-us-{{ section.id }} .placeholder-svg {
+    width: 60%;
+    height: 60%;
+    fill: #adb5bd;
+  }
+
+  @media (max-width: 991px) {
+    .about-us-{{ section.id }} .row-content-layout {
+      flex-direction: column;
+    }
+    .about-us-{{ section.id }} .img-column {
+      order: 1 !important;
+      margin-bottom: 40px;
+    }
+    .about-us-{{ section.id }} .content-column {
+      order: 2 !important;
+      text-align: center;
+    }
+    .about-us-{{ section.id }} .about-us-title {
+      font-size: 30px;
+      margin-bottom: 16px;
+    }
+    .about-us-{{ section.id }} .about-us-text {
+      font-size: 15px;
+      margin-bottom: 24px;
+    }
+    .about-us-{{ section.id }} .about-us-image-wrapper {
+      max-width: 500px;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="about-us-section about-us-{{ section.id }}">
+  <div class="container">
+    <div class="row align-items-center row-content-layout g-5">
+      <!-- Image Column -->
+      <div class="col-12 col-lg-6 img-column">
+        <div class="about-us-image-wrapper">
+          {% if section.settings.image != blank %}
+            <img
+              src="{{ section.settings.image | image_url: width: 800 }}"
+              alt="{{ section.settings.image.alt | escape }}"
+              class="about-us-img"
+              height="auto"
+              width="auto"
+              loading="lazy"
+            >
+          {% else %}
+            <!-- Check if placeholder image asset exists, otherwise fallback to SVG -->
+            <img
+              src="{{ 'about-us-placeholder.png' | asset_url }}"
+              alt="About Us Gulf Coast Outfitters"
+              class="about-us-img"
+              height="auto"
+              width="auto"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              loading="lazy"
+            >
+            <div class="about-us-placeholder-image" style="display: none;">
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Content Column -->
+      <div class="col-12 col-lg-6 content-column">
+        {% if section.settings.subtitle != blank %}
+          <span class="about-us-subtitle d-block">{{ section.settings.subtitle | escape }}</span>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <h2 class="about-us-title">{{ section.settings.title | escape }}</h2>
+        {% endif %}
+        {% if section.settings.text != blank %}
+          <div class="about-us-text">
+            {{ section.settings.text }}
+          </div>
+        {% endif %}
+        {% if section.settings.btn_label != blank %}
+          <a href="{{ section.settings.btn_link | default: '#' }}" class="btn about-us-btn">
+            {{ section.settings.btn_label | escape }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About Us",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Featured Image"
+    },
+    {
+      "type": "header",
+      "content": "Content Settings"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sub-title",
+      "default": "About Us"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Navigating the Journey of Self-Discovery"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text Paragraph",
+      "default": "<p>At Gulf Coast Outfitters, it is our mission to outfit boaters with the highest-quality marine hardware and boat accessories. Shop with us today and discover the Gulf Coast difference!</p>"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button Label",
+      "default": "Explore Our Products"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Styling & Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#0b2f61"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Heading Color",
+      "default": "#0f2e5a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#212529"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Button Background Color",
+      "default": "#2b4ebb"
+    },
+    {
+      "type": "color",
+      "id": "btn_hover_bg_color",
+      "label": "Button Hover Background Color",
+      "default": "#1e3894"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Us",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}
