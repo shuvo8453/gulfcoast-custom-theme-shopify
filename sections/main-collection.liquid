@@ -1,0 +1,187 @@
+<section class="collection-archive-section py-5">
+  <div class="container">
+    {% render 'breadcrumb' %}
+
+    <!-- Header Banner / Info -->
+    <div class="collection-header my-4 p-4 border rounded bg-light">
+      <h1 class="collection-title fw-bold text-dark mb-2">{{ collection.title }}</h1>
+      {% if collection.description != blank %}
+        <div class="collection-description text-muted small leading-relaxed">{{ collection.description }}</div>
+      {% endif %}
+    </div>
+
+    <div class="row g-4 mt-2">
+      <!-- Left: Sidebar Filters -->
+      <div class="col-12 col-md-3">
+        <div class="collection-filters-sidebar border rounded p-4 bg-white shadow-sm">
+          <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa-solid fa-filter me-2 text-primary"></i>Filters</h5>
+          
+          <form class="filter-form d-flex flex-column gap-4">
+            {%- for filter in collection.filters -%}
+              <div class="filter-group">
+                <h6 class="fw-bold text-dark mb-3">{{ filter.label }}</h6>
+                
+                {%- case filter.type -%}
+                  {%- when 'list' -%}
+                    <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+                      {%- for value in filter.values -%}
+                        <li class="form-check">
+                          <input type="checkbox" 
+                                 name="{{ value.param_name }}" 
+                                 value="{{ value.value }}" 
+                                 id="Filter-{{ filter.label | handle }}-{{ forloop.index }}" 
+                                 class="form-check-input"
+                                 {% if value.active %}checked{% endif %}
+                                 {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                                 onchange="this.form.submit()">
+                          <label class="form-check-label small {% if value.count == 0 and value.active == false %}text-muted{% endif %}" for="Filter-{{ filter.label | handle }}-{{ forloop.index }}">
+                            {{ value.label }} ({{ value.count }})
+                          </label>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- when 'price_range' -%}
+                    <div class="price-range-inputs d-flex align-items-center gap-2">
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-text">$</span>
+                        <input name="{{ filter.min_value.param_name }}"
+                               id="Filter-{{ filter.label | handle }}-Min"
+                               {%- if filter.min_value.value -%}
+                                 value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                               {%- endif -%}
+                               type="number"
+                               placeholder="Min"
+                               min="0"
+                               max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                               class="form-control"
+                               onchange="this.form.submit()">
+                      </div>
+                      <span class="text-muted small">to</span>
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-text">$</span>
+                        <input name="{{ filter.max_value.param_name }}"
+                               id="Filter-{{ filter.label | handle }}-Max"
+                               {%- if filter.max_value.value -%}
+                                 value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                               {%- endif -%}
+                               type="number"
+                               placeholder="Max"
+                               min="0"
+                               max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                               class="form-control"
+                               onchange="this.form.submit()">
+                      </div>
+                    </div>
+                {%- endcase -%}
+              </div>
+            {%- endfor -%}
+          </form>
+        </div>
+      </div>
+
+      <!-- Right: Products Grid -->
+      <div class="col-12 col-md-9">
+        {% paginate collection.products by section.settings.products_per_page %}
+          {% if collection.products.size > 0 %}
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+              {% for product in collection.products %}
+                <div class="col">
+                  {% render 'product-card', product: product %}
+                </div>
+              {% endfor %}
+            </div>
+
+            <!-- Pagination Bar -->
+            {% if paginate.pages > 1 %}
+              <nav class="d-flex justify-content-center mt-5" aria-label="Page navigation">
+                <ul class="pagination pagination-sm">
+                  {% if paginate.previous %}
+                    <li class="page-item"><a class="page-link rounded-circle px-3 py-2 me-2" href="{{ paginate.previous.url }}"><i class="fa-solid fa-chevron-left"></i></a></li>
+                  {% endif %}
+                  
+                  {% for part in paginate.parts %}
+                    {% if part.is_link %}
+                      <li class="page-item"><a class="page-link rounded-circle px-3 py-2 me-2" href="{{ part.url }}">{{ part.title }}</a></li>
+                    {% else %}
+                      <li class="page-item active"><span class="page-link rounded-circle px-3 py-2 me-2">{{ part.title }}</span></li>
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if paginate.next %}
+                    <li class="page-item"><a class="page-link rounded-circle px-3 py-2" href="{{ paginate.next.url }}"><i class="fa-solid fa-chevron-right"></i></a></li>
+                  {% endif %}
+                </ul>
+              </nav>
+            {% endif %}
+          {% else %}
+            <div class="text-center py-5 border rounded bg-light">
+              <i class="fa-solid fa-magnifying-glass fa-3x text-muted mb-3"></i>
+              <p class="text-muted mb-0">No products found in this category.</p>
+            </div>
+          {% endif %}
+        {% endpaginate %}
+      </div>
+    </div>
+
+    <!-- Collection FAQ Accordions Section -->
+    {% if collection.metafields.custom.faqs.value != blank %}
+      <div class="collection-faq-section border rounded p-4 bg-light shadow-sm mt-5">
+        <h3 class="faq-section-title fw-bold text-dark mb-4 border-bottom pb-2">
+          <i class="fa-regular fa-circle-question me-2 text-primary"></i>{{ 'products.general.faqs_title' | t }}
+        </h3>
+        
+        <div class="faq-accordion-container d-flex flex-column gap-3">
+          {% assign faqs = collection.metafields.custom.faqs.value %}
+          {% for faq in faqs %}
+            <div class="faq-item border-bottom pb-3">
+              <button class="faq-trigger d-flex justify-content-between align-items-center w-100 bg-transparent border-0 text-start py-2" aria-expanded="false">
+                <span class="faq-question fw-bold text-dark fs-6">{{ faq.question }}</span>
+                <span class="faq-icon text-primary"><i class="fa-solid fa-plus"></i></span>
+              </button>
+              <div class="faq-answer-panel d-none mt-2 ps-2 text-muted leading-relaxed small">
+                <p class="mb-0">{{ faq.answer }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Inject structured FAQ schema for SEO -->
+      <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {% for faq in faqs %}
+              {
+                "@type": "Question",
+                "name": {{ faq.question | json }},
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": {{ faq.answer | json }}
+                }
+              }{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ]
+        }
+      </script>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection Grid",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 6,
+      "max": 48,
+      "step": 3,
+      "label": "Products per page",
+      "default": 12
+    }
+  ]
+}
+{% endschema %}

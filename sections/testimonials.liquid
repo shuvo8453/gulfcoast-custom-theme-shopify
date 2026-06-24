@@ -1,0 +1,125 @@
+<section class="testimonials-section gcf-section-padding bg-light">
+  <div class="container">
+    <div class="row mb-5 text-center">
+      <div class="col-12">
+        {% if section.settings.subtitle != blank %}
+          <span class="d-block gcf-section-subtitle">{{ section.settings.subtitle | escape }}</span>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <h2 class="gcf-section-title mb-0 fw-bold">{{ section.settings.title | escape }}</h2>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Bootstrap Reviews Slider Carousel -->
+    <div id="TestimonialsCarousel" class="carousel slide max-w-2xl mx-auto" data-bs-ride="carousel" data-bs-interval="5000">
+      <div class="carousel-inner">
+        {% for block in section.blocks %}
+          <div class="carousel-item {% if forloop.first %}active{% endif %} p-4" {{ block.shopify_attributes }}>
+            <div class="testimonial-card text-center p-4 bg-white shadow-sm border rounded-3 position-relative">
+              <i class="fa-solid fa-quote-left text-primary-subtle display-2 position-absolute start-0 top-0 m-3 opacity-25" style="z-index: 1;"></i>
+              
+              <div class="stars mb-3 text-warning position-relative" style="z-index: 2;">
+                {% assign stars_count = block.settings.rating %}
+                {% for i in (1..5) %}
+                  <i class="{% if i <= stars_count %}fa-solid{% else %}fa-regular{% endif %} fa-star"></i>
+                {% endfor %}
+              </div>
+
+              <blockquote class="fs-5 text-muted leading-relaxed mb-4 position-relative" style="z-index: 2;">
+                "{{ block.settings.text }}"
+              </blockquote>
+
+              <div class="d-flex align-items-center justify-content-center gap-3 position-relative" style="z-index: 2;">
+                <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-size: 20px;">
+                  <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="text-start">
+                  <h6 class="mb-0 text-dark fw-bold">{{ block.settings.name }}</h6>
+                  <span class="text-muted small d-block">{{ block.settings.city }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Controls -->
+      {% if section.blocks.size > 1 %}
+        <button class="carousel-control-prev" type="button" data-bs-target="#TestimonialsCarousel" data-bs-slide="prev" style="filter: invert(1);">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#TestimonialsCarousel" data-bs-slide="next" style="filter: invert(1);">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonials Slider",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sub-title",
+      "default": "Reviews"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "What Our Adventurers Say"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Customer Review",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer Name",
+          "default": "John Doe"
+        },
+        {
+          "type": "text",
+          "id": "city",
+          "label": "Location Details",
+          "default": "Destin, FL"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Review Rating (Stars)",
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Review Description Text",
+          "default": "Absolutely the best service and equipment! Highly recommend Gulf Coast Outfitters for any kayaking trip."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials Slider",
+      "blocks": [
+        { "type": "review", "settings": { "name": "Sarah Miller", "city": "Pensacola, FL", "text": "Top-tier kayak gear. Quick delivery and extremely friendly support team." } },
+        { "type": "review", "settings": { "name": "Captain Jack", "city": "Destin, FL", "text": "Excellent boat accessories. The dynamic specifications sheets and manuals helped me pick exactly what I needed." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

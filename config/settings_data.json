@@ -1,0 +1,25 @@
+{
+  "current": {
+    "color_primary": "#062e67",
+    "color_primary_hover": "#0b3d77",
+    "color_background": "#ffffff",
+    "color_text": "#4b5563",
+    "color_heading": "#1f2937",
+    "color_accent": "#3b82f6",
+    "color_success": "#10b981",
+    "color_error": "#ef4444",
+    "logo_width": 180,
+    "social_facebook_link": "https:\/\/facebook.com\/gulfcoastoutfitters",
+    "social_twitter_link": "https:\/\/twitter.com\/gulfcoastoutfitters",
+    "social_instagram_link": "https:\/\/instagram.com\/gulfcoastoutfitters",
+    "social_youtube_link": "https:\/\/youtube.com\/gulfcoastoutfitters",
+    "social_pinterest_link": "https:\/\/pinterest.com\/gulfcoastoutfitters",
+    "type_primary_font": "assistant_n4",
+    "max_page_width": "1200px",
+    "min_page_margin": 24,
+    "background_color": "#ffffff",
+    "foreground_color": "#4b5563",
+    "input_corner_radius": 4
+  },
+  "presets": {}
+}

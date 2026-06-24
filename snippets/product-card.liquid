@@ -1,0 +1,60 @@
+<div class="product-card h-100 d-flex flex-column" data-product-id="{{ product.id }}">
+  <!-- Product Image Area -->
+  <div class="product-card-image position-relative">
+    <a href="{{ product.url | within: collection }}" class="d-block w-100 h-100">
+      {% if product.featured_image != blank %}
+        <img src="{{ product.featured_image | image_url: width: 500, height: 500, crop: 'center' }}" 
+             alt="{{ product.title | escape }}" 
+             class="img-fluid"
+             loading="lazy">
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg border rounded' }}
+      {% endif %}
+    </a>
+
+    <!-- Discount / Save Badge -->
+    {% if product.compare_at_price > product.price %}
+      {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
+      <span class="badge bg-danger position-absolute top-0 start-0 m-3 rounded-pill px-3 py-2 text-uppercase fw-bold" style="z-index: 2;">
+        Sale {{ discount }}%
+      </span>
+    {% endif %}
+
+    <!-- Action Buttons (Wishlist and Compare Toggles) -->
+    <div class="product-card-actions">
+      <button class="card-action-btn wishlist-btn-toggle" data-handle="{{ product.handle }}" aria-label="Add to Wishlist" title="Add to Wishlist">
+        <i class="fa-regular fa-heart"></i>
+      </button>
+      <button class="card-action-btn compare-btn-toggle" data-handle="{{ product.handle }}" aria-label="Compare Product" title="Compare Product">
+        <i class="fa-solid fa-code-compare"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Product Details Info -->
+  <div class="product-card-info p-3 d-flex flex-column flex-grow-1">
+    <!-- Vendor -->
+    <span class="text-uppercase text-muted small fw-bold tracking-wider mb-1" style="font-size: 11px;">{{ product.vendor }}</span>
+    
+    <!-- Title -->
+    <h6 class="product-card-title fw-bold mb-2">
+      <a href="{{ product.url | within: collection }}" class="text-dark hover:text-primary text-decoration-none">
+        {{ product.title }}
+      </a>
+    </h6>
+
+    <!-- Star Review Placeholder -->
+    <div class="product-card-review mb-2 small text-warning">
+      <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+      <span class="text-muted small ms-1">(5.0)</span>
+    </div>
+
+    <!-- Pricing -->
+    <div class="product-card-price mt-auto pt-2 border-top border-light-subtle d-flex align-items-center gap-2">
+      <span class="fw-bold text-primary">{{ product.price | money }}</span>
+      {% if product.compare_at_price > product.price %}
+        <span class="text-muted text-decoration-line-through small">{{ product.compare_at_price | money }}</span>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,153 @@
+<style>
+  #shopify-section-{{ section.id }} .benefit-section {
+    background: {{ section.settings.background_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  #shopify-section-{{ section.id }} .benefit-title {
+    color: {{ section.settings.text_color }};
+    font-size: {{ section.settings.font_size }}px;
+  }
+  #shopify-section-{{ section.id }} .divider {
+    background-color: {{ section.settings.divider_color }};
+    width: {{ section.settings.divider_width }}px;
+  }
+</style>
+
+<section class="benefit-section border-top border-bottom border-light-subtle">
+  <div class="container benefit-items d-flex justify-content-between align-items-center flex-wrap gap-4 py-1">
+    {% for block in section.blocks %}
+      <div class="benefit-item d-flex align-items-center gap-3" {{ block.shopify_attributes }}>
+        {% if block.settings.icon_class != blank %}
+          <span class="benefit-item-icon text-primary fs-4" style="width: {{ section.settings.icon_width }}px;">
+            <i class="fa-solid {{ block.settings.icon_class }}"></i>
+          </span>
+        {% endif %}
+        
+        {% if block.settings.text != blank %}
+          <p class="fw-semibold benefit-title mb-0">{{ block.settings.text }}</p>
+        {% endif %}
+      </div>
+
+      {% if section.settings.show_divider and forloop.last == false %}
+        <div class="align-self-stretch my-2 divider d-none d-md-block" style="width: {{ section.settings.divider_width }}px; background-color: {{ section.settings.divider_color }};"></div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Benefit Bar",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f8fafc"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1e293b"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "icon_width",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon Width",
+      "default": 25
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show Dividers",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider Color",
+      "default": "#cbd5e1"
+    },
+    {
+      "type": "range",
+      "id": "divider_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Divider Width",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit_item",
+      "name": "Benefit Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon_class",
+          "label": "FontAwesome Icon Class Name",
+          "default": "fa-truck"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free Shipping over $150"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Benefit Bar",
+      "blocks": [
+        { "type": "benefit_item", "settings": { "icon_class": "fa-truck-fast", "text": "Free Shipping over $150" } },
+        { "type": "benefit_item", "settings": { "icon_class": "fa-shield-halved", "text": "Secure Payments" } },
+        { "type": "benefit_item", "settings": { "icon_class": "fa-rotate-left", "text": "30-Day Returns" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

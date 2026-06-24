@@ -1,0 +1,44 @@
+{% if section.settings.enable %}
+  <div id="gcf-cart-recovery-toast" class="cart-recovery-toast d-none" data-delay="{{ section.settings.delay | times: 1000 }}">
+    <div class="toast-header d-flex justify-content-between align-items-center">
+      <h6 class="mb-0 text-dark fw-bold"><i class="fa-solid fa-cart-shopping text-primary me-2"></i>{{ section.settings.title | escape }}</h6>
+      <button type="button" class="close-toast border-0 bg-transparent text-muted"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="toast-body mt-2" id="recovery-items-container" style="max-height: 200px; overflow-y: auto;">
+      <!-- Loaded dynamically via AJAX -->
+    </div>
+    <div class="toast-footer mt-3">
+      <a href="/checkout" class="btn btn-primary btn-sm w-100 rounded-pill">{{ 'cart.general.checkout_now' | t }}</a>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Cart Recovery Toast",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Enable Toast",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Toast Title",
+      "default": "Items left in your cart"
+    },
+    {
+      "type": "range",
+      "id": "delay",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "unit": "s",
+      "label": "Appearance Delay",
+      "default": 5
+    }
+  ]
+}
+{% endschema %}

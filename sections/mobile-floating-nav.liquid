@@ -1,0 +1,38 @@
+{% if section.settings.enable %}
+  <div class="mobile-floating-nav d-flex d-md-none">
+    <a href="{{ routes.root_url }}" class="mobile-nav-item {% if request.path == routes.root_url %}active{% endif %}">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </a>
+    
+    <a href="/collections/all" class="mobile-nav-item {% if request.path contains '/collections/' %}active{% endif %}">
+      <i class="fa-solid fa-compass"></i>
+      <span>Shop</span>
+    </a>
+
+    <a href="#" data-gcf-wishlist-drawer-toggle="true" class="mobile-nav-item">
+      <i class="fa-regular fa-heart"></i>
+      <span>Wishlist</span>
+    </a>
+
+    <a href="#" data-gcf-mini-cart-toggle="true" class="mobile-nav-item position-relative">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span class="badge bg-primary text-white border-0 position-absolute" style="top: 2px; right: 18px; font-size: 8px; padding: 2px 4px; border-radius: 50%;">{{ cart.item_count }}</span>
+      <span>Cart</span>
+    </a>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Mobile Navigation",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Enable Mobile Bottom Nav",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

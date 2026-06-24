@@ -1,0 +1,87 @@
+<article class="article-section py-5">
+  <div class="container">
+    {% render 'breadcrumb' %}
+
+    <div class="row g-5 justify-content-center mt-2">
+      <div class="col-12 col-lg-8">
+        <!-- Post Header -->
+        <header class="article-header mb-4">
+          {% if article.tags.size > 0 %}
+            <div class="article-tags mb-3 d-flex gap-2">
+              {% for tag in article.tags %}
+                <span class="badge bg-primary px-3 py-2 rounded-pill small">{{ tag }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+          
+          <h1 class="article-title fw-bold text-dark mb-3">{{ article.title }}</h1>
+          
+          <div class="article-meta text-muted d-flex align-items-center gap-3 border-bottom pb-3">
+            <div class="author-info d-flex align-items-center gap-2">
+              <i class="fa-solid fa-user-circle fa-lg text-primary"></i>
+              <span class="small fw-semibold">{{ article.author }}</span>
+            </div>
+            <span>&bull;</span>
+            <div class="publish-date d-flex align-items-center gap-2">
+              <i class="fa-regular fa-calendar text-primary"></i>
+              <span class="small">{{ article.published_at | time_tag: format: 'date' }}</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Article Featured Image -->
+        {% if article.image %}
+          <div class="article-featured-image rounded overflow-hidden mb-5 shadow-sm">
+            <img src="{{ article.image | image_url: width: 1000 }}" class="img-fluid w-100" alt="{{ article.title | escape }}" loading="eager">
+          </div>
+        {% endif %}
+
+        <!-- Article Main Content -->
+        <div class="article-body leading-relaxed text-muted mb-5">
+          {{ article.content }}
+        </div>
+
+        <!-- Social Share Bar -->
+        <div class="article-share-bar p-3 border rounded bg-light d-flex align-items-center justify-content-between my-5">
+          <span class="fw-bold text-dark small"><i class="fa-solid fa-share-nodes me-2 text-primary"></i>{{ 'blogs.article.share' | t }}</span>
+          <div class="share-icons d-flex gap-2">
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ canonical_url }}" target="_blank" class="btn btn-sm btn-outline-secondary border-0" aria-label="Share on Facebook"><i class="fa-brands fa-facebook fa-lg"></i></a>
+            <a href="https://twitter.com/intent/tweet?text={{ article.title | escape }}&url={{ canonical_url }}" target="_blank" class="btn btn-sm btn-outline-secondary border-0" aria-label="Share on Twitter"><i class="fa-brands fa-x-twitter fa-lg"></i></a>
+            <a href="https://pinterest.com/pin/create/button/?url={{ canonical_url }}&media={{ article.image | image_url: width: 800 }}&description={{ article.title | escape }}" target="_blank" class="btn btn-sm btn-outline-secondary border-0" aria-label="Share on Pinterest"><i class="fa-brands fa-pinterest fa-lg"></i></a>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ canonical_url }}&title={{ article.title | escape }}" target="_blank" class="btn btn-sm btn-outline-secondary border-0" aria-label="Share on LinkedIn"><i class="fa-brands fa-linkedin fa-lg"></i></a>
+          </div>
+        </div>
+
+        <!-- Author Bio Box -->
+        <div class="author-bio-card p-4 border rounded bg-light d-flex gap-4 align-items-center mb-5">
+          <div class="author-avatar rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 70px; height: 70px; min-width: 70px; font-size: 28px;">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div>
+            <h5 class="fw-bold text-dark mb-1">{{ article.author }}</h5>
+            <p class="text-muted small mb-0">Gulf Coast Outfitters editorial contributor sharing tips, tutorials, and product reviews for boating, angling, and kayaking adventures.</p>
+          </div>
+        </div>
+
+        <!-- Prev / Next Post Link Links -->
+        {% if blog.next_article or blog.previous_article %}
+          <div class="article-navigation border-top border-bottom py-4 d-flex justify-content-between align-items-center my-5 flex-wrap gap-3">
+            {% if blog.previous_article %}
+              <div class="prev-article-link">
+                <span class="d-block text-muted small fw-medium">{{ 'blogs.article.prev_post' | t }}</span>
+                <a href="{{ blog.previous_article.url }}" class="fw-bold text-primary">{{ blog.previous_article.title | truncate: 35 }}</a>
+              </div>
+            {% endif %}
+            
+            {% if blog.next_article %}
+              <div class="next-article-link text-md-end ms-auto">
+                <span class="d-block text-muted small fw-medium">{{ 'blogs.article.next_post' | t }}</span>
+                <a href="{{ blog.next_article.url }}" class="fw-bold text-primary">{{ blog.next_article.title | truncate: 35 }}</a>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</article>

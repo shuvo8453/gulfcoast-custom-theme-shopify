@@ -1,0 +1,20 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {}
+    },
+    "bundle": {
+      "type": "bundle-deal",
+      "settings": {
+        "title": "Frequently Bought Together",
+        "discount_value": 10,
+        "discount_type": "percentage"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "bundle"
+  ]
+}

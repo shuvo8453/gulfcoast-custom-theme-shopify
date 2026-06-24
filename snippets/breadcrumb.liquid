@@ -1,0 +1,54 @@
+{%- unless template == 'index' or template == 'cart' or template == 'list-collections' -%}
+  <nav class="breadcrumb py-3 bg-light rounded px-3" aria-label="breadcrumb">
+    <div class="container">
+      <ol class="breadcrumb mb-0 flex-nowrap overflow-x-auto text-truncate" style="list-style: none; padding-left: 0; display: flex; gap: 8px;">
+        <li class="breadcrumb-item d-flex align-items-center">
+          <a href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t }}</a>
+          <span class="text-muted mx-2 small"><i class="fa-solid fa-chevron-right"></i></span>
+        </li>
+        
+        {%- if template contains 'product' -%}
+          {%- if collection -%}
+            <li class="breadcrumb-item d-flex align-items-center">
+              <a href="{{ collection.url }}">{{ collection.title }}</a>
+              <span class="text-muted mx-2 small"><i class="fa-solid fa-chevron-right"></i></span>
+            </li>
+          {%- endif -%}
+          <li class="breadcrumb-item active text-dark text-truncate" aria-current="page">{{ product.title }}</li>
+          
+        {%- elsif template contains 'collection' and collection.handle -%}
+          {%- if current_tags -%}
+            <li class="breadcrumb-item d-flex align-items-center">
+              <a href="{{ collection.url }}">{{ collection.title }}</a>
+              <span class="text-muted mx-2 small"><i class="fa-solid fa-chevron-right"></i></span>
+            </li>
+            <li class="breadcrumb-item active text-dark" aria-current="page">{{ current_tags | join: " + " }}</li>
+          {%- else -%}
+            <li class="breadcrumb-item active text-dark" aria-current="page">{{ collection.title }}</li>
+          {%- endif -%}
+          
+        {%- elsif template == 'blog' -%}
+          {%- if current_tags -%}
+            <li class="breadcrumb-item d-flex align-items-center">
+              <a href="{{ blog.url }}">{{ blog.title }}</a>
+              <span class="text-muted mx-2 small"><i class="fa-solid fa-chevron-right"></i></span>
+            </li>
+            <li class="breadcrumb-item active text-dark" aria-current="page">{{ current_tags | join: " + " }}</li>
+          {%- else -%}
+            <li class="breadcrumb-item active text-dark" aria-current="page">{{ blog.title }}</li>
+          {%- endif -%}
+          
+        {%- elsif template == 'article' -%}
+          <li class="breadcrumb-item d-flex align-items-center">
+            <a href="{{ blog.url }}">{{ blog.title }}</a>
+            <span class="text-muted mx-2 small"><i class="fa-solid fa-chevron-right"></i></span>
+          </li>
+          <li class="breadcrumb-item active text-dark text-truncate" aria-current="page">{{ article.title }}</li>
+          
+        {%- else -%}
+          <li class="breadcrumb-item active text-dark" aria-current="page">{{ page_title }}</li>
+        {%- endif -%}
+      </ol>
+    </div>
+  </nav>
+{%- endunless -%}

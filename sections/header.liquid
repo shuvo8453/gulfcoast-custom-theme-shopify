@@ -1,0 +1,1616 @@
+<!-- Gulf Coast Outfitters Custom Header -->
+{{ 'header.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  :root {
+    --header-bg-top: {{ section.settings.bg_top }};
+    --header-text-top: {{ section.settings.text_top }};
+    --top-bar-divider-color: {{ section.settings.top_bar_divider_color }};
+    --social-icon-size: {{ section.settings.social_icon_size }}px;
+    --social-icon-gap: {{ section.settings.social_icon_gap }}px;
+    --action-icon-gap: {{ section.settings.action_icon_gap }}px;
+    --wishlist-icon-size: {{ section.settings.wishlist_icon_size }}px;
+    --compare-icon-size: {{ section.settings.compare_icon_size }}px;
+    --cart-icon-size: {{ section.settings.cart_icon_size }}px;
+    --announcement-color: {{ section.settings.announcement_color }};
+    --announcement-hover-color: {{ section.settings.announcement_hover_color }};
+    --announcement-font-size: {{ section.settings.announcement_font_size }}px;
+    --announcement-font-weight: {{ section.settings.announcement_font_weight }};
+
+    --contact-color: {{ section.settings.contact_color }};
+    --contact-hover-color: {{ section.settings.contact_hover_color }};
+    --contact-font-size: {{ section.settings.contact_font_size }}px;
+    --contact-font-weight: {{ section.settings.contact_font_weight }};
+
+    --header-bg-main: {{ section.settings.bg_main }};
+    --header-text-main: {{ section.settings.text_main }};
+    --header-accent-color: {{ section.settings.accent_color }};
+    --header-accent-hover-color: {{ section.settings.accent_hover_color }};
+
+    --search-bg-color: {{ section.settings.search_bg_color }};
+    --search-text-color: {{ section.settings.search_text_color }};
+    --search-border-color: {{ section.settings.search_border_color }};
+    --search-divider-color: {{ section.settings.search_divider_color }};
+    --search-font-size: {{ section.settings.search_font_size }}px;
+    --search-category-text-color: {{ section.settings.search_category_text_color }};
+    --search-category-font-size: {{ section.settings.search_category_font_size }}px;
+
+    --actions-text-color: {{ section.settings.actions_text_color }};
+    --actions-hover-color: {{ section.settings.actions_hover_color }};
+    --actions-font-size: {{ section.settings.actions_font_size }}px;
+    --actions-font-weight: {{ section.settings.actions_font_weight }};
+
+    --badge-bg-color: {{ section.settings.badge_bg_color }};
+    --badge-text-color: {{ section.settings.badge_text_color }};
+    --badge-font-size: {{ section.settings.badge_font_size }}px;
+
+    --cart-price-color: {{ section.settings.cart_price_color }};
+    --cart-price-font-size: {{ section.settings.cart_price_font_size }}px;
+    --cart-price-font-weight: {{ section.settings.cart_price_font_weight }};
+
+    --header-bg-nav: {{ section.settings.bg_nav }};
+    --nav-border-color: {{ section.settings.nav_border_color }};
+    --nav-link-color: {{ section.settings.nav_link_color }};
+    --nav-link-hover-color: {{ section.settings.nav_link_hover_color }};
+    --nav-font-size: {{ section.settings.nav_font_size }}px;
+    --nav-font-weight: {{ section.settings.nav_font_weight }};
+
+    --categories-btn-bg: {{ section.settings.categories_btn_bg }};
+    --categories-btn-bg-hover: {{ section.settings.categories_btn_bg_hover }};
+    --categories-btn-border: {{ section.settings.categories_btn_border }};
+    --categories-btn-text: {{ section.settings.categories_btn_text }};
+    --categories-btn-text-hover: {{ section.settings.categories_btn_text_hover }};
+    --categories-btn-radius: {{ section.settings.categories_btn_radius }}px;
+    --categories-font-size: {{ section.settings.categories_font_size }}px;
+    --categories-font-weight: {{ section.settings.categories_font_weight }};
+    --categories-dropdown-bg: {{ section.settings.categories_dropdown_bg }};
+    --categories-item-color: {{ section.settings.categories_item_color }};
+    --categories-item-color-hover: {{ section.settings.categories_item_color_hover }};
+    --categories-item-bg-hover: {{ section.settings.categories_item_bg_hover }};
+
+    --mobile-bottom-nav-bg: {{ section.settings.mobile_bottom_nav_bg }};
+    --mobile-bottom-nav-text: {{ section.settings.mobile_bottom_nav_text_color }};
+    --mobile-bottom-nav-active: {{ section.settings.mobile_bottom_nav_active_color }};
+    --mobile-bottom-nav-border: {{ section.settings.mobile_bottom_nav_border_color }};
+    --mobile-bottom-nav-font-size: {{ section.settings.mobile_bottom_nav_font_size }}px;
+    --mobile-bottom-nav-icon-size: {{ section.settings.mobile_bottom_nav_icon_size }}px;
+    --mobile-bottom-nav-gap: {{ section.settings.mobile_bottom_nav_gap }}px;
+  }
+
+  /* Font overrides */
+  {% if section.settings.announcement_font_family != 'inherit' %}
+    .announcement-message { font-family: "{{ section.settings.announcement_font_family }}", sans-serif; }
+  {% endif %}
+  {% if section.settings.contact_font_family != 'inherit' %}
+    .top-contact-link { font-family: "{{ section.settings.contact_font_family }}", sans-serif; }
+  {% endif %}
+  {% if section.settings.nav_font_family != 'inherit' %}
+    .nav-linkslist-link { font-family: "{{ section.settings.nav_font_family }}", sans-serif; }
+    .browse-categories-btn { font-family: "{{ section.settings.nav_font_family }}", sans-serif; }
+  {% endif %}
+{%- endstyle -%}
+
+<header class="site-header full-width">
+  <!-- 1. Top Bar / Announcement Bar -->
+  {% if section.settings.show_announcement %}
+    <div class="top-header-bar">
+      <div class="container d-flex justify-content-between align-items-center announcement-bar-wrapper">
+        <div class="d-flex align-items-center gap-2">
+          <div class="announcement-message fw-medium ps-2">
+            {{ section.settings.announcement_text }}
+          </div>
+        </div>
+        <div class="top-header-right d-flex align-items-center gap-3">
+          <div class="header-socials d-flex gap-2">
+            {% if section.settings.fb_url != blank %}
+              <a
+                href="{{ section.settings.fb_url }}"
+                target="_blank"
+                class="social-icon facebook"
+                aria-label="Facebook"
+              >
+                {% if section.settings.fb_icon != blank %}
+                  <img
+                    src="{{ section.settings.fb_icon | image_url: width: 80 }}"
+                    alt="Facebook"
+                    width="{{ section.settings.social_icon_size }}"
+                    height="{{ section.settings.social_icon_size }}"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <i class="fab fa-facebook-f"></i>
+                {% endif %}
+              </a>
+            {% endif %}
+            {% if section.settings.insta_url != blank %}
+              <a
+                href="{{ section.settings.insta_url }}"
+                target="_blank"
+                class="social-icon instagram"
+                aria-label="Instagram"
+              >
+                {% if section.settings.insta_icon != blank %}
+                  <img
+                    src="{{ section.settings.insta_icon | image_url: width: 80 }}"
+                    alt="Instagram"
+                    width="{{ section.settings.social_icon_size }}"
+                    height="{{ section.settings.social_icon_size }}"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <i class="fab fa-instagram"></i>
+                {% endif %}
+              </a>
+            {% endif %}
+            {% if section.settings.yt_url != blank %}
+              <a href="{{ section.settings.yt_url }}" target="_blank" class="social-icon youtube" aria-label="YouTube">
+                {% if section.settings.yt_icon != blank %}
+                  <img
+                    src="{{ section.settings.yt_icon | image_url: width: 80 }}"
+                    alt="YouTube"
+                    width="{{ section.settings.social_icon_size }}"
+                    height="{{ section.settings.social_icon_size }}"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <i class="fab fa-youtube"></i>
+                {% endif %}
+              </a>
+            {% endif %}
+          </div>
+          <!-- Contact Us Link/Button bordered inside vertical dividers -->
+          {% if section.settings.contact_link != blank %}
+            <div class="contact-us-wrapper">
+              <a href="{{ section.settings.contact_link }}" class="top-contact-link text-uppercase">
+                {{ section.settings.contact_text | default: 'Contact Us' }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- 2. Main Header -->
+  <div class="main-header-bar py-3">
+    <div class="container">
+      <div class="d-none d-lg-flex justify-content-between align-items-center gap-4">
+        <!-- Logo (Desktop) -->
+        <div class="header-logo-wrapper">
+          <a href="{{ routes.root_url }}" class="logo-link">
+            {% if section.settings.logo != blank %}
+              <img
+                src="{{ section.settings.logo | image_url: width: 400 }}"
+                alt="{{ shop.name | escape }}"
+                style="max-width: {{ section.settings.logo_max_width }}px; height: auto;"
+                class="header-logo-img"
+                loading="eager"
+                width="auto"
+                height="auto"
+              >
+            {% else %}
+              <span class="h3 text-white fw-bold mb-0">{{ shop.name }}</span>
+            {% endif %}
+          </a>
+        </div>
+
+        <!-- Integrated Search Box with Category Dropdown -->
+        <div class="header-search-wrapper flex-grow-1 position-relative" style="max-width: 600px;">
+          <form
+            action="{{ routes.search_url }}"
+            method="get"
+            role="search"
+            class="d-flex search-bar-form"
+            data-gcf-live-search="true"
+          >
+            <input type="hidden" name="type" value="product">
+            <input
+              type="search"
+              name="q"
+              placeholder="Search for products"
+              class="form-control px-4 border-0 search-input"
+              value="{{ search.terms | escape }}"
+              autocomplete="off"
+            >
+            <div class="search-category-divider"></div>
+            <select class="category-select border-0 bg-white" name="options[prefix]" aria-label="Category select">
+              <option value="last">Select Category</option>
+              {% for collection in collections %}
+                <option value="{{ collection.handle }}">{{ collection.title }}</option>
+              {% endfor %}
+            </select>
+            <button
+              type="submit"
+              class="search-submit-btn d-flex align-items-center justify-content-center border-0 px-4"
+              aria-label="Search"
+            >
+              <i class="fa-solid fa-magnifying-glass text-white"></i>
+            </button>
+          </form>
+
+          <!-- Predictive AJAX Results Dropdown -->
+          <div
+            class="search-results-dropdown d-none bg-white shadow rounded border position-absolute w-100 mt-1 p-2"
+            data-gcf-live-search-results="true"
+            style="z-index: 1000; max-height: 400px; overflow-y: auto;"
+          >
+            <div class="search-results-inner" data-gcf-live-search-results-inner="true"></div>
+          </div>
+        </div>
+
+        <!-- Action Items (Account, Wishlist, Compare, Cart) -->
+        <div class="header-actions-desktop d-flex align-items-center gap-4 text-white">
+          <!-- Account / Login -->
+          {% if shop.customer_accounts_enabled %}
+            <a
+              href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+              class="action-item d-flex align-items-center gap-2 text-white text-decoration-none text-uppercase fw-semibold small"
+            >
+              <i class="fa-regular fa-user"></i>
+              <span>Login / Register</span>
+            </a>
+          {% endif %}
+
+          <!-- Wishlist -->
+          <a
+            href="#"
+            data-gcf-wishlist-drawer-toggle="true"
+            class="action-item wishlist-btn position-relative text-white"
+            aria-label="Wishlist"
+          >
+            {% if section.settings.wishlist_icon != blank %}
+              <img
+                src="{{ section.settings.wishlist_icon | image_url: width: 100 }}"
+                alt="Wishlist"
+                width="{{ section.settings.wishlist_icon_size }}"
+                height="{{ section.settings.wishlist_icon_size }}"
+                loading="lazy"
+              >
+            {% else %}
+              <i class="far fa-heart"></i>
+            {% endif %}
+            <span class="badge position-absolute top-0 start-100 translate-middle badge-count header-wishlist-count"
+              >0</span
+            >
+          </a>
+
+          <!-- Compare -->
+          <a
+            href="#"
+            data-gcf-compare-drawer-toggle="true"
+            class="action-item compare-btn position-relative text-white"
+            aria-label="Compare"
+          >
+            {% if section.settings.compare_icon != blank %}
+              <img
+                src="{{ section.settings.compare_icon | image_url: width: 100 }}"
+                alt="Compare"
+                width="{{ section.settings.compare_icon_size }}"
+                height="{{ section.settings.compare_icon_size }}"
+                loading="lazy"
+              >
+            {% else %}
+              <i class="fa-solid fas fa-exchange-alt"></i>
+            {% endif %}
+            <span class="badge position-absolute top-0 start-100 translate-middle badge-count header-compare-count"
+              >0</span
+            >
+          </a>
+
+          <!-- Cart -->
+          <a
+            href="#"
+            data-gcf-mini-cart-toggle="true"
+            class="action-item cart-btn d-flex align-items-center gap-2 text-white text-decoration-none"
+            aria-label="Cart"
+          >
+            <div class="position-relative">
+              {% if section.settings.cart_icon != blank %}
+                <img
+                  src="{{ section.settings.cart_icon | image_url: width: 100 }}"
+                  alt="Cart"
+                  width="{{ section.settings.cart_icon_size }}"
+                  height="{{ section.settings.cart_icon_size }}"
+                  loading="lazy"
+                >
+              {% else %}
+                <i class="fa-solid fa-bag-shopping"></i>
+              {% endif %}
+              <span class="badge position-absolute top-0 start-100 translate-middle badge-count header-cart-count">
+                {{- cart.item_count -}}
+              </span>
+            </div>
+            <span class="cart-total-price fw-bold">{{ cart.total_price | money }}</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Mobile Header Bar (Matches Mobile Screenshot) -->
+      <div class="d-flex d-lg-none justify-content-between align-items-center">
+        <!-- Left: Hamburger MENU Trigger -->
+        <button
+          class="mobile-menu-trigger-btn d-flex align-items-center gap-2 text-white border-0 bg-transparent"
+          type="button"
+          aria-label="Open navigation menu"
+        >
+          <i class="fa-solid fa-bars"></i>
+          <span class="text-uppercase fw-bold small">Menu</span>
+        </button>
+
+        <!-- Center: Logo -->
+        <div class="header-logo-wrapper-mobile">
+          <a href="{{ routes.root_url }}" class="logo-link">
+            {% if section.settings.logo != blank %}
+              <img
+                src="{{ section.settings.logo | image_url: width: 300 }}"
+                alt="{{ shop.name | escape }}"
+                style="max-width: {{ section.settings.logo_max_width_mobile | default: 140 }}px; height: auto;"
+                class="header-logo-img"
+                loading="eager"
+                width="auto"
+                height="auto"
+              >
+            {% else %}
+              <span class="h4 text-white fw-bold mb-0">{{ shop.name }}</span>
+            {% endif %}
+          </a>
+        </div>
+
+        <!-- Right: Action Icons (Wishlist, Cart) -->
+        <div class="header-actions-mobile d-flex align-items-center gap-3 text-white">
+          <!-- Wishlist -->
+          <a
+            href="#"
+            data-gcf-wishlist-drawer-toggle="true"
+            class="action-item action-item-mobile wishlist-btn position-relative text-white"
+            aria-label="Wishlist"
+          >
+            {% if section.settings.wishlist_icon != blank %}
+              <img
+                src="{{ section.settings.wishlist_icon | image_url: width: 100 }}"
+                alt="Wishlist"
+                width="{{ section.settings.wishlist_icon_size }}"
+                height="{{ section.settings.wishlist_icon_size }}"
+                loading="lazy"
+              >
+            {% else %}
+              <i class="fa-regular fa-heart"></i>
+            {% endif %}
+            <span class="badge position-absolute top-0 start-100 translate-middle badge-count header-wishlist-count"
+              >0</span
+            >
+          </a>
+
+          <!-- Cart -->
+          <a
+            href="#"
+            data-gcf-mini-cart-toggle="true"
+            class="action-item action-item-mobile cart-btn position-relative text-white"
+            aria-label="Cart"
+          >
+            {% if section.settings.cart_icon != blank %}
+              <img
+                src="{{ section.settings.cart_icon | image_url: width: 100 }}"
+                alt="Cart"
+                width="{{ section.settings.cart_icon_size }}"
+                height="{{ section.settings.cart_icon_size }}"
+                loading="lazy"
+              >
+            {% else %}
+              <i class="fa-solid fa-bag-shopping"></i>
+            {% endif %}
+            <span class="badge position-absolute top-0 start-100 translate-middle badge-count header-cart-count">
+              {{- cart.item_count -}}
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Navigation Bar (Desktop Only) -->
+  <nav class="navigation-bar-desktop d-none d-lg-block py-2 bg-white border-bottom">
+    <div class="container d-flex align-items-center gap-4">
+      <!-- Browse Categories Dropdown -->
+      <div class="browse-categories-dropdown-wrapper position-relative">
+        <button
+          class="browse-categories-btn d-flex align-items-center justify-content-between gap-3 text-uppercase fw-semibold"
+          type="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <span class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-bars"></i>
+            Browse Categories
+          </span>
+          <i class="fa-solid fa-chevron-down small-chevron"></i>
+        </button>
+
+        <div class="categories-menu-dropdown-list shadow rounded border position-absolute">
+          {% assign categories_menu_links = linklists[section.settings.categories_menu].links %}
+          {% if section.settings.categories_menu != blank and categories_menu_links.size > 0 %}
+            {% for link in categories_menu_links %}
+              <div class="category-menu-item-wrapper">
+                <a href="{{ link.url }}" class="category-menu-item d-flex justify-content-between align-items-center">
+                  <span>{{ link.title }}</span>
+                  {% if link.links != blank %}
+                    <i class="fa-solid fa-chevron-right text-muted small"></i>
+                  {% endif %}
+                </a>
+                {% if link.links != blank %}
+                  <div class="category-submenu-level-2 shadow rounded border">
+                    {% for child in link.links %}
+                      <div class="category-submenu-item-wrapper">
+                        <a
+                          href="{{ child.url }}"
+                          class="category-submenu-item d-flex justify-content-between align-items-center"
+                        >
+                          <span>{{ child.title }}</span>
+                          {% if child.links != blank %}
+                            <i class="fa-solid fa-chevron-right text-muted small"></i>
+                          {% endif %}
+                        </a>
+                        {% if child.links != blank %}
+                          <div class="category-submenu-level-3 shadow rounded border">
+                            {% for grandchild in child.links %}
+                              <a href="{{ grandchild.url }}" class="category-submenu-link">
+                                {{ grandchild.title }}
+                              </a>
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% else %}
+            <!-- Fallback Dummy Categories for Testing/Design -->
+            <div class="category-menu-item-wrapper">
+              <a href="#" class="category-menu-item d-flex justify-content-between align-items-center">
+                <span>Boat Outfitting</span>
+                <i class="fa-solid fa-chevron-right text-muted small"></i>
+              </a>
+              <div class="category-submenu-level-2 shadow rounded border">
+                <div class="category-submenu-item-wrapper">
+                  <a href="#" class="category-submenu-item">Trolling Motors</a>
+                </div>
+                <div class="category-submenu-item-wrapper"><a href="#" class="category-submenu-item">Trim Tabs</a></div>
+                <div class="category-submenu-item-wrapper">
+                  <a href="#" class="category-submenu-item">Engine Controls</a>
+                </div>
+                <div class="category-submenu-item-wrapper"><a href="#" class="category-submenu-item">Propeller</a></div>
+                <div class="category-submenu-item-wrapper">
+                  <a href="#" class="category-submenu-item">Steering Systems</a>
+                </div>
+              </div>
+            </div>
+            <div class="category-menu-item-wrapper">
+              <a href="#" class="category-menu-item d-flex justify-content-between align-items-center">
+                <span>Anchoring & Docking</span>
+                <i class="fa-solid fa-chevron-right text-muted small"></i>
+              </a>
+              <div class="category-submenu-level-2 shadow rounded border">
+                <div class="category-submenu-item-wrapper"><a href="#" class="category-submenu-item">Anchors</a></div>
+                <div class="category-submenu-item-wrapper"><a href="#" class="category-submenu-item">Cleats</a></div>
+                <div class="category-submenu-item-wrapper">
+                  <a href="#" class="category-submenu-item">Rope & Chain</a>
+                </div>
+                <div class="category-submenu-item-wrapper">
+                  <a href="#" class="category-submenu-item">Windlasses</a>
+                </div>
+              </div>
+            </div>
+            <div class="category-menu-item-wrapper">
+              <a href="#" class="category-menu-item d-flex justify-content-between align-items-center">
+                <span>Electronics & Navigation</span>
+                <i class="fa-solid fa-chevron-right text-muted small"></i>
+              </a>
+              <div class="category-submenu-level-2 shadow rounded border">
+                <div class="category-submenu-item-wrapper">
+                  <a href="#" class="category-submenu-item">GPS & Radar</a>
+                </div>
+                <div class="category-submenu-item-wrapper">
+                  <a href="#" class="category-submenu-item">Fishfinders</a>
+                </div>
+                <div class="category-submenu-item-wrapper">
+                  <a href="#" class="category-submenu-item">Entertainment</a>
+                </div>
+                <div class="category-submenu-item-wrapper">
+                  <a href="#" class="category-submenu-item">Communication</a>
+                </div>
+              </div>
+            </div>
+            <div class="category-menu-item-wrapper">
+              <a href="#" class="category-menu-item d-flex justify-content-between align-items-center">
+                <span>Marine Safety</span>
+                <i class="fa-solid fa-chevron-right text-muted small"></i>
+              </a>
+              <div class="category-submenu-level-2 shadow rounded border">
+                <div class="category-submenu-item-wrapper">
+                  <a href="#" class="category-submenu-item">Life Vests</a>
+                </div>
+                <div class="category-submenu-item-wrapper"><a href="#" class="category-submenu-item">Horns</a></div>
+                <div class="category-submenu-item-wrapper">
+                  <a href="#" class="category-submenu-item">Safety Lights</a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Main Navigation Menu -->
+      <ul class="main-nav-linkslist d-flex align-items-center gap-4 mb-0 list-unstyled">
+        {% for link in linklists[section.settings.menu].links %}
+          <li class="nav-linkslist-item {% if link.links != blank %}has-dropdown{% endif %}">
+            <a
+              href="{{ link.url }}"
+              class="nav-linkslist-link text-uppercase {% if link.active %}active{% endif %}"
+            >
+              {{ link.title }}
+            </a>
+            {% if link.links != blank %}
+              <ul class="nav-submenu shadow rounded border list-unstyled">
+                {% for child in link.links %}
+                  <li>
+                    <a href="{{ child.url }}" class="nav-submenu-link {% if child.active %}active{% endif %}">
+                      {{ child.title }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<!-- 4. Mobile Drawer Navigation Menu (Matches Mobile Screenshot Drawer Layout) -->
+<div class="mobile-navigation-drawer" id="mobileNavDrawer" aria-hidden="true">
+  <div class="drawer-nav-backdrop"></div>
+  <div class="drawer-nav-panel">
+    <!-- Search Input at the very top (No navigation title or close button row) -->
+    <div class="p-3 border-bottom drawer-search-container">
+      <form action="{{ routes.search_url }}" method="get" role="search" class="position-relative m-0">
+        <input type="hidden" name="type" value="product">
+        <input
+          type="search"
+          name="q"
+          placeholder="Search for products"
+          class="form-control search-input-drawer"
+          value="{{ search.terms | escape }}"
+        >
+        <button type="submit" class="drawer-search-btn" aria-label="Search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </form>
+    </div>
+
+    <!-- Tabs Header: MENU and CATEGORIES -->
+    <div class="drawer-tabs-header d-flex border-bottom text-center fw-bold">
+      <button
+        type="button"
+        class="drawer-tab-btn active w-50 py-3 border-0 bg-transparent text-uppercase"
+        data-target="drawer-menu-content"
+      >
+        Menu
+      </button>
+      <button
+        type="button"
+        class="drawer-tab-btn w-50 py-3 border-0 bg-transparent text-uppercase border-start"
+        data-target="drawer-categories-content"
+      >
+        Categories
+      </button>
+    </div>
+
+    <!-- Tabs Content Container -->
+    <div class="drawer-tabs-content p-0">
+      <!-- Menu Content (Links + Compare + Login/Register) -->
+      <div class="drawer-tab-content-pane active-pane" id="drawer-menu-content">
+        <ul class="list-unstyled drawer-menu-list mb-0">
+          {% for link in linklists[section.settings.menu].links %}
+            <li>
+              <a href="{{ link.url }}" class="drawer-menu-link text-uppercase d-block py-2 text-decoration-none">
+                {{ link.title }}
+              </a>
+            </li>
+          {% endfor %}
+          <li>
+            <a
+              href="#"
+              data-gcf-compare-drawer-toggle="true"
+              class="drawer-menu-link text-uppercase d-flex align-items-center gap-2 py-2 text-decoration-none"
+            >
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>Compare</span>
+            </a>
+          </li>
+          {% if shop.customer_accounts_enabled %}
+            <li>
+              <a
+                href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+                class="drawer-menu-link text-uppercase d-flex align-items-center gap-2 py-2 text-decoration-none"
+              >
+                <i class="fa-regular fa-user mt-0"></i>
+                <span>Login / Register</span>
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <!-- Categories Content -->
+      <div class="drawer-tab-content-pane" id="drawer-categories-content">
+        <ul class="list-unstyled drawer-menu-list mb-0">
+          {% assign categories_menu_links = linklists[section.settings.categories_menu].links %}
+          {% if section.settings.categories_menu != blank and categories_menu_links.size > 0 %}
+            {% for link in categories_menu_links %}
+              <li class="drawer-category-item border-bottom">
+                <div class="d-flex justify-content-between align-items-center py-2 px-3">
+                  <a
+                    href="{{ link.url }}"
+                    class="drawer-menu-link text-uppercase text-decoration-none border-0 p-0 m-0"
+                  >
+                    {{ link.title }}
+                  </a>
+                  {% if link.links != blank %}
+                    <button
+                      type="button"
+                      class="drawer-submenu-toggle bg-transparent border-0 p-1"
+                      aria-label="Toggle submenu"
+                    >
+                      <i class="fa-solid fa-chevron-down text-muted"></i>
+                    </button>
+                  {% endif %}
+                </div>
+                {% if link.links != blank %}
+                  <ul class="list-unstyled ps-3 d-none drawer-submenu-list bg-light">
+                    {% for child in link.links %}
+                      <li>
+                        <a href="{{ child.url }}" class="drawer-submenu-link d-block py-2 text-decoration-none">
+                          {{ child.title }}
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          {% else %}
+            <!-- Fallback Dummy Categories for Mobile Menu Drawer -->
+            <li class="drawer-category-item border-bottom">
+              <div class="d-flex justify-content-between align-items-center py-2 px-3">
+                <a href="#" class="drawer-menu-link text-uppercase text-decoration-none border-0 p-0 m-0"
+                  >Boat Outfitting</a
+                >
+                <button
+                  type="button"
+                  class="drawer-submenu-toggle bg-transparent border-0 p-1"
+                  aria-label="Toggle submenu"
+                >
+                  <i class="fa-solid fa-chevron-down text-muted"></i>
+                </button>
+              </div>
+              <ul class="list-unstyled ps-3 d-none drawer-submenu-list bg-light">
+                <li><a href="#" class="drawer-submenu-link d-block py-2 text-decoration-none">Trolling Motors</a></li>
+                <li><a href="#" class="drawer-submenu-link d-block py-2 text-decoration-none">Trim Tabs</a></li>
+                <li><a href="#" class="drawer-submenu-link d-block py-2 text-decoration-none">Engine Controls</a></li>
+              </ul>
+            </li>
+            <li class="drawer-category-item border-bottom">
+              <div class="d-flex justify-content-between align-items-center py-2 px-3">
+                <a href="#" class="drawer-menu-link text-uppercase text-decoration-none border-0 p-0 m-0"
+                  >Anchoring & Docking</a
+                >
+                <button
+                  type="button"
+                  class="drawer-submenu-toggle bg-transparent border-0 p-1"
+                  aria-label="Toggle submenu"
+                >
+                  <i class="fa-solid fa-chevron-down text-muted"></i>
+                </button>
+              </div>
+              <ul class="list-unstyled ps-3 d-none drawer-submenu-list bg-light">
+                <li><a href="#" class="drawer-submenu-link d-block py-2 text-decoration-none">Anchors</a></li>
+                <li><a href="#" class="drawer-submenu-link d-block py-2 text-decoration-none">Cleats</a></li>
+              </ul>
+            </li>
+            <li class="drawer-category-item border-bottom">
+              <div class="d-flex justify-content-between align-items-center py-2 px-3">
+                <a href="#" class="drawer-menu-link text-uppercase text-decoration-none border-0 p-0 m-0"
+                  >Electronics & Navigation</a
+                >
+                <button
+                  type="button"
+                  class="drawer-submenu-toggle bg-transparent border-0 p-1"
+                  aria-label="Toggle submenu"
+                >
+                  <i class="fa-solid fa-chevron-down text-muted"></i>
+                </button>
+              </div>
+              <ul class="list-unstyled ps-3 d-none drawer-submenu-list bg-light">
+                <li><a href="#" class="drawer-submenu-link d-block py-2 text-decoration-none">GPS & Radar</a></li>
+                <li><a href="#" class="drawer-submenu-link d-block py-2 text-decoration-none">Fishfinders</a></li>
+              </ul>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. Mobile Bottom Sticky Navigation Bar -->
+{% if section.settings.show_mobile_bottom_nav %}
+  <div class="mobile-bottom-nav d-lg-none">
+    <!-- Home tab -->
+    <a
+      href="{{ section.settings.mobile_bottom_nav_home_link | default: routes.root_url }}"
+      class="mobile-bottom-nav-item {% if request.path == '/' or request.path == routes.root_url %}active{% endif %}"
+    >
+      <div class="mobile-bottom-nav-icon">
+        {% if section.settings.mobile_bottom_nav_home_icon != blank %}
+          <img
+            src="{{ section.settings.mobile_bottom_nav_home_icon | image_url: width: 80 }}"
+            alt="{{ section.settings.mobile_bottom_nav_home_label | escape }}"
+            loading="lazy"
+            class="img-fluid"
+            width="auto"
+            height="auto"
+          >
+        {% else %}
+          <i class="fa-solid fa-house"></i>
+        {% endif %}
+      </div>
+      <span>{{ section.settings.mobile_bottom_nav_home_label | default: 'Home' }}</span>
+    </a>
+
+    <!-- Shop tab -->
+    <a
+      href="{{ section.settings.mobile_bottom_nav_shop_link | default: routes.all_products_collection_url }}"
+      class="mobile-bottom-nav-item {% if request.path contains '/collections/' %}active{% endif %}"
+    >
+      <div class="mobile-bottom-nav-icon">
+        {% if section.settings.mobile_bottom_nav_shop_icon != blank %}
+          <img
+            src="{{ section.settings.mobile_bottom_nav_shop_icon | image_url: width: 80 }}"
+            alt="{{ section.settings.mobile_bottom_nav_shop_label | escape }}"
+            loading="lazy"
+            class="img-fluid"
+            width="auto"
+            height="auto"
+          >
+        {% else %}
+          <i class="fa-solid fa-bag-shopping"></i>
+        {% endif %}
+      </div>
+      <span>{{ section.settings.mobile_bottom_nav_shop_label | default: 'Shop' }}</span>
+    </a>
+
+    <!-- Cart tab -->
+    <a
+      href="{{ section.settings.mobile_bottom_nav_cart_link | default: routes.cart_url }}"
+      class="mobile-bottom-nav-item {% if request.path == routes.cart_url %}active{% endif %}"
+    >
+      <div class="mobile-bottom-nav-icon">
+        {% if section.settings.mobile_bottom_nav_cart_icon != blank %}
+          <img
+            src="{{ section.settings.mobile_bottom_nav_cart_icon | image_url: width: 80 }}"
+            alt="{{ section.settings.mobile_bottom_nav_cart_label | escape }}"
+            loading="lazy"
+            class="img-fluid"
+            width="auto"
+            height="auto"
+          >
+        {% else %}
+          <i class="fa-solid fa-basket-shopping"></i>
+        {% endif %}
+        <span
+          class="badge badge-count position-absolute translate-middle-y header-cart-count"
+          style="top: 8px; right: 15%;"
+        >
+          {{- cart.item_count -}}
+        </span>
+      </div>
+      <span>{{ section.settings.mobile_bottom_nav_cart_label | default: 'Cart' }}</span>
+    </a>
+
+    <!-- My Account tab -->
+    <a
+      href="{{ section.settings.mobile_bottom_nav_account_link | default: routes.account_url }}"
+      class="mobile-bottom-nav-item {% if request.path contains '/account' %}active{% endif %}"
+    >
+      <div class="mobile-bottom-nav-icon">
+        {% if section.settings.mobile_bottom_nav_account_icon != blank %}
+          <img
+            src="{{ section.settings.mobile_bottom_nav_account_icon | image_url: width: 80 }}"
+            alt="{{ section.settings.mobile_bottom_nav_account_label | escape }}"
+            loading="lazy"
+            class="img-fluid"
+            width="auto"
+            height="auto"
+          >
+        {% else %}
+          <i class="fa-solid fa-user"></i>
+        {% endif %}
+      </div>
+      <span>{{ section.settings.mobile_bottom_nav_account_label | default: 'My account' }}</span>
+    </a>
+  </div>
+{% endif %}
+
+<script src="{{ 'header.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Site Header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Announcement Top Bar Styling"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show Announcement Bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement Text",
+      "default": "Free Delivery on Purchase Over $150"
+    },
+    {
+      "type": "select",
+      "id": "announcement_font_family",
+      "label": "Announcement Font Family",
+      "options": [
+        { "value": "inherit", "label": "Default" },
+        { "value": "Inter", "label": "Inter" },
+        { "value": "Outfit", "label": "Outfit" },
+        { "value": "Cabin", "label": "Cabin" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "range",
+      "id": "announcement_font_size",
+      "label": "Announcement Font Size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "announcement_font_weight",
+      "label": "Announcement Font Weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "color",
+      "id": "bg_top",
+      "label": "Top Bar Background Color",
+      "default": "#092143"
+    },
+    {
+      "type": "color",
+      "id": "text_top",
+      "label": "Top Bar Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "top_bar_divider_color",
+      "label": "Top Bar Divider Lines Color",
+      "default": "rgba(255, 255, 255, 0.15)"
+    },
+    {
+      "type": "color",
+      "id": "announcement_color",
+      "label": "Announcement Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "announcement_hover_color",
+      "label": "Announcement Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Social Media Links"
+    },
+    {
+      "type": "url",
+      "id": "fb_url",
+      "label": "Facebook Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "fb_icon",
+      "label": "Custom Facebook Icon (Optional)"
+    },
+    {
+      "type": "url",
+      "id": "insta_url",
+      "label": "Instagram Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "insta_icon",
+      "label": "Custom Instagram Icon (Optional)"
+    },
+    {
+      "type": "url",
+      "id": "yt_url",
+      "label": "YouTube Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "yt_icon",
+      "label": "Custom YouTube Icon (Optional)"
+    },
+    {
+      "type": "range",
+      "id": "social_icon_size",
+      "label": "Social Icons Size (px)",
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "social_icon_gap",
+      "label": "Social Icons Spacing/Gap (px)",
+      "min": 4,
+      "max": 30,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Contact Us Button Link & Styling"
+    },
+    {
+      "type": "text",
+      "id": "contact_text",
+      "label": "Contact Us Link Text",
+      "default": "Contact Us"
+    },
+    {
+      "type": "url",
+      "id": "contact_link",
+      "label": "Contact Us URL"
+    },
+    {
+      "type": "select",
+      "id": "contact_font_family",
+      "label": "Contact Us Font Family",
+      "options": [
+        { "value": "inherit", "label": "Default" },
+        { "value": "Inter", "label": "Inter" },
+        { "value": "Outfit", "label": "Outfit" },
+        { "value": "Cabin", "label": "Cabin" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "range",
+      "id": "contact_font_size",
+      "label": "Contact Us Font Size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "contact_font_weight",
+      "label": "Contact Us Font Weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "contact_color",
+      "label": "Contact Us Link Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "contact_hover_color",
+      "label": "Contact Us Link Hover Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Main Branding & Layout Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "min": 80,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop Logo Max Width",
+      "default": 240
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width_mobile",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile Logo Max Width",
+      "default": 140
+    },
+    {
+      "type": "color",
+      "id": "bg_main",
+      "label": "Main Header Background Color",
+      "default": "#0b3d77"
+    },
+    {
+      "type": "color",
+      "id": "text_main",
+      "label": "Main Header Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Header Accent Color",
+      "default": "#0d6efd"
+    },
+    {
+      "type": "color",
+      "id": "accent_hover_color",
+      "label": "Header Accent Hover Color",
+      "default": "#0b5ed7"
+    },
+    {
+      "type": "header",
+      "content": "Search Box Styling"
+    },
+    {
+      "type": "color",
+      "id": "search_bg_color",
+      "label": "Search Box Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "search_text_color",
+      "label": "Search Input Text Color",
+      "default": "#4b5563"
+    },
+    {
+      "type": "color",
+      "id": "search_border_color",
+      "label": "Search Box Border Color",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "search_divider_color",
+      "label": "Search Inner Divider Color",
+      "default": "#e2e8f0"
+    },
+    {
+      "type": "range",
+      "id": "search_font_size",
+      "label": "Search Text Font Size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "search_category_text_color",
+      "label": "Search Category Dropdown Text Color",
+      "default": "#4b5563"
+    },
+    {
+      "type": "range",
+      "id": "search_category_font_size",
+      "label": "Search Category Dropdown Font Size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "Action Links (Login/Register, Wishlist, Compare)"
+    },
+    {
+      "type": "color",
+      "id": "actions_text_color",
+      "label": "Actions Text/Icon Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "actions_hover_color",
+      "label": "Actions Text/Icon Hover Color",
+      "default": "#0d6efd"
+    },
+    {
+      "type": "range",
+      "id": "actions_font_size",
+      "label": "Actions Text Font Size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "actions_font_weight",
+      "label": "Actions Font Weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "image_picker",
+      "id": "wishlist_icon",
+      "label": "Custom Wishlist Icon"
+    },
+    {
+      "type": "range",
+      "id": "wishlist_icon_size",
+      "label": "Wishlist Icon Size (px)",
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "image_picker",
+      "id": "compare_icon",
+      "label": "Custom Compare Icon"
+    },
+    {
+      "type": "range",
+      "id": "compare_icon_size",
+      "label": "Compare Icon Size (px)",
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "image_picker",
+      "id": "cart_icon",
+      "label": "Custom Cart Icon"
+    },
+    {
+      "type": "range",
+      "id": "cart_icon_size",
+      "label": "Cart Icon Size (px)",
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "action_icon_gap",
+      "label": "Action Icons Gap (px)",
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Action Badges Styling"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge Background Color",
+      "default": "#0d6efd"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "label": "Badge Font Size",
+      "min": 8,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "header",
+      "content": "Cart Total Price Styling"
+    },
+    {
+      "type": "color",
+      "id": "cart_price_color",
+      "label": "Cart Price Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "cart_price_font_size",
+      "label": "Cart Price Font Size",
+      "min": 11,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "cart_price_font_weight",
+      "label": "Cart Price Font Weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "header",
+      "content": "Navigation Menus Background & Borders"
+    },
+    {
+      "type": "color",
+      "id": "bg_nav",
+      "label": "Navigation Bar Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "nav_border_color",
+      "label": "Navigation Bar Bottom Border Color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "header",
+      "content": "Browse Categories Customization"
+    },
+    {
+      "type": "color",
+      "id": "categories_btn_bg",
+      "label": "Categories Button Background",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "categories_btn_bg_hover",
+      "label": "Categories Button Hover Background",
+      "default": "#f8fafc"
+    },
+    {
+      "type": "color",
+      "id": "categories_btn_border",
+      "label": "Categories Button Border Color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "categories_btn_text",
+      "label": "Categories Button Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "categories_btn_text_hover",
+      "label": "Categories Button Hover Text Color",
+      "default": "#0d6efd"
+    },
+    {
+      "type": "range",
+      "id": "categories_btn_radius",
+      "label": "Categories Button Corner Radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "categories_font_size",
+      "label": "Categories Button Font Size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "categories_font_weight",
+      "label": "Categories Button Font Weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "categories_dropdown_bg",
+      "label": "Categories Dropdown List Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "categories_item_color",
+      "label": "Category Item Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "categories_item_color_hover",
+      "label": "Category Item Hover Text Color",
+      "default": "#0d6efd"
+    },
+    {
+      "type": "color",
+      "id": "categories_item_bg_hover",
+      "label": "Category Item Hover Background",
+      "default": "#f8fafc"
+    },
+    {
+      "type": "header",
+      "content": "Navigation linkslist links customization"
+    },
+    {
+      "type": "select",
+      "id": "nav_font_family",
+      "label": "Navigation Links Font Family",
+      "options": [
+        { "value": "inherit", "label": "Default" },
+        { "value": "Inter", "label": "Inter" },
+        { "value": "Outfit", "label": "Outfit" },
+        { "value": "Cabin", "label": "Cabin" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "range",
+      "id": "nav_font_size",
+      "label": "Navigation Links Font Size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "nav_font_weight",
+      "label": "Navigation Links Font Weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "nav_link_color",
+      "label": "Navigation Link Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "nav_link_hover_color",
+      "label": "Navigation Link Hover/Active Color",
+      "default": "#0d6efd"
+    },
+    {
+      "type": "header",
+      "content": "Menu & Navigation configuration"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main Navigation Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "link_list",
+      "id": "categories_menu",
+      "label": "Browse Categories Menu"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Bottom Navigation Bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mobile_bottom_nav",
+      "label": "Show Mobile Bottom Navigation Bar",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "mobile_bottom_nav_bg",
+      "label": "Bottom Nav Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "mobile_bottom_nav_text_color",
+      "label": "Bottom Nav Text Color",
+      "default": "#4b5563"
+    },
+    {
+      "type": "color",
+      "id": "mobile_bottom_nav_active_color",
+      "label": "Bottom Nav Active Color",
+      "default": "#0b3d77"
+    },
+    {
+      "type": "color",
+      "id": "mobile_bottom_nav_border_color",
+      "label": "Bottom Nav Top Border Color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "range",
+      "id": "mobile_bottom_nav_font_size",
+      "label": "Bottom Nav Font Size (px)",
+      "min": 8,
+      "max": 18,
+      "step": 1,
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "mobile_bottom_nav_icon_size",
+      "label": "Bottom Nav Icon Size (px)",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_bottom_nav_gap",
+      "label": "Bottom Nav Icon-Text Gap (px)",
+      "min": 1,
+      "max": 15,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Home Tab Customization"
+    },
+    {
+      "type": "text",
+      "id": "mobile_bottom_nav_home_label",
+      "label": "Home Label",
+      "default": "Home"
+    },
+    {
+      "type": "url",
+      "id": "mobile_bottom_nav_home_link",
+      "label": "Home Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_bottom_nav_home_icon",
+      "label": "Home Icon Image (Optional)"
+    },
+    {
+      "type": "header",
+      "content": "Shop Tab Customization"
+    },
+    {
+      "type": "text",
+      "id": "mobile_bottom_nav_shop_label",
+      "label": "Shop Label",
+      "default": "Shop"
+    },
+    {
+      "type": "url",
+      "id": "mobile_bottom_nav_shop_link",
+      "label": "Shop Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_bottom_nav_shop_icon",
+      "label": "Shop Icon Image (Optional)"
+    },
+    {
+      "type": "header",
+      "content": "Cart Tab Customization"
+    },
+    {
+      "type": "text",
+      "id": "mobile_bottom_nav_cart_label",
+      "label": "Cart Label",
+      "default": "Cart"
+    },
+    {
+      "type": "url",
+      "id": "mobile_bottom_nav_cart_link",
+      "label": "Cart Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_bottom_nav_cart_icon",
+      "label": "Cart Icon Image (Optional)"
+    },
+    {
+      "type": "header",
+      "content": "Account Tab Customization"
+    },
+    {
+      "type": "text",
+      "id": "mobile_bottom_nav_account_label",
+      "label": "Account Label",
+      "default": "My account"
+    },
+    {
+      "type": "url",
+      "id": "mobile_bottom_nav_account_link",
+      "label": "Account Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_bottom_nav_account_icon",
+      "label": "Account Icon Image (Optional)"
+    }
+  ]
+}
+{% endschema %}

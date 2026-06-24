@@ -1,0 +1,262 @@
+<footer class="site-footer bg-dark text-light pt-5 pb-4">
+  <div class="container">
+    <div class="row g-4 justify-content-between">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'text' %}
+            <!-- Column 1: Brand details (col-lg-3) -->
+            <div class="col-12 col-md-6 col-lg-3" {{ block.shopify_attributes }}>
+              <h5 class="text-white mb-3">{{ block.settings.title }}</h5>
+              <div class="footer-brand-info">
+                {% if block.settings.logo != blank %}
+                  <img src="{{ block.settings.logo | image_url: width: 250 }}" 
+                       alt="{{ shop.name | escape }}" 
+                       style="max-width: {{ block.settings.logo_width }}px; height: auto;" 
+                       class="mb-3">
+                {% endif %}
+                <p class="text-muted small leading-relaxed">{{ block.settings.text }}</p>
+              </div>
+            </div>
+            
+          {% when 'link_list' %}
+            <!-- Columns 2 & 3: Link lists (col-lg-2) -->
+            <div class="col-6 col-md-6 col-lg-2" {{ block.shopify_attributes }}>
+              <h5 class="text-white mb-3">{{ block.settings.title }}</h5>
+              <ul class="list-unstyled footer-links">
+                {% for link in linklists[block.settings.menu].links %}
+                  <li class="mb-2">
+                    <a href="{{ link.url }}" class="text-muted text-decoration-none small hover:text-white transition">
+                      {{ link.title }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+          {% when 'contact' %}
+            <!-- Column 4: Contact card details (col-lg-2) -->
+            <div class="col-6 col-md-6 col-lg-2" {{ block.shopify_attributes }}>
+              <h5 class="text-white mb-3">{{ block.settings.title }}</h5>
+              <p class="text-muted small mb-3">
+                {{ block.settings.address }}
+              </p>
+              <div class="contact-details small d-flex flex-column gap-2 text-muted">
+                {% if block.settings.phone != blank %}
+                  <div><i class="fa-solid fa-phone me-2 text-primary"></i><a href="tel:{{ block.settings.phone }}" class="text-muted">{{ block.settings.phone }}</a></div>
+                {% endif %}
+                {% if block.settings.email != blank %}
+                  <div><i class="fa-solid fa-envelope me-2 text-primary"></i><a href="mailto:{{ block.settings.email }}" class="text-muted">{{ block.settings.email }}</a></div>
+                {% endif %}
+                {% if block.settings.hours != blank %}
+                  <div><i class="fa-regular fa-clock me-2 text-primary"></i>{{ block.settings.hours }}</div>
+                {% endif %}
+              </div>
+            </div>
+
+          {% when 'newsletter' %}
+            <!-- Column 5: Newsletter email input (col-lg-3) -->
+            <div class="col-12 col-md-6 col-lg-3" {{ block.shopify_attributes }}>
+              <h5 class="text-white mb-3">{{ block.settings.title }}</h5>
+              <p class="text-muted small mb-3">{{ block.settings.text }}</p>
+              
+              {% form 'customer', class: 'footer-newsletter d-flex mb-3' %}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <input type="email" 
+                       name="contact[email]" 
+                       class="form-control border-0 bg-secondary-subtle px-3 py-2 text-dark rounded-start" 
+                       value="{{ form.email }}"
+                       placeholder="Your email address" 
+                       required
+                       aria-label="Email address"
+                       style="font-size: 14px;">
+                <button type="submit" class="btn btn-primary px-3 rounded-end rounded-0" aria-label="Subscribe">
+                  <i class="fa-solid fa-paper-plane"></i>
+                </button>
+              {% endform %}
+
+              <!-- Social Links inside newsletter widget -->
+              <div class="d-flex gap-3 mt-3">
+                {% if settings.social_facebook_link != blank %}
+                  <a href="{{ settings.social_facebook_link }}" target="_blank" class="text-muted hover:text-white" aria-label="Facebook"><i class="fa-brands fa-facebook fa-lg"></i></a>
+                {% endif %}
+                {% if settings.social_instagram_link != blank %}
+                  <a href="{{ settings.social_instagram_link }}" target="_blank" class="text-muted hover:text-white" aria-label="Instagram"><i class="fa-brands fa-instagram fa-lg"></i></a>
+                {% endif %}
+                {% if settings.social_twitter_link != blank %}
+                  <a href="{{ settings.social_twitter_link }}" target="_blank" class="text-muted hover:text-white" aria-label="Twitter"><i class="fa-brands fa-x-twitter fa-lg"></i></a>
+                {% endif %}
+                {% if settings.social_pinterest_link != blank %}
+                  <a href="{{ settings.social_pinterest_link }}" target="_blank" class="text-muted hover:text-white" aria-label="Pinterest"><i class="fa-brands fa-pinterest fa-lg"></i></a>
+                {% endif %}
+              </div>
+            </div>
+            
+        {% endcase %}
+      {% endfor %}
+    </div>
+
+    <!-- Bottom copyrights area -->
+    <div class="footer-bottom mt-5 pt-3 border-top border-secondary d-flex justify-content-between align-items-center flex-wrap gap-3 text-muted small">
+      <p class="mb-0">&copy; {{ 'now' | date: "%Y" }} {{ shop.name }}. All rights reserved.</p>
+      
+      <!-- Dynamic payment icons list -->
+      <div class="payment-icons d-flex gap-2">
+        {% for type in shop.enabled_payment_types %}
+          {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  
+  <!-- Scroll to top button -->
+  <a href="#" id="scroll-to-top" class="scroll-to-top position-fixed rounded-circle shadow" aria-label="Scroll to top" style="bottom: 80px; right: 24px; width: 44px; height: 44px; display: none; align-items: center; justify-content: center; background: var(--color-primary); color: #fff; z-index: 999; border: none; font-size: 18px; text-decoration: none; opacity: 0; transition: opacity 0.3s ease;">
+    <i class="fa-solid fa-arrow-up"></i>
+  </a>
+</footer>
+
+<style>
+  /* Footer styles integration */
+  .scroll-to-top.show {
+    display: flex !important;
+    opacity: 1 !important;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Footer",
+  "max_blocks": 5,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Brand Info",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Gulf Coast Outfitters"
+        },
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Footer Logo"
+        },
+        {
+          "type": "range",
+          "id": "logo_width",
+          "min": 50,
+          "max": 200,
+          "step": 10,
+          "unit": "px",
+          "label": "Logo Max Width",
+          "default": 130
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description",
+          "default": "Premium outdoor gear and apparel for kayaking, boating, fishing, and water sports lovers."
+        }
+      ]
+    },
+    {
+      "type": "link_list",
+      "name": "Menu Links",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Quick Links"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Select Menu"
+        }
+      ]
+    },
+    {
+      "type": "contact",
+      "name": "Contact Details",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Support"
+        },
+        {
+          "type": "textarea",
+          "id": "address",
+          "label": "Address",
+          "default": "123 Gulf Coast Blvd, Destin, FL 32541"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Phone Number",
+          "default": "(850) 555-0199"
+        },
+        {
+          "type": "text",
+          "id": "email",
+          "label": "Email Address",
+          "default": "support@gulfcoastoutfitters.com"
+        },
+        {
+          "type": "text",
+          "id": "hours",
+          "label": "Store Hours",
+          "default": "Mon - Fri: 9am - 6pm"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter Signup",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Subscribe"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Subtext",
+          "default": "Sign up for exclusive offers, announcements, and events."
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "text"
+      },
+      {
+        "type": "link_list",
+        "settings": {
+          "title": "Shop Categories"
+        }
+      },
+      {
+        "type": "link_list",
+        "settings": {
+          "title": "Help & Support"
+        }
+      },
+      {
+        "type": "contact"
+      },
+      {
+        "type": "newsletter"
+      }
+    ]
+  }
+}
+{% endschema %}

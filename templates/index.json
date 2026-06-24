@@ -1,0 +1,56 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-slider",
+      "settings": {
+        "autoplay_speed": 6
+      }
+    },
+    "benefits": {
+      "type": "benefit-bar",
+      "settings": {
+        "background_color": "#f8fafc",
+        "text_color": "#1e293b",
+        "font_size": 14,
+        "icon_width": 25,
+        "show_divider": true,
+        "divider_color": "#cbd5e1",
+        "divider_width": 1,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "featured": {
+      "type": "featured-products",
+      "settings": {
+        "subtitle": "New Arrivals",
+        "title": "Popular Gear & Accessories",
+        "limit": 8,
+        "columns": 4,
+        "show_view_all": true
+      }
+    },
+    "why_choose_us": {
+      "type": "why-choose-us",
+      "settings": {
+        "subtitle": "Our Commitment",
+        "title": "Why Choose Gulf Coast Outfitters",
+        "content": "We offer premium quality gear designed specifically for Destin and Gulf Coast conditions, with expert customer advice and hassle-free support."
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "settings": {
+        "subtitle": "Reviews",
+        "title": "What Our Adventurers Say"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "benefits",
+    "featured",
+    "why_choose_us",
+    "testimonials"
+  ]
+}

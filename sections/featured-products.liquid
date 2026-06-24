@@ -1,0 +1,105 @@
+<section class="featured-products-section gcf-section-padding bg-white">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="row mb-5">
+      <div class="col-12 text-center">
+        {% if section.settings.subtitle != blank %}
+          <span class="d-block gcf-section-subtitle">{{ section.settings.subtitle | escape }}</span>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <h2 class="gcf-section-title mb-0 fw-bold">{{ section.settings.title | escape }}</h2>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    {% assign featured_collection = collections[section.settings.collection] %}
+    {% if featured_collection != blank and featured_collection.products.size > 0 %}
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-{{ section.settings.columns }} g-4">
+        {% for product in featured_collection.products limit: section.settings.limit %}
+          <div class="col">
+            {% render 'product-card', product: product %}
+          </div>
+        {% endfor %}
+      </div>
+      
+      <!-- CTA Button -->
+      {% if section.settings.show_view_all %}
+        <div class="text-center mt-5">
+          <a href="{{ featured_collection.url }}" class="btn btn-primary btn-lg rounded-pill px-5 py-3 text-uppercase fw-semibold">
+            View All Products
+          </a>
+        </div>
+      {% endif %}
+    {% else %}
+      <!-- Placeholder grid when empty -->
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        {% for i in (1..4) %}
+          <div class="col">
+            <div class="card h-100 border-0 shadow-sm p-3">
+              <div class="bg-light rounded d-flex align-items-center justify-content-center mb-3" style="height: 200px;">
+                <i class="fa-solid fa-image fa-3x text-muted"></i>
+              </div>
+              <h6 class="fw-bold mb-2">Example Product Title</h6>
+              <span class="text-primary fw-bold">$19.99</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sub-title",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Popular Gear & Accessories"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 4,
+      "max": 16,
+      "step": 4,
+      "label": "Product count limit",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 3,
+      "max": 5,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View All' Button",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Products"
+    }
+  ]
+}
+{% endschema %}

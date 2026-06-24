@@ -1,0 +1,63 @@
+<section class="search-results-section py-5">
+  <div class="container">
+    {% render 'breadcrumb' %}
+
+    <h1 class="fw-bold text-dark mb-2">{{ 'general.search.heading' | t }}</h1>
+    
+    {% if search.performed %}
+      <p class="text-muted mb-4">
+        {{ 'general.search.results_with_count' | t: count: search.results_count }} for "{{ search.terms }}"
+      </p>
+
+      {% paginate search.results by 12 %}
+        {% if search.results.size > 0 %}
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mt-2">
+            {% for item in search.results %}
+              {% if item.object_type == 'product' %}
+                <div class="col">
+                  {% render 'product-card', product: item %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          <!-- Pagination -->
+          {% if paginate.pages > 1 %}
+            <nav class="d-flex justify-content-center mt-5" aria-label="Page navigation">
+              <ul class="pagination pagination-sm">
+                {% if paginate.previous %}
+                  <li class="page-item"><a class="page-link rounded-circle px-3 py-2 me-2" href="{{ paginate.previous.url }}"><i class="fa-solid fa-chevron-left"></i></a></li>
+                {% endif %}
+                
+                {% for part in paginate.parts %}
+                  {% if part.is_link %}
+                    <li class="page-item"><a class="page-link rounded-circle px-3 py-2 me-2" href="{{ part.url }}">{{ part.title }}</a></li>
+                  {% else %}
+                    <li class="page-item active"><span class="page-link rounded-circle px-3 py-2 me-2">{{ part.title }}</span></li>
+                  {% endif %}
+                {% endfor %}
+
+                {% if paginate.next %}
+                  <li class="page-item"><a class="page-link rounded-circle px-3 py-2" href="{{ paginate.next.url }}"><i class="fa-solid fa-chevron-right"></i></a></li>
+                {% endif %}
+              </ul>
+            </nav>
+          {% endif %}
+        {% else %}
+          <div class="text-center py-5 border rounded bg-light">
+            <i class="fa-solid fa-magnifying-glass fa-3x text-muted mb-3"></i>
+            <p class="text-muted">{{ 'general.search.no_results' | t: terms: search.terms }}</p>
+          </div>
+        {% endif %}
+      {% endpaginate %}
+    {% else %}
+      <div class="search-form-container max-w-md mx-auto my-5 p-4 border rounded bg-light shadow-sm">
+        <form action="{{ routes.search_url }}" method="get" role="search" class="d-flex">
+          <input type="hidden" name="type" value="product">
+          <input type="search" name="q" placeholder="{{ 'general.search.placeholder' | t }}" class="form-control rounded-start border-0 py-2 px-3" style="outline: none;">
+          <button type="submit" class="btn btn-primary rounded-end rounded-0 px-4"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+</section>
