@@ -1,38 +1,217 @@
-<section class="why-choose-us-section gcf-section-padding bg-white">
+{%- style -%}
+  #WhyChooseUs-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    --separator-color: {{ section.settings.separator_color | default: '#e2e8f0' }};
+  }
+  
+  #WhyChooseUs-{{ section.id }} .wcu-header {
+    margin-bottom: 40px;
+  }
+  
+  #WhyChooseUs-{{ section.id }} .wcu-section-title {
+    color: {{ section.settings.title_color }};
+    font-family: 'Outfit', sans-serif;
+    font-size: {{ section.settings.heading_size_desktop }}px;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  #WhyChooseUs-{{ section.id }} .wcu-btn {
+    background-color: {{ section.settings.btn_bg_color }};
+    color: {{ section.settings.btn_text_color }};
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+    white-space: nowrap;
+  }
+  
+  #WhyChooseUs-{{ section.id }} .wcu-btn:hover {
+    background-color: {{ section.settings.btn_hover_bg_color }};
+    color: {{ section.settings.btn_hover_text_color }};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+  #WhyChooseUs-{{ section.id }} .features-container {
+    border-top: 1px solid var(--separator-color);
+  }
+  
+  #WhyChooseUs-{{ section.id }} .feature-row-item {
+    border-bottom: 1px solid var(--separator-color);
+    display: flex;
+    align-items: flex-start;
+    padding: 28px 0;
+  }
+  
+  #WhyChooseUs-{{ section.id }} .feature-row-title {
+    flex: 0 0 35%;
+    padding-right: 30px;
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    font-size: {{ section.settings.title_size_desktop }}px;
+    font-weight: 700;
+    color: {{ section.settings.item_title_color }};
+    line-height: 1.3;
+  }
+  
+  #WhyChooseUs-{{ section.id }} .feature-row-desc {
+    flex: 0 0 65%;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: {{ section.settings.desc_size_desktop }}px;
+    color: {{ section.settings.item_desc_color }};
+    line-height: 1.6;
+  }
+  
+  #WhyChooseUs-{{ section.id }} .wcu-image-wrapper {
+    border-radius: 20px;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+  }
+  
+  #WhyChooseUs-{{ section.id }} .wcu-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    aspect-ratio: 1.25 / 1;
+  }
+
+  /* Tablet Viewport styling */
+  @media (min-width: 768px) and (max-width: 991px) {
+    #WhyChooseUs-{{ section.id }} .wcu-section-title {
+      font-size: {{ section.settings.heading_size_tablet }}px;
+    }
+    #WhyChooseUs-{{ section.id }} .feature-row-item {
+      display: block;
+      padding: 24px 15px;
+      height: 100%;
+    }
+    #WhyChooseUs-{{ section.id }} .feature-row-title {
+      font-size: {{ section.settings.title_size_tablet }}px;
+      margin-bottom: 10px;
+      width: 100%;
+      padding-right: 0;
+    }
+    #WhyChooseUs-{{ section.id }} .feature-row-desc {
+      font-size: {{ section.settings.desc_size_tablet }}px;
+      width: 100%;
+    }
+    /* In tablet view, the features are rendering side by side, so we adjust border layout */
+    #WhyChooseUs-{{ section.id }} .features-grid-row .col:nth-child(odd) .feature-row-item {
+      border-right: 1px solid var(--separator-color);
+    }
+  }
+
+  /* Mobile Viewport styling */
+  @media (max-width: 767px) {
+    #WhyChooseUs-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+    #WhyChooseUs-{{ section.id }} .wcu-header {
+      margin-bottom: 30px;
+    }
+    #WhyChooseUs-{{ section.id }} .wcu-section-title {
+      font-size: {{ section.settings.heading_size_mobile }}px;
+    }
+    #WhyChooseUs-{{ section.id }} .wcu-btn {
+      padding: 10px 22px;
+      font-size: 13px;
+    }
+    #WhyChooseUs-{{ section.id }} .feature-row-item {
+      display: block;
+      padding: 20px 0;
+    }
+    #WhyChooseUs-{{ section.id }} .feature-row-title {
+      font-size: {{ section.settings.title_size_mobile }}px;
+      margin-bottom: 8px;
+      width: 100%;
+      padding-right: 0;
+    }
+    #WhyChooseUs-{{ section.id }} .feature-row-desc {
+      font-size: {{ section.settings.desc_size_mobile }}px;
+      width: 100%;
+    }
+    #WhyChooseUs-{{ section.id }} .wcu-image-column {
+      margin-top: 40px;
+    }
+  }
+{%- endstyle -%}
+
+<section id="WhyChooseUs-{{ section.id }}" class="why-choose-us-section">
   <div class="container">
-    <div class="row align-items-center g-5">
-      <!-- Left Column: Heading and Description -->
-      <div class="col-12 col-lg-5">
-        {% if section.settings.subtitle != blank %}
-          <span class="d-block gcf-section-subtitle">{{ section.settings.subtitle | escape }}</span>
-        {% endif %}
-        {% if section.settings.title != blank %}
-          <h2 class="gcf-section-title fw-bold text-dark mb-4">{{ section.settings.title | escape }}</h2>
-        {% endif %}
-        {% if section.settings.content != blank %}
-          <p class="gcf-section-content leading-relaxed text-muted">{{ section.settings.content | escape }}</p>
-        {% endif %}
-        {% if section.settings.btn_label != blank %}
-          <a href="{{ section.settings.btn_link }}" class="btn btn-primary btn-lg rounded-pill px-4 text-uppercase">
-            {{ section.settings.btn_label }}
+    <!-- Header -->
+    <div class="wcu-header d-flex align-items-center justify-content-between gap-3">
+      <div class="header-left">
+        {%- if section.settings.title != blank -%}
+          <h2 class="wcu-section-title">{{ section.settings.title | escape }}</h2>
+        {%- endif -%}
+      </div>
+      <div class="header-right">
+        {%- if section.settings.btn_label != blank -%}
+          <a href="{{ section.settings.btn_link | default: '#' }}" class="wcu-btn">
+            {{ section.settings.btn_label | escape }}
           </a>
-        {% endif %}
+        {%- endif -%}
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="row align-items-stretch g-5">
+      <!-- Left Column: Features (order-1 on mobile) -->
+      <div class="col-12 col-lg-6 order-1">
+        <div class="features-container">
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-1 g-0 features-grid-row">
+            {%- for block in section.blocks -%}
+              <div class="col" {{ block.shopify_attributes }}>
+                <div class="feature-row-item">
+                  {%- if block.settings.title != blank -%}
+                    <h3 class="feature-row-title">{{ block.settings.title | escape }}</h3>
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <p class="feature-row-desc">{{ block.settings.text | escape }}</p>
+                  {%- endif -%}
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
       </div>
 
-      <!-- Right Column: Features Grid List -->
-      <div class="col-12 col-lg-7">
-        <div class="row row-cols-1 row-cols-sm-2 g-4">
-          {% for block in section.blocks %}
-            <div class="col" {{ block.shopify_attributes }}>
-              <div class="feature-item p-4 border rounded shadow-sm bg-light h-100 transition hover:-translate-y-1">
-                <div class="feature-icon rounded-circle d-flex align-items-center justify-content-center bg-primary text-white mb-3" style="width: 50px; height: 50px; font-size: 20px;">
-                  <i class="fa-solid {{ block.settings.icon_class | default: 'fa-check' }}"></i>
-                </div>
-                <h5 class="fw-bold text-dark mb-2">{{ block.settings.title }}</h5>
-                <p class="text-muted small leading-relaxed mb-0">{{ block.settings.text }}</p>
-              </div>
-            </div>
-          {% endfor %}
+      <!-- Right Column: Image (order-2 on mobile so it is last) -->
+      <div class="col-12 col-lg-6 order-2 wcu-image-column">
+        <div class="wcu-image-wrapper">
+          {%- if section.settings.image != blank -%}
+            <img 
+              src="{{ section.settings.image | image_url: width: 1000 }}" 
+              class="wcu-img" 
+              alt="{{ section.settings.image.alt | escape }}" 
+              loading="lazy"
+              width="auto"
+              height="auto"
+            >
+          {%- else -%}
+            <!-- Demo fallback image -->
+            <img 
+              src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1000&auto=format&fit=crop&q=80" 
+              class="wcu-img" 
+              alt="Gulf Coast Outfitters Mariners" 
+              loading="lazy"
+              width="auto"
+              height="auto"
+            >
+          {%- endif -%}
         </div>
       </div>
     </div>
@@ -41,71 +220,297 @@
 
 {% schema %}
 {
-  "name": "Why Choose Us",
-  "max_blocks": 4,
+  "name": "Why Choose Us Redesign",
+  "max_blocks": 6,
   "settings": [
     {
-      "type": "text",
-      "id": "subtitle",
-      "label": "Sub-title",
-      "default": "Our Commitment"
+      "type": "header",
+      "content": "Section Header"
     },
     {
       "type": "text",
       "id": "title",
       "label": "Heading",
-      "default": "Why Choose Gulf Coast Outfitters"
-    },
-    {
-      "type": "textarea",
-      "id": "content",
-      "label": "Description Text",
-      "default": "We offer premium quality gear designed specifically for Destin and Gulf Coast conditions, with expert customer advice and hassle-free support."
+      "default": "Why Choose Us"
     },
     {
       "type": "text",
       "id": "btn_label",
       "label": "Button Label",
-      "default": "About Our Team"
+      "default": "Shop Now"
     },
     {
       "type": "url",
       "id": "btn_link",
       "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Featured Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Featured Image",
+      "info": "Leave blank to display the high-quality demo image"
+    },
+    {
+      "type": "header",
+      "content": "Styling & Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f4f7fb"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Heading Color",
+      "default": "#0b1d33"
+    },
+    {
+      "type": "color",
+      "id": "item_title_color",
+      "label": "Feature Title Color",
+      "default": "#0b1d33"
+    },
+    {
+      "type": "color",
+      "id": "item_desc_color",
+      "label": "Feature Description Color",
+      "default": "#4a5568"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator Line Color",
+      "default": "#e2e8f0"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Button Background Color",
+      "default": "#3b4cb3"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_hover_bg_color",
+      "label": "Button Hover Background Color",
+      "default": "#2e3b99"
+    },
+    {
+      "type": "color",
+      "id": "btn_hover_text_color",
+      "label": "Button Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Typography: Heading Font Size"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 20,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Size (Desktop)",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "heading_size_tablet",
+      "min": 18,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Size (Tablet)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 16,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Size (Mobile)",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Typography: Feature Title Font Size"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "min": 14,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "label": "Feature Title Size (Desktop)",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "title_size_tablet",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Feature Title Size (Tablet)",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Feature Title Size (Mobile)",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Typography: Feature Description Font Size"
+    },
+    {
+      "type": "range",
+      "id": "desc_size_desktop",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Feature Description Size (Desktop)",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "desc_size_tablet",
+      "min": 11,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Feature Description Size (Tablet)",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "desc_size_mobile",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Feature Description Size (Mobile)",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top (Desktop)",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom (Desktop)",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 50
     }
   ],
   "blocks": [
     {
       "type": "feature",
-      "name": "Feature Card",
+      "name": "Feature Row",
       "settings": [
-        {
-          "type": "text",
-          "id": "icon_class",
-          "label": "FontAwesome Icon Class Name",
-          "default": "fa-certificate"
-        },
         {
           "type": "text",
           "id": "title",
           "label": "Feature Title",
-          "default": "Premium Quality"
+          "default": "Feature Title"
         },
         {
           "type": "textarea",
           "id": "text",
           "label": "Feature Description Text",
-          "default": "Every item is rigorously tested to ensure performance in local marine environments."
+          "default": "Feature description goes here."
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Why Choose Us",
+      "name": "Why Choose Us Redesign",
       "blocks": [
-        { "type": "feature", "settings": { "icon_class": "fa-medal", "title": "Tested Locally", "text": "Designed and vetted specifically for the waters of the Florida Gulf Coast." } },
-        { "type": "feature", "settings": { "icon_class": "fa-life-ring", "title": "Lifetime Support", "text": "Unmatched post-purchase support and answers for any technical issues." } }
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Home Delivery",
+            "text": "Order today and get your boating accessories delivered straight to your door."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Order As a Gift",
+            "text": "Order as a gift and send high-quality boating accessories with easy shipping options."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "High Quality",
+            "text": "Discover top-tier and durable marine products designed for boating adventures."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Buy with a Joy",
+            "text": "Experience hassle-free with our excellent customer service."
+          }
+        }
       ]
     }
   ]
