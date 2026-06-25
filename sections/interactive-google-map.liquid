@@ -1,0 +1,433 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  @media screen and (min-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    }
+  }
+
+  .map-section-{{ section.id }} {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    padding-left: {{ section.settings.padding_horizontal }}px;
+    padding-right: {{ section.settings.padding_horizontal }}px;
+  }
+
+  .map-header-{{ section.id }} {
+    text-align: {{ section.settings.heading_alignment }};
+    margin-bottom: {{ section.settings.heading_margin_bottom }}px;
+    width: 100%;
+    max-width: {{ section.settings.content_max_width }}px;
+  }
+
+  .map-title-{{ section.id }} {
+    font-family: {{ section.settings.heading_font_family | default: 'var(--font-heading-family)' }};
+    font-size: {{ section.settings.heading_size_mobile }}px;
+    font-weight: {{ section.settings.heading_font_weight }};
+    color: {{ section.settings.heading_color }};
+    margin: 0 0 10px 0;
+    line-height: 1.2;
+  }
+
+  .map-subtitle-{{ section.id }} {
+    font-family: {{ section.settings.subtitle_font_family | default: 'var(--font-body-family)' }};
+    font-size: {{ section.settings.subtitle_size_mobile }}px;
+    font-weight: normal;
+    color: {{ section.settings.subtitle_color }};
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  @media screen and (min-width: 768px) {
+    .map-title-{{ section.id }} {
+      font-size: {{ section.settings.heading_size_desktop }}px;
+    }
+    .map-subtitle-{{ section.id }} {
+      font-size: {{ section.settings.subtitle_size_desktop }}px;
+    }
+  }
+
+  .map-container-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ section.settings.border_radius }}px;
+    box-shadow: {{ section.settings.box_shadow }};
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    {%- comment -%} Determine Width {%- endcomment -%}
+    {%- if section.settings.width_unit == 'auto' -%}
+      width: 100%;
+    {%- else -%}
+      width: {{ section.settings.width_value }}{{ section.settings.width_unit }};
+    {%- endif -%}
+
+    max-width: 100%;
+
+    {%- comment -%} Determine Height {%- endcomment -%}
+    {%- if section.settings.height_unit == 'auto' -%}
+      height: 460px;
+    {%- else -%}
+      height: {{ section.settings.height_value }}{{ section.settings.height_unit }};
+    {%- endif -%}
+  }
+
+  .map-container-{{ section.id }}:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  }
+
+  .map-iframe-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+{%- endstyle -%}
+
+<div class="map-section-{{ section.id }}">
+  {%- if section.settings.heading != blank or section.settings.subtitle != blank -%}
+    <div class="map-header-{{ section.id }}">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="map-title-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subtitle != blank -%}
+        <p class="map-subtitle-{{ section.id }}">{{ section.settings.subtitle | escape }}</p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.map_address != blank -%}
+    {%- assign encoded_address = section.settings.map_address | url_encode -%}
+    <div class="map-container-{{ section.id }}">
+      <iframe
+        class="map-iframe-{{ section.id }}"
+        src="https://maps.google.com/maps?q={{ encoded_address }}&t=&z={{ section.settings.zoom_level }}&ie=UTF8&iwloc=&output=embed"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="{{ section.settings.heading | default: 'Store Location Map' | escape }}"
+      ></iframe>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Interactive Google Map",
+  "tag": "section",
+  "class": "section-google-map",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Map Configuration"
+    },
+    {
+      "type": "text",
+      "id": "map_address",
+      "label": "Map Address or Business Name",
+      "default": "505 S Main St, Picayune MS 39466",
+      "info": "Type a plain text address or business name here to automatically drop a pin."
+    },
+    {
+      "type": "range",
+      "id": "zoom_level",
+      "label": "Map Zoom Level",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Heading & Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Location"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Come visit our retail store"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Sizing & Layout"
+    },
+    {
+      "type": "select",
+      "id": "width_unit",
+      "label": "Width Unit Type",
+      "options": [
+        { "value": "auto", "label": "Full Width (Auto)" },
+        { "value": "px", "label": "px" },
+        { "value": "rem", "label": "rem" },
+        { "value": "%", "label": "%" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "text",
+      "id": "width_value",
+      "label": "Custom Width Value",
+      "default": "100",
+      "info": "Ignored if Width Unit Type is set to Full Width."
+    },
+    {
+      "type": "select",
+      "id": "height_unit",
+      "label": "Height Unit Type",
+      "options": [
+        { "value": "auto", "label": "Auto (460px)" },
+        { "value": "px", "label": "px" },
+        { "value": "rem", "label": "rem" },
+        { "value": "vh", "label": "vh" },
+        { "value": "%", "label": "%" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "text",
+      "id": "height_value",
+      "label": "Custom Height Value",
+      "default": "460",
+      "info": "Ignored if Height Unit Type is set to Auto."
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Map Border Radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "box_shadow",
+      "label": "Box Shadow Style",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "0 4px 12px rgba(0,0,0,0.05)", "label": "Soft" },
+        { "value": "0 8px 24px rgba(0,0,0,0.08)", "label": "Medium" },
+        { "value": "0 12px 30px rgba(0,0,0,0.12)", "label": "Premium Depth" }
+      ],
+      "default": "0 8px 24px rgba(0,0,0,0.08)"
+    },
+    {
+      "type": "header",
+      "content": "Typography: Heading Font Size"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_family",
+      "label": "Heading Font Family",
+      "options": [
+        { "value": "var(--font-heading-family)", "label": "Theme Heading Font" },
+        { "value": "'Outfit', sans-serif", "label": "Outfit" },
+        { "value": "'Inter', sans-serif", "label": "Inter" }
+      ],
+      "default": "var(--font-heading-family)"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 20,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Size (Desktop)",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Size (Mobile)",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "heading_font_weight",
+      "label": "Heading Font Weight",
+      "options": [
+        { "value": "400", "label": "Normal (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi-Bold (600)" },
+        { "value": "700", "label": "Bold (700)" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "header",
+      "content": "Typography: Subtitle Font Size"
+    },
+    {
+      "type": "select",
+      "id": "subtitle_font_family",
+      "label": "Subtitle Font Family",
+      "options": [
+        { "value": "var(--font-body-family)", "label": "Theme Body Font" },
+        { "value": "'Inter', sans-serif", "label": "Inter" },
+        { "value": "'Outfit', sans-serif", "label": "Outfit" }
+      ],
+      "default": "var(--font-body-family)"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_desktop",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Size (Desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Size (Mobile)",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Color Customization"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#1e293b"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#64748b"
+    },
+    {
+      "type": "header",
+      "content": "Spacing Settings"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 600,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Content Container Max Width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal Padding (Outer)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Heading Margin Bottom",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Interactive Google Map",
+      "settings": {
+        "heading": "Our Location",
+        "subtitle": "Come visit our retail store",
+        "map_address": "505 S Main St, Picayune MS 39466"
+      }
+    }
+  ]
+}
+{% endschema %}
