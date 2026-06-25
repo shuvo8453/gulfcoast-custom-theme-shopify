@@ -64,5 +64,13 @@
       "prev_post": "Previous Post",
       "next_post": "Next Post"
     }
+  },
+  "templates": {
+    "contact": {
+      "form": {
+        "post_success": "Thanks for contacting us. We will get back to you as soon as possible.",
+        "error_heading": "Please adjust the following:"
+      }
+    }
   }
 }
