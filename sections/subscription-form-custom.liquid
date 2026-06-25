@@ -1,0 +1,507 @@
+{%- style -%}
+  #subscription-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 768px) {
+    #subscription-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    }
+  }
+
+  .subscription-wrapper-{{ section.id }} {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .subscription-heading-{{ section.id }} {
+    font-family: {{ section.settings.heading_font_family }};
+    font-size: {{ section.settings.heading_font_size_mobile }}px;
+    font-weight: {{ section.settings.heading_font_weight }};
+    color: {{ section.settings.heading_color }};
+    margin: 0 auto 20px auto;
+    max-width: 700px;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .subscription-subtitle-{{ section.id }} {
+    font-family: {{ section.settings.subtitle_font_family }};
+    font-size: {{ section.settings.subtitle_font_size_mobile }}px;
+    font-weight: {{ section.settings.subtitle_font_weight }};
+    color: {{ section.settings.subtitle_color }};
+    margin: 0 auto 35px auto;
+    max-width: 600px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  /* Form Styles */
+  .subscription-form-{{ section.id }} {
+    width: 100%;
+    max-width: {{ section.settings.form_max_width }}px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 0 auto;
+  }
+
+  .subscription-input-{{ section.id }} {
+    width: 100%;
+    padding: 14px 20px;
+    border: 1px solid {{ section.settings.input_border_color }};
+    background-color: {{ section.settings.input_bg_color }};
+    border-radius: {{ section.settings.input_border_radius }}px;
+    font-size: 16px;
+    color: {{ section.settings.input_text_color }};
+    outline: none;
+    text-align: left;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .subscription-input-{{ section.id }}::placeholder {
+    color: {{ section.settings.input_placeholder_color }};
+    opacity: 0.8;
+  }
+
+  .subscription-input-{{ section.id }}:focus {
+    border-color: {{ section.settings.button_bg_color }};
+    box-shadow: 0 0 0 3px {{ section.settings.button_bg_color | color_modify: 'alpha', 0.15 }};
+  }
+
+  .subscription-submit-{{ section.id }} {
+    width: 100%;
+    padding: 14px 20px;
+    background-color: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+    border: none;
+    border-radius: {{ section.settings.button_border_radius }}px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+  }
+
+  .subscription-submit-{{ section.id }}:hover {
+    background-color: {{ section.settings.button_hover_bg_color }};
+  }
+
+  .subscription-submit-{{ section.id }}:active {
+    transform: scale(0.99);
+  }
+
+  /* Form Alert Statuses */
+  .subscription-status-{{ section.id }} {
+    width: 100%;
+    max-width: {{ section.settings.form_max_width }}px;
+    margin: 0 auto 20px auto;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 15px;
+    text-align: center;
+  }
+
+  .subscription-status--success-{{ section.id }} {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #badbcc;
+  }
+
+  .subscription-status--error-{{ section.id }} {
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+  }
+
+  @media screen and (min-width: 768px) {
+    .subscription-heading-{{ section.id }} {
+      font-size: {{ section.settings.heading_font_size_desktop }}px;
+    }
+
+    .subscription-subtitle-{{ section.id }} {
+      font-size: {{ section.settings.subtitle_font_size_desktop }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section id="subscription-section-{{ section.id }}">
+  <div class="subscription-wrapper-{{ section.id }}">
+    
+    <!-- Heading -->
+    {%- if section.settings.heading != blank -%}
+      <h2 class="subscription-heading-{{ section.id }}">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    <!-- Subtitle -->
+    {%- if section.settings.subtitle != blank -%}
+      <p class="subscription-subtitle-{{ section.id }}">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+
+    {%- assign form_class = 'subscription-form-' | append: section.id -%}
+    {%- form 'customer', class: form_class -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+
+      <!-- Success & Error Alert Statuses -->
+      {%- if form.posted_successfully? -%}
+        {%- assign success_msg = section.settings.success_message -%}
+        {%- if success_msg == blank -%}
+          {%- assign success_msg = 'newsletter.success' | t -%}
+          {%- if success_msg contains 'translation missing' or success_msg == blank -%}
+            {%- assign success_msg = 'Thank you for subscribing!' -%}
+          {%- endif -%}
+        {%- endif -%}
+        <div class="subscription-status-{{ section.id }} subscription-status--success-{{ section.id }}" tabindex="-1" autofocus>
+          <i class="fa-solid fa-circle-check me-2"></i>{{ success_msg }}
+        </div>
+      {%- elsif form.errors -%}
+        <div class="subscription-status-{{ section.id }} subscription-status--error-{{ section.id }}" role="alert" tabindex="-1" autofocus>
+          <i class="fa-solid fa-circle-exclamation me-2"></i>
+          {{ form.errors.translated_fields.email | capitalize }}
+          {{ form.errors.messages.email }}
+        </div>
+      {%- endif -%}
+
+      <!-- Name Input -->
+      <input
+        type="text"
+        name="contact[first_name]"
+        class="subscription-input-{{ section.id }}"
+        placeholder="{{ section.settings.placeholder_name }}"
+        aria-label="Name"
+        value="{% if form.first_name %}{{ form.first_name }}{% endif %}"
+      >
+
+      <!-- Email Input -->
+      <input
+        type="email"
+        name="contact[email]"
+        class="subscription-input-{{ section.id }}"
+        placeholder="{{ section.settings.placeholder_email }}"
+        aria-label="Email Address"
+        value="{% if form.email %}{{ form.email }}{% endif %}"
+        autocorrect="off"
+        autocapitalize="off"
+        required
+      >
+
+      <!-- Submit Button -->
+      <button type="submit" class="subscription-submit-{{ section.id }}">
+        {{ section.settings.button_text }}
+      </button>
+    {%- endform -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Custom Subscription",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "default": "#072146",
+      "label": "Background Color"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Max Container Width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "form_max_width",
+      "min": 300,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "label": "Form Max Width",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Top (Desktop)",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Bottom (Desktop)",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Heading Settings"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading Text",
+      "default": "Get Discount Offers First"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_family",
+      "label": "Heading Font Family",
+      "options": [
+        { "value": "var(--font-primary--family)", "label": "Primary Font Theme" },
+        { "value": "'Outfit', sans-serif", "label": "Outfit" },
+        { "value": "'Inter', sans-serif", "label": "Inter" },
+        { "value": "sans-serif", "label": "System Sans-serif" }
+      ],
+      "default": "'Outfit', sans-serif"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_desktop",
+      "min": 16,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Font Size (Desktop)",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_mobile",
+      "min": 14,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Font Size (Mobile)",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "heading_font_weight",
+      "label": "Heading Font Weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-Bold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra-Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Subtitle Settings"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle Text",
+      "default": "Sign up to our newsletter and receive expert fishing tips, seasonal trip updates, exclusive early access to charter deals, and more."
+    },
+    {
+      "type": "select",
+      "id": "subtitle_font_family",
+      "label": "Subtitle Font Family",
+      "options": [
+        { "value": "var(--font-primary--family)", "label": "Primary Font Theme" },
+        { "value": "'Outfit', sans-serif", "label": "Outfit" },
+        { "value": "'Inter', sans-serif", "label": "Inter" },
+        { "value": "sans-serif", "label": "System Sans-serif" }
+      ],
+      "default": "'Inter', sans-serif"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_font_size_desktop",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Font Size (Desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "subtitle_font_size_mobile",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Font Size (Mobile)",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "subtitle_font_weight",
+      "label": "Subtitle Font Weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#dddddd"
+    },
+    {
+      "type": "header",
+      "content": "Input Fields Settings"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_name",
+      "label": "Name Field Placeholder",
+      "default": "Name"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_email",
+      "label": "Email Field Placeholder",
+      "default": "Email"
+    },
+    {
+      "type": "color",
+      "id": "input_bg_color",
+      "label": "Input Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Input Border Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Input Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "input_placeholder_color",
+      "label": "Input Placeholder Color",
+      "default": "#888888"
+    },
+    {
+      "type": "range",
+      "id": "input_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Input Corner Radius",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Button Settings"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#2b46b3"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Button Hover Background Color",
+      "default": "#1e328a"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Button Corner Radius",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Success Message Settings"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success Message",
+      "default": "Thank you for subscribing!"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Subscription Form"
+    }
+  ]
+}
+{% endschema %}
