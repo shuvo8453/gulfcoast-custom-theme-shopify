@@ -63,7 +63,6 @@
     overflow: hidden;
     border-radius: {{ section.settings.border_radius }}px;
     box-shadow: {{ section.settings.box_shadow }};
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     {%- comment -%} Determine Width {%- endcomment -%}
     {%- if section.settings.width_unit == 'auto' -%}
@@ -80,11 +79,6 @@
     {%- else -%}
       height: {{ section.settings.height_value }}{{ section.settings.height_unit }};
     {%- endif -%}
-  }
-
-  .map-container-{{ section.id }}:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
   }
 
   .map-iframe-{{ section.id }} {
