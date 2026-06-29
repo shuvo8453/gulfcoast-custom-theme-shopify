@@ -9,8 +9,7 @@
     margin: 0 auto;
     overflow-x: hidden;
   }
-  .custom-footer .container-fluid {
-    max-width: 1200px;
+  .custom-footer .container {
     margin: 0 auto;
   }
 
@@ -397,7 +396,7 @@
 <div id="custom-footer-{{ section.id }}" class="custom-footer">
   <!-- SECTION 1: Benefit Bar -->
   <div class="footer-benefits-{{ section.id }}">
-    <div class="container-fluid px-4 px-md-5">
+    <div class="container">
       <div class="benefits-grid-{{ section.id }}">
         {%- for i in (1..4) -%}
           {%- liquid
@@ -430,7 +429,7 @@
 
   <!-- SECTION 2: Main Footer Content -->
   <div class="footer-main-{{ section.id }}">
-    <div class="container-fluid px-4 px-md-5">
+    <div class="container">
       <div class="footer-main-grid-{{ section.id }}">
         <!-- Logo & Description column -->
         <div class="brand-column-{{ section.id }}">
@@ -566,7 +565,7 @@
     id="footer-systems-desktop-{{ section.id }}"
     class="footer-systems-{{ section.id }} footer-systems-desktop-{{ section.id }}"
   >
-    <div class="container-fluid px-4 px-md-5">
+    <div class="container">
       <div class="systems-grid-{{ section.id }}">
         <!-- Payment System -->
         <div class="system-block-{{ section.id }} payment-block-{{ section.id }}">
@@ -669,7 +668,7 @@
     id="footer-systems-mobile-{{ section.id }}"
     class="footer-systems-{{ section.id }} footer-systems-mobile-{{ section.id }}"
   >
-    <div class="container-fluid px-4 px-md-5">
+    <div class="container">
       <div class="systems-mobile-row1-{{ section.id }}">
         <!-- Payment System -->
         <div class="system-block-{{ section.id }} payment-block-{{ section.id }}">
@@ -771,7 +770,7 @@
 
   <!-- SECTION 4: Copyright Bottom -->
   <div class="footer-bottom-{{ section.id }}">
-    <div class="container-fluid px-4 px-md-5">
+    <div class="container">
       {%- if section.settings.copyright_text != blank -%}
         <p class="copyright-text-{{ section.id }}">{{ section.settings.copyright_text }}</p>
       {%- endif -%}
