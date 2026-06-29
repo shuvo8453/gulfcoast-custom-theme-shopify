@@ -1,112 +1,725 @@
 <section class="blog-archive-section py-5">
+  <!-- Dynamic Styles Based on Theme Customizer Settings -->
+  <style>
+    :root {
+      --blog-card-bg: {{ section.settings.card_bg_color }};
+      --blog-card-border: {{ section.settings.card_border_color }};
+      --blog-card-radius: {{ section.settings.card_border_radius }}px;
+
+      {% case section.settings.card_shadow %}
+        {% when 'none' %}
+          --blog-card-shadow: none;
+        {% when 'small' %}
+          --blog-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        {% when 'medium' %}
+          --blog-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        {% when 'large' %}
+          --blog-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      {% endcase %}
+
+      --blog-badge-bg: {{ section.settings.badge_bg_color }};
+      --blog-badge-text: {{ section.settings.badge_text_color }};
+      --blog-badge-size: {{ section.settings.badge_font_size }}px;
+      --blog-badge-weight: {{ section.settings.badge_font_weight }};
+      --blog-badge-transform: {{ section.settings.badge_text_transform }};
+
+      --blog-date-bg: {{ section.settings.date_bg_color }};
+      --blog-date-num: {{ section.settings.date_number_color }};
+      --blog-date-mon: {{ section.settings.date_month_color }};
+
+      --blog-title-color: {{ section.settings.title_color }};
+      --blog-title-hover: {{ section.settings.title_hover_color }};
+      --blog-title-weight: {{ section.settings.title_font_weight }};
+      --blog-title-size-desktop: {{ section.settings.title_font_size_desktop }}px;
+      --blog-title-size-mobile: {{ section.settings.title_font_size_mobile }}px;
+
+      --blog-meta-color: {{ section.settings.meta_text_color }};
+      --blog-avatar-bg: {{ section.settings.meta_avatar_bg }};
+      --blog-avatar-icon: {{ section.settings.meta_avatar_icon }};
+
+      --blog-share-color: {{ section.settings.share_btn_color }};
+      --blog-share-hover: {{ section.settings.share_btn_hover_color }};
+      --blog-share-border: {{ section.settings.share_btn_border_color }};
+      --blog-share-hover-border: {{ section.settings.share_btn_hover_border_color }};
+
+      --blog-excerpt-color: {{ section.settings.excerpt_color }};
+      --blog-excerpt-size: {{ section.settings.excerpt_font_size }}px;
+      --blog-excerpt-height: {{ section.settings.excerpt_line_height }};
+
+      --blog-readmore-color: {{ section.settings.read_more_color }};
+      --blog-readmore-hover: {{ section.settings.read_more_hover_color }};
+      --blog-readmore-size: {{ section.settings.read_more_font_size }}px;
+      --blog-readmore-weight: {{ section.settings.read_more_font_weight }};
+
+      --blog-sidebar-bg: {{ section.settings.sidebar_widget_bg }};
+      --blog-sidebar-border: {{ section.settings.sidebar_widget_border }};
+      --blog-sidebar-title-color: {{ section.settings.sidebar_widget_title_color }};
+      --blog-sidebar-title-border: {{ section.settings.sidebar_widget_title_border }};
+      --blog-sidebar-link: {{ section.settings.sidebar_link_color }};
+      --blog-sidebar-link-hover: {{ section.settings.sidebar_link_hover_color }};
+
+      --blog-pagination-text: {{ section.settings.pagination_text_color }};
+      --blog-pagination-bg: {{ section.settings.pagination_bg_color }};
+      --blog-pagination-active-text: {{ section.settings.pagination_active_text_color }};
+      --blog-pagination-active-bg: {{ section.settings.pagination_active_bg_color }};
+    }
+
+    /* Card Layout Styling */
+    .custom-blog-card {
+      background-color: var(--blog-card-bg);
+      border: 1px solid var(--blog-card-border);
+      border-radius: var(--blog-card-radius);
+      box-shadow: var(--blog-card-shadow);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+    .custom-blog-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+    }
+    .custom-blog-card__image-container {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16 / 10;
+      border-top-left-radius: calc(var(--blog-card-radius) - 1px);
+      border-top-right-radius: calc(var(--blog-card-radius) - 1px);
+    }
+    .custom-blog-card__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .custom-blog-card:hover .custom-blog-card__img {
+      transform: scale(1.05);
+    }
+    
+    /* Date Badge */
+    .custom-blog-card__date-badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background-color: var(--blog-date-bg);
+      padding: 8px 14px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      z-index: 5;
+      text-align: center;
+      min-width: 60px;
+    }
+    .custom-blog-card__date-day {
+      display: block;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--blog-date-num);
+      line-height: 1.1;
+      font-family: 'Outfit', sans-serif;
+    }
+    .custom-blog-card__date-month {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--blog-date-mon);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Content & Details */
+    .custom-blog-card__body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .custom-blog-card__badge-wrapper {
+      margin-bottom: 12px;
+    }
+    .custom-blog-card__category-badge {
+      display: inline-block;
+      background-color: var(--blog-badge-bg);
+      color: var(--blog-badge-text);
+      font-size: var(--blog-badge-size);
+      font-weight: var(--blog-badge-weight);
+      text-transform: var(--blog-badge-transform);
+      padding: 6px 16px;
+      border-radius: 50px;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      transition: opacity 0.2s ease;
+      font-family: 'Outfit', sans-serif;
+    }
+    .custom-blog-card__category-badge:hover {
+      opacity: 0.9;
+      color: var(--blog-badge-text);
+    }
+    .custom-blog-card__title {
+      font-size: var(--blog-title-size-mobile);
+      font-weight: var(--blog-title-weight);
+      margin-bottom: 16px;
+      line-height: 1.35;
+      font-family: 'Outfit', sans-serif;
+    }
+    @media (min-width: 768px) {
+      .custom-blog-card__title {
+        font-size: var(--blog-title-size-desktop);
+      }
+    }
+    .custom-blog-card__title-link {
+      color: var(--blog-title-color);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .custom-blog-card__title-link:hover {
+      color: var(--blog-title-hover);
+    }
+
+    /* Meta: Author & Share Row */
+    .custom-blog-card__meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .custom-blog-card__author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .custom-blog-card__avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background-color: var(--blog-avatar-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blog-avatar-icon);
+      font-size: 14px;
+    }
+    .custom-blog-card__author-text {
+      font-size: 13px;
+      color: var(--blog-meta-color);
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Social Share Button & Popover */
+    .custom-blog-card__share {
+      position: relative;
+    }
+    .custom-blog-card__share-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--blog-share-border);
+      background-color: transparent;
+      color: var(--blog-share-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .custom-blog-card__share:hover .custom-blog-card__share-btn {
+      color: var(--blog-share-hover);
+      border-color: var(--blog-share-hover-border);
+      background-color: rgba(6, 46, 103, 0.05);
+    }
+    .custom-blog-card__share-tooltip {
+      position: absolute;
+      bottom: calc(100% + 12px);
+      right: 0;
+      transform: translateY(10px);
+      background-color: #ffffff;
+      border-radius: 30px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      padding: 6px 12px;
+      display: flex;
+      gap: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      z-index: 100;
+    }
+    .custom-blog-card__share-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      right: 14px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: #ffffff transparent transparent transparent;
+    }
+    .custom-blog-card__share:hover .custom-blog-card__share-tooltip,
+    .custom-blog-card__share-btn:focus + .custom-blog-card__share-tooltip,
+    .custom-blog-card__share-tooltip:hover {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .custom-blog-card__social-link {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff !important;
+      font-size: 12px;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+    .custom-blog-card__social-link:hover {
+      transform: scale(1.15);
+    }
+    .custom-blog-card__social-link--facebook { background-color: #1877f2; }
+    .custom-blog-card__social-link--twitter { background-color: #000000; }
+    .custom-blog-card__social-link--pinterest { background-color: #e60023; }
+    .custom-blog-card__social-link--linkedin { background-color: #0077b5; }
+    .custom-blog-card__social-link--telegram { background-color: #0088cc; }
+
+    /* Divider */
+    .custom-blog-card__divider {
+      border: 0;
+      border-top: 1px solid #f1f5f9;
+      margin: 0 0 16px 0;
+    }
+
+    /* Excerpt and Read More */
+    .custom-blog-card__excerpt {
+      color: var(--blog-excerpt-color);
+      font-size: var(--blog-excerpt-size);
+      line-height: var(--blog-excerpt-height);
+      margin-bottom: 20px;
+      flex-grow: 1;
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-blog-card__read-more-link {
+      color: var(--blog-readmore-color);
+      font-size: var(--blog-readmore-size);
+      font-weight: var(--blog-readmore-weight);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
+      transition: color 0.2s ease;
+      font-family: 'Outfit', sans-serif;
+    }
+    .custom-blog-card__read-more-link:hover {
+      color: var(--blog-readmore-hover);
+      text-decoration: underline;
+    }
+
+    /* Sidebar Styling */
+    .blog-sidebar-widget {
+      background-color: var(--blog-sidebar-bg);
+      border: 1px solid var(--blog-sidebar-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+    .blog-sidebar-widget__title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--blog-sidebar-title-color);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid var(--blog-sidebar-title-border);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Categories list */
+    .blog-sidebar-categories {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .blog-sidebar-categories__item {
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .blog-sidebar-categories__item:last-child {
+      border-bottom: none;
+    }
+    .blog-sidebar-categories__link {
+      display: block;
+      padding: 10px 0;
+      color: var(--blog-sidebar-link);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .blog-sidebar-categories__link:hover,
+    .blog-sidebar-categories__link--active {
+      color: var(--blog-sidebar-link-hover);
+      padding-left: 5px;
+      font-weight: 600;
+    }
+
+    /* Recent Posts list */
+    .blog-sidebar-recent {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .blog-sidebar-recent__item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .blog-sidebar-recent__img-wrapper {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .blog-sidebar-recent__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .blog-sidebar-recent__content {
+      min-width: 0;
+    }
+    .blog-sidebar-recent__title {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.35;
+      margin: 0 0 4px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-family: 'Outfit', sans-serif;
+    }
+    .blog-sidebar-recent__title-link {
+      color: #1f2937;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .blog-sidebar-recent__title-link:hover {
+      color: var(--blog-sidebar-link-hover);
+    }
+    .blog-sidebar-recent__date {
+      font-size: 11px;
+      color: #9ca3af;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Circular Pagination */
+    .custom-pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 48px;
+      padding: 0;
+      list-style: none;
+    }
+    .custom-pagination__item-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--blog-pagination-bg);
+      color: var(--blog-pagination-text);
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-family: 'Outfit', sans-serif;
+    }
+    .custom-pagination__item-link:hover {
+      background-color: var(--blog-pagination-active-bg);
+      color: var(--blog-pagination-active-text);
+    }
+    .custom-pagination__item-link--active {
+      background-color: var(--blog-pagination-active-bg) !important;
+      color: var(--blog-pagination-active-text) !important;
+      cursor: default;
+    }
+    .custom-pagination__item-link--disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  </style>
+
   <div class="container">
-    {% render 'breadcrumb' %}
-
-    <div class="row g-5 mt-2">
+    <div class="row g-4 mt-2">
       <!-- Main Content (Articles Grid) -->
-      <div class="col-12 col-lg-9">
-        <h1 class="blog-title fw-bold text-dark mb-4">{{ blog.title }}</h1>
-
+      <div class="col-12 {% if section.settings.show_sidebar %}col-lg-9{% endif %}">
         {% paginate blog.articles by section.settings.posts_per_page %}
           {% if blog.articles.size > 0 %}
-            <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="row row-cols-{{ section.settings.columns_mobile }} row-cols-md-{{ section.settings.columns_tablet }} row-cols-lg-{{ section.settings.columns_desktop }} g-4">
               {% for article in blog.articles %}
                 <div class="col">
-                  <article class="card h-100 shadow-sm border border-light-subtle rounded overflow-hidden">
-                    {% if article.image %}
-                      <a href="{{ article.url }}">
-                        <img src="{{ article.image | image_url: width: 600 }}" class="card-img-top" style="height: 220px; object-fit: cover;" alt="{{ article.title | escape }}" loading="lazy">
-                      </a>
-                    {% endif %}
-                    
-                    <div class="card-body p-4">
-                      <!-- Date / Author -->
-                      <div class="article-meta text-muted small mb-2 d-flex align-items-center gap-2">
-                        <span>{{ article.published_at | time_tag: format: 'date' }}</span>
-                        <span>&bull;</span>
-                        <span>{{ 'blogs.article.by_author' | t: author: article.author }}</span>
+                  <article class="custom-blog-card">
+                    <div class="custom-blog-card__image-container">
+                      {% if article.image %}
+                        <a href="{{ article.url }}">
+                          <img
+                            src="{{ article.image | image_url: width: 600 }}"
+                            class="custom-blog-card__img"
+                            height=""
+                            width=""
+                            alt="{{ article.title | escape }}"
+                            loading="lazy"
+                          >
+                        </a>
+                      {% else %}
+                        <div class="bg-secondary-subtle d-flex align-items-center justify-content-center h-100">
+                          <i class="fa-regular fa-image fa-3x text-muted"></i>
+                        </div>
+                      {% endif %}
+
+                      <!-- Absolute positioned Date Badge -->
+                      <div class="custom-blog-card__date-badge">
+                        <span class="custom-blog-card__date-day">{{ article.published_at | date: '%d' }}</span>
+                        <span class="custom-blog-card__date-month">
+                          {{- article.published_at | date: '%b' | upcase -}}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="custom-blog-card__body">
+                      <!-- Tag Badge / Category -->
+                      <div class="custom-blog-card__badge-wrapper">
+                        {% if article.tags.size > 0 %}
+                          {% assign primary_tag = article.tags | first %}
+                          <a
+                            href="{{ blog.url }}/tagged/{{ primary_tag | handle }}"
+                            class="custom-blog-card__category-badge"
+                          >
+                            {{ primary_tag }}
+                          </a>
+                        {% else %}
+                          <span class="custom-blog-card__category-badge">Blog</span>
+                        {% endif %}
                       </div>
 
-                      <h5 class="card-title fw-bold"><a href="{{ article.url }}" class="text-dark hover:text-primary">{{ article.title }}</a></h5>
-                      <p class="card-text text-muted small mt-2">
+                      <!-- Article Title -->
+                      <h3 class="custom-blog-card__title">
+                        <a href="{{ article.url }}" class="custom-blog-card__title-link">
+                          {{ article.title }}
+                        </a>
+                      </h3>
+
+                      <!-- Author and Share Menu -->
+                      <div class="custom-blog-card__meta-row">
+                        <div class="custom-blog-card__author">
+                          <div class="custom-blog-card__avatar">
+                            <i class="fa-solid fa-user text-white"></i>
+                          </div>
+                          <span class="custom-blog-card__author-text">Posted by {{ article.author }}</span>
+                        </div>
+
+                        <div class="custom-blog-card__share">
+                          <button class="custom-blog-card__share-btn" aria-label="Share article">
+                            <i class="fas fa-share-alt"></i>
+                          </button>
+
+                          <!-- Share Popup Tooltip -->
+                          <div class="custom-blog-card__share-tooltip">
+                            {% assign article_full_url = shop.url | append: article.url %}
+                            {% assign article_encoded_url = article_full_url | url_encode %}
+                            {% assign article_encoded_title = article.title | escape | url_encode %}
+
+                            <a
+                              href="https://www.facebook.com/sharer/sharer.php?u={{ article_encoded_url }}"
+                              target="_blank"
+                              rel="noopener"
+                              class="custom-blog-card__social-link custom-blog-card__social-link--facebook"
+                              title="Share on Facebook"
+                            >
+                              <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a
+                              href="https://twitter.com/intent/tweet?text={{ article_encoded_title }}&url={{ article_encoded_url }}"
+                              target="_blank"
+                              rel="noopener"
+                              class="custom-blog-card__social-link custom-blog-card__social-link--twitter"
+                              title="Share on X"
+                            >
+                              <i class="fab fa-x-twitter"></i>
+                            </a>
+                            <a
+                              href="https://pinterest.com/pin/create/button/?url={{ article_encoded_url }}&media={{ article.image | image_url: width: 1000 | url_encode }}&description={{ article_encoded_title }}"
+                              target="_blank"
+                              rel="noopener"
+                              class="custom-blog-card__social-link custom-blog-card__social-link--pinterest"
+                              title="Pin it"
+                            >
+                              <i class="fab fa-pinterest-p"></i>
+                            </a>
+                            <a
+                              href="https://www.linkedin.com/sharing/share-offsite/?url={{ article_encoded_url }}"
+                              target="_blank"
+                              rel="noopener"
+                              class="custom-blog-card__social-link custom-blog-card__social-link--linkedin"
+                              title="Share on LinkedIn"
+                            >
+                              <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a
+                              href="https://t.me/share/url?url={{ article_encoded_url }}&text={{ article_encoded_title }}"
+                              target="_blank"
+                              rel="noopener"
+                              class="custom-blog-card__social-link custom-blog-card__social-link--telegram"
+                              title="Share on Telegram"
+                            >
+                              <i class="fab fa-telegram-plane"></i>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <hr class="custom-blog-card__divider">
+
+                      <!-- Article Content / Excerpt -->
+                      <p class="custom-blog-card__excerpt">
                         {% if article.excerpt.size > 0 %}
-                          {{ article.excerpt | strip_html | truncatewords: 30 }}
+                          {{ article.excerpt | strip_html | truncatewords: 24 }}
                         {% else %}
-                          {{ article.content | strip_html | truncatewords: 30 }}
+                          {{ article.content | strip_html | truncatewords: 24 }}
                         {% endif %}
                       </p>
-                    </div>
-                    
-                    <div class="card-footer bg-transparent border-0 px-4 pb-4 pt-0">
-                      <a href="{{ article.url }}" class="btn btn-outline-primary btn-sm rounded-pill px-3">{{ 'blogs.article.read_more' | t }}</a>
+
+                      <!-- Continue Reading Link -->
+                      <div>
+                        <a href="{{ article.url }}" class="custom-blog-card__read-more-link"> Continue Reading </a>
+                      </div>
                     </div>
                   </article>
                 </div>
               {% endfor %}
             </div>
 
-            <!-- Pagination -->
+            <!-- Custom Pagination -->
             {% if paginate.pages > 1 %}
-              <nav class="d-flex justify-content-center mt-5" aria-label="Page navigation">
-                <ul class="pagination pagination-sm">
+              <nav aria-label="Page navigation">
+                <ul class="custom-pagination">
                   {% if paginate.previous %}
-                    <li class="page-item"><a class="page-link rounded-circle px-3 py-2 me-2" href="{{ paginate.previous.url }}"><i class="fa-solid fa-chevron-left"></i></a></li>
+                    <li>
+                      <a
+                        class="custom-pagination__item-link"
+                        href="{{ paginate.previous.url }}"
+                        aria-label="Previous Page"
+                      >
+                        <i class="fa-solid fa-chevron-left"></i>
+                      </a>
+                    </li>
                   {% endif %}
-                  
+
                   {% for part in paginate.parts %}
                     {% if part.is_link %}
-                      <li class="page-item"><a class="page-link rounded-circle px-3 py-2 me-2" href="{{ part.url }}">{{ part.title }}</a></li>
-                    25:                 {% else %}
-                      <li class="page-item active"><span class="page-link rounded-circle px-3 py-2 me-2">{{ part.title }}</span></li>
+                      <li>
+                        <a class="custom-pagination__item-link" href="{{ part.url }}">{{ part.title }}</a>
+                      </li>
+                    {% else %}
+                      {% if part.title == paginate.current_page %}
+                        <li>
+                          <span class="custom-pagination__item-link custom-pagination__item-link--active">
+                            {{- part.title -}}
+                          </span>
+                        </li>
+                      {% else %}
+                        <li>
+                          <span class="custom-pagination__item-link custom-pagination__item-link--disabled">
+                            {{- part.title -}}
+                          </span>
+                        </li>
+                      {% endif %}
                     {% endif %}
                   {% endfor %}
 
                   {% if paginate.next %}
-                    <li class="page-item"><a class="page-link rounded-circle px-3 py-2" href="{{ paginate.next.url }}"><i class="fa-solid fa-chevron-right"></i></a></li>
+                    <li>
+                      <a class="custom-pagination__item-link" href="{{ paginate.next.url }}" aria-label="Next Page">
+                        <i class="fa-solid fa-chevron-right"></i>
+                      </a>
+                    </li>
                   {% endif %}
                 </ul>
               </nav>
             {% endif %}
           {% else %}
-            <p class="text-muted">No posts available in this blog.</p>
+            <p class="text-muted text-center py-5">No posts available in this blog.</p>
           {% endif %}
         {% endpaginate %}
       </div>
 
-      <!-- Blog Sidebar -->
-      <div class="col-12 col-lg-3">
-        <aside class="blog-sidebar d-flex flex-column gap-5">
-          <!-- Widget: Recent Articles -->
-          <div class="sidebar-widget p-4 border rounded bg-light shadow-sm">
-            <h5 class="fw-bold mb-3 border-bottom pb-2">Recent Posts</h5>
-            <ul class="list-unstyled mb-0 d-flex flex-column gap-3">
-              {% for article in blog.articles limit: 5 %}
-                <li class="d-flex gap-3 align-items-center">
-                  {% if article.image %}
-                    <img src="{{ article.image | image_url: width: 100 }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;" alt="{{ article.title | escape }}">
-                  {% endif %}
-                  <div class="min-w-0">
-                    <h6 class="mb-0 text-dark small fw-bold text-truncate"><a href="{{ article.url }}" class="text-dark">{{ article.title }}</a></h6>
-                    <span class="text-muted small text-xs" style="font-size: 11px;">{{ article.published_at | time_tag: format: 'date' }}</span>
-                  </div>
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
+      <!-- Blog Sidebar (Hidden on Tablet and Mobile) -->
+      {% if section.settings.show_sidebar %}
+        <div class="col-12 col-lg-3 d-none d-lg-block">
+          <aside class="blog-sidebar">
+            <!-- Categories Widget -->
+            {% if blog.all_tags.size > 0 %}
+              <div class="blog-sidebar-widget">
+                <h4 class="blog-sidebar-widget__title">{{ section.settings.categories_title }}</h4>
+                <ul class="blog-sidebar-categories">
+                  {% for tag in blog.all_tags %}
+                    <li class="blog-sidebar-categories__item">
+                      <a
+                        href="{{ blog.url }}/tagged/{{ tag | handle }}"
+                        class="blog-sidebar-categories__link{% if current_tags contains tag %} blog-sidebar-categories__link--active{% endif %}"
+                      >
+                        {{ tag }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
 
-          <!-- Widget: Meta tags list -->
-          {% if blog.all_tags.size > 0 %}
-            <div class="sidebar-widget p-4 border rounded bg-light shadow-sm">
-              <h5 class="fw-bold mb-3 border-bottom pb-2">Categories</h5>
-              <div class="d-flex flex-wrap gap-2">
-                {% for tag in blog.all_tags %}
-                  <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="badge bg-secondary-subtle text-secondary border px-3 py-2 text-decoration-none rounded-pill small">{{ tag }}</a>
+            <!-- Recent Posts Widget -->
+            <div class="blog-sidebar-widget">
+              <h4 class="blog-sidebar-widget__title">{{ section.settings.recent_posts_title }}</h4>
+              <div class="blog-sidebar-recent">
+                {% for article in blog.articles limit: section.settings.recent_posts_limit %}
+                  <div class="blog-sidebar-recent__item">
+                    <div class="blog-sidebar-recent__img-wrapper">
+                      {% if article.image %}
+                        <img
+                          src="{{ article.image | image_url: width: 120 }}"
+                          class="blog-sidebar-recent__img"
+                          alt="{{ article.title | escape }}"
+                          loading="lazy"
+                          width="auto"
+                          height="auto"
+                        >
+                      {% else %}
+                        <div class="bg-secondary-subtle d-flex align-items-center justify-content-center h-100">
+                          <i class="fa-regular fa-image text-muted"></i>
+                        </div>
+                      {% endif %}
+                    </div>
+                    <div class="blog-sidebar-recent__content">
+                      <h5 class="blog-sidebar-recent__title">
+                        <a href="{{ article.url }}" class="blog-sidebar-recent__title-link">
+                          {{ article.title }}
+                        </a>
+                      </h5>
+                      <span class="blog-sidebar-recent__date">{{ article.published_at | date: '%B %d, %Y' }}</span>
+                    </div>
+                  </div>
                 {% endfor %}
               </div>
             </div>
-          {% endif %}
-        </aside>
-      </div>
+          </aside>
+        </div>
+      {% endif %}
     </div>
   </div>
 </section>
@@ -116,13 +729,417 @@
   "name": "Blog Grid",
   "settings": [
     {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
       "type": "range",
       "id": "posts_per_page",
-      "min": 4,
-      "max": 20,
-      "step": 2,
+      "min": 2,
+      "max": 24,
+      "step": 1,
       "label": "Posts per page",
       "default": 6
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on Desktop",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Columns on Tablet",
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on Mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sidebar",
+      "label": "Show Sidebar (Desktop Only)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Card Container Styles"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card Border Color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Border Radius",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "card_shadow",
+      "label": "Card Shadow Type",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "header",
+      "content": "Category Badge Styles"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge Background Color",
+      "default": "#f59e0b"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge Font Size",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "badge_font_weight",
+      "label": "Badge Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-Bold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "select",
+      "id": "badge_text_transform",
+      "label": "Badge Text Transform",
+      "options": [
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "lowercase", "label": "Lowercase" },
+        { "value": "capitalize", "label": "Capitalize" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "header",
+      "content": "Date Badge Styles"
+    },
+    {
+      "type": "color",
+      "id": "date_bg_color",
+      "label": "Date Badge Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "date_number_color",
+      "label": "Date Day Number Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "color",
+      "id": "date_month_color",
+      "label": "Date Month Text Color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "header",
+      "content": "Title Styles"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#1f2937"
+    },
+    {
+      "type": "color",
+      "id": "title_hover_color",
+      "label": "Title Hover Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size_desktop",
+      "min": 16,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Font Size (Desktop)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "title_font_size_mobile",
+      "min": 14,
+      "max": 26,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Font Size (Mobile)",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Title Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-Bold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "header",
+      "content": "Author & Share Button Styles"
+    },
+    {
+      "type": "color",
+      "id": "meta_text_color",
+      "label": "Author Text Color",
+      "default": "#4b5563"
+    },
+    {
+      "type": "color",
+      "id": "meta_avatar_bg",
+      "label": "Avatar Circle Background",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "meta_avatar_icon",
+      "label": "Avatar Icon Color",
+      "default": "#9ca3af"
+    },
+    {
+      "type": "color",
+      "id": "share_btn_color",
+      "label": "Share Button Color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "color",
+      "id": "share_btn_hover_color",
+      "label": "Share Button Hover Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "color",
+      "id": "share_btn_border_color",
+      "label": "Share Button Border Color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "share_btn_hover_border_color",
+      "label": "Share Button Hover Border Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "header",
+      "content": "Excerpt Content Styles"
+    },
+    {
+      "type": "color",
+      "id": "excerpt_color",
+      "label": "Excerpt Text Color",
+      "default": "#4b5563"
+    },
+    {
+      "type": "range",
+      "id": "excerpt_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Excerpt Font Size",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "excerpt_line_height",
+      "label": "Excerpt Line Height",
+      "options": [
+        { "value": "1.2", "label": "1.2" },
+        { "value": "1.4", "label": "1.4" },
+        { "value": "1.5", "label": "1.5" },
+        { "value": "1.6", "label": "1.6" }
+      ],
+      "default": "1.5"
+    },
+    {
+      "type": "header",
+      "content": "Continue Reading Styles"
+    },
+    {
+      "type": "color",
+      "id": "read_more_color",
+      "label": "Link Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "color",
+      "id": "read_more_hover_color",
+      "label": "Link Hover Color",
+      "default": "#004b93"
+    },
+    {
+      "type": "range",
+      "id": "read_more_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Link Font Size",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "read_more_font_weight",
+      "label": "Link Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-Bold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "header",
+      "content": "Sidebar Styling"
+    },
+    {
+      "type": "text",
+      "id": "categories_title",
+      "label": "Categories Widget Title",
+      "default": "CATEGORIES"
+    },
+    {
+      "type": "text",
+      "id": "recent_posts_title",
+      "label": "Recent Posts Widget Title",
+      "default": "RECENT POSTS"
+    },
+    {
+      "type": "range",
+      "id": "recent_posts_limit",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "label": "Recent Posts Limit",
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "sidebar_widget_bg",
+      "label": "Sidebar Widget Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_widget_border",
+      "label": "Sidebar Widget Border",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_widget_title_color",
+      "label": "Sidebar Widget Title Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_widget_title_border",
+      "label": "Widget Title Border Color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_link_color",
+      "label": "Sidebar Link Color",
+      "default": "#4b5563"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_link_hover_color",
+      "label": "Sidebar Link Hover Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "header",
+      "content": "Pagination Styling"
+    },
+    {
+      "type": "color",
+      "id": "pagination_text_color",
+      "label": "Pagination Text Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "color",
+      "id": "pagination_bg_color",
+      "label": "Pagination Background Color",
+      "default": "#f3f4f6"
+    },
+    {
+      "type": "color",
+      "id": "pagination_active_text_color",
+      "label": "Pagination Active Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "pagination_active_bg_color",
+      "label": "Pagination Active Background Color",
+      "default": "#062e67"
     }
   ]
 }
