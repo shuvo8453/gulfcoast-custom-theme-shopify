@@ -5,9 +5,14 @@
     "footer": {
       "type": "footer",
       "settings": {}
+    },
+    "custom_footer": {
+      "type": "custom-footer",
+      "settings": {}
     }
   },
   "order": [
-    "footer"
+    "footer",
+    "custom_footer"
   ]
 }

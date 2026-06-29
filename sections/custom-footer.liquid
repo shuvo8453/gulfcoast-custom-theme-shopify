@@ -1,0 +1,1676 @@
+{% comment %}
+  Custom Footer Section
+  Developed for Gulf Coast Outfitters
+{% endcomment %}
+
+{%- style -%}
+  .custom-footer {
+    width: 100%;
+    margin: 0 auto;
+    overflow-x: hidden;
+  }
+  .custom-footer .container-fluid {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    font-family: 'Inter', sans-serif;
+    --font-heading: 'Outfit', sans-serif;
+    overflow-x: hidden;
+  }
+
+  #shopify-section-{{ section.id }} img {
+    max-width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} a {
+    color: {{ section.settings.link_color }};
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  #shopify-section-{{ section.id }} a:hover {
+    color: {{ section.settings.link_hover_color }};
+  }
+
+  /* SECTION 1: Benefit Bar */
+  .footer-benefits-{{ section.id }} {
+    border-bottom: 1px solid {{ section.settings.border_color }};
+    padding: {{ section.settings.benefit_padding_desktop }}px 0;
+  }
+  .benefits-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: {{ section.settings.benefit_gap_desktop }}px;
+    justify-content: center;
+    align-items: center;
+  }
+  .benefit-item-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+  }
+  .benefit-img-{{ section.id }} {
+    display: block;
+    object-fit: contain;
+    width: {{ section.settings.benefit_img_width_desktop }}px;
+    height: {{ section.settings.benefit_img_height_desktop }}px;
+  }
+  .benefit-text-{{ section.id }} {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  /* SECTION 2: Main Footer Content */
+  .footer-main-{{ section.id }} {
+    padding: {{ section.settings.main_padding_desktop }}px 0;
+    border-bottom: 1px solid {{ section.settings.border_color }};
+  }
+  .footer-main-grid-{{ section.id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: {{ section.settings.main_gap_desktop }}px;
+    flex-wrap: wrap;
+  }
+  .brand-column-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    flex: 1 1 25%;
+    max-width: 320px;
+  }
+  .brand-logo-{{ section.id }} {
+    display: block;
+    object-fit: contain;
+    width: {{ section.settings.logo_width_desktop }}px;
+    height: {{ section.settings.logo_height_desktop }}px;
+    margin-bottom: 20px;
+  }
+  .brand-desc-{{ section.id }} {
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+    color: {{ section.settings.text_muted_color }};
+  }
+  .columns-2x2-grid-{{ section.id }} {
+    display: flex;
+    justify-content: space-between;
+    flex: 1 1 70%;
+    gap: {{ section.settings.main_gap_desktop }}px;
+    flex-wrap: wrap;
+  }
+  .menu-column-{{ section.id }} {
+    flex: 1 1 15%;
+    min-width: 140px;
+  }
+  .contact-column-{{ section.id }} {
+    flex: 1 1 20%;
+    min-width: 200px;
+  }
+  .menu-column-{{ section.id }} h3,
+  .contact-column-{{ section.id }} h3 {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    color: {{ section.settings.heading_color }};
+  }
+  .footer-menu-{{ section.id }} {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .footer-menu-{{ section.id }} li {
+    margin-bottom: 12px;
+  }
+  .footer-menu-{{ section.id }} a {
+    font-size: 14px;
+  }
+  .contact-list-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .contact-item-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+  }
+  .contact-icon-{{ section.id }} {
+    display: block;
+    object-fit: contain;
+    width: {{ section.settings.contact_icon_width_desktop }}px;
+    height: {{ section.settings.contact_icon_height_desktop }}px;
+  }
+  i.contact-icon-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: {{ section.settings.contact_icon_width_desktop }}px;
+    line-height: 1;
+    color: {{ section.settings.link_color }};
+  }
+  .contact-text-{{ section.id }} {
+    line-height: 1.4;
+    word-break: break-all;
+    color: #b8c5d6;
+  }
+
+  /* SECTION 3: Systems & Socials */
+  .footer-systems-{{ section.id }} {
+    padding: {{ section.settings.systems_padding_desktop }}px 0;
+    border-bottom: 1px solid {{ section.settings.border_color }};
+  }
+  .footer-systems-desktop-{{ section.id }} {
+    display: block;
+  }
+  .footer-systems-mobile-{{ section.id }} {
+    display: none;
+  }
+  .systems-grid-{{ section.id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: {{ section.settings.systems_gap_desktop }}px;
+    flex-wrap: wrap;
+  }
+  .system-block-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1 1 30%;
+  }
+  .system-block-{{ section.id }} h4 {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: {{ section.settings.heading_color }};
+  }
+  .system-images-{{ section.id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+  }
+  .system-img-{{ section.id }} {
+    display: block;
+    object-fit: contain;
+  }
+  .social-links-{{ section.id }} {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+  }
+  .social-icon-btn-{{ section.id }} {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: {{ section.settings.social_bg_color }};
+    color: {{ section.settings.social_icon_color }} !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+  }
+  .social-icon-btn-{{ section.id }}.facebook {
+    background-color: #3b5998;
+  }
+  .social-icon-btn-{{ section.id }}.instagram {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+  }
+  .social-icon-btn-{{ section.id }}.youtube {
+    background-color: #ff0000;
+  }
+  .social-icon-btn-{{ section.id }}:hover {
+    background-color: {{ section.settings.social_hover_bg_color }};
+    transform: translateY(-2px);
+  }
+  .social-icon-btn-{{ section.id }}.facebook:hover {
+    background-color: #2d4373;
+  }
+  .social-icon-btn-{{ section.id }}.instagram:hover {
+    opacity: 0.9;
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+  }
+  .social-icon-btn-{{ section.id }}.youtube:hover {
+    background-color: #cc0000;
+  }
+
+  /* SECTION 4: Copyright Bottom */
+  .footer-bottom-{{ section.id }} {
+    padding: {{ section.settings.bottom_padding_desktop }}px 0;
+    text-align: center;
+  }
+  .copyright-text-{{ section.id }} {
+    font-size: 13px;
+    margin: 0;
+    color: {{ section.settings.text_muted_color }};
+  }
+
+  /* TABLET AND MOBILE RESPONSIVE STYLES */
+  @media screen and (max-width: 991px) {
+    /* Tablet Styles */
+    .benefits-grid-{{ section.id }} {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: {{ section.settings.benefit_gap_tablet }}px;
+    }
+    .benefit-img-{{ section.id }} {
+      width: {{ section.settings.benefit_img_width_tablet }}px;
+      height: {{ section.settings.benefit_img_height_tablet }}px;
+    }
+
+    .footer-main-grid-{{ section.id }} {
+      display: flex;
+      flex-direction: column;
+      gap: {{ section.settings.main_gap_tablet }}px;
+      text-align: center;
+      align-items: center;
+    }
+    .brand-column-{{ section.id }} {
+      align-items: center;
+      text-align: center;
+      margin-bottom: 20px;
+      flex: 1 1 auto;
+      max-width: 100%;
+    }
+    .brand-logo-{{ section.id }} {
+      width: {{ section.settings.logo_width_tablet }}px;
+      height: {{ section.settings.logo_height_tablet }}px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .columns-2x2-grid-{{ section.id }} {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: {{ section.settings.main_gap_tablet }}px;
+      width: 100%;
+      flex: 1 1 auto;
+    }
+    .menu-column-{{ section.id }} h3,
+    .contact-column-{{ section.id }} h3 {
+      margin-bottom: 15px;
+    }
+    .contact-item-{{ section.id }} {
+      justify-content: center;
+    }
+    .contact-icon-{{ section.id }} {
+      width: {{ section.settings.contact_icon_width_tablet }}px;
+      height: {{ section.settings.contact_icon_height_tablet }}px;
+    }
+    i.contact-icon-{{ section.id }} {
+      font-size: {{ section.settings.contact_icon_width_tablet }}px;
+    }
+
+    /* Toggle visibility */
+    .footer-systems-desktop-{{ section.id }} {
+      display: none !important;
+    }
+    .footer-systems-mobile-{{ section.id }} {
+      display: block !important;
+      padding: {{ section.settings.systems_padding_desktop }}px 0;
+    }
+    .systems-mobile-row1-{{ section.id }} {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: {{ section.settings.systems_gap_tablet }}px;
+      margin-bottom: 25px;
+    }
+    .systems-mobile-row1-{{ section.id }} .system-block-{{ section.id }} {
+      flex: 1 1 45%;
+    }
+    .systems-mobile-row2-{{ section.id }} {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+    .systems-mobile-row2-{{ section.id }} .system-block-{{ section.id }} {
+      flex: 1 1 100%;
+    }
+  }
+
+  @media screen and (max-width: 575px) {
+    /* Mobile Styles */
+    .footer-benefits-{{ section.id }} {
+      padding: {{ section.settings.benefit_padding_mobile }}px 0;
+    }
+    .benefits-grid-{{ section.id }} {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: {{ section.settings.benefit_gap_mobile }}px;
+    }
+    .benefit-img-{{ section.id }} {
+      width: {{ section.settings.benefit_img_width_mobile }}px;
+      height: {{ section.settings.benefit_img_height_mobile }}px;
+    }
+
+    .footer-main-{{ section.id }} {
+      padding: {{ section.settings.main_padding_mobile }}px 0;
+    }
+    .footer-main-grid-{{ section.id }} {
+      gap: {{ section.settings.main_gap_mobile }}px;
+    }
+    .brand-logo-{{ section.id }} {
+      width: {{ section.settings.logo_width_mobile }}px;
+      height: {{ section.settings.logo_height_mobile }}px;
+    }
+    .columns-2x2-grid-{{ section.id }} {
+      gap: {{ section.settings.main_gap_mobile }}px;
+    }
+    .contact-icon-{{ section.id }} {
+      width: {{ section.settings.contact_icon_width_mobile }}px;
+      height: {{ section.settings.contact_icon_height_mobile }}px;
+    }
+    i.contact-icon-{{ section.id }} {
+      font-size: {{ section.settings.contact_icon_width_mobile }}px;
+    }
+
+    .footer-systems-mobile-{{ section.id }} {
+      padding: {{ section.settings.systems_padding_mobile }}px 0 !important;
+    }
+    .systems-mobile-row1-{{ section.id }} {
+      gap: {{ section.settings.systems_gap_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div id="custom-footer-{{ section.id }}" class="custom-footer">
+  <!-- SECTION 1: Benefit Bar -->
+  <div class="footer-benefits-{{ section.id }}">
+    <div class="container-fluid px-4 px-md-5">
+      <div class="benefits-grid-{{ section.id }}">
+        {%- for i in (1..4) -%}
+          {%- liquid
+            assign img_key = 'benefit_img_' | append: i
+            assign text_key = 'benefit_text_' | append: i
+            assign img = section.settings[img_key]
+            assign text = section.settings[text_key]
+          -%}
+          {%- if img != blank or text != blank -%}
+            <div class="benefit-item-{{ section.id }}">
+              {%- if img != blank -%}
+                <img
+                  src="{{ img | image_url: width: 150 }}"
+                  alt="{{ text | escape }}"
+                  class="benefit-img-{{ section.id }}"
+                  loading="lazy"
+                  height="auto"
+                  width="auto"
+                >
+              {%- endif -%}
+              {%- if text != blank -%}
+                <p class="benefit-text-{{ section.id }}">{{ text }}</p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Main Footer Content -->
+  <div class="footer-main-{{ section.id }}">
+    <div class="container-fluid px-4 px-md-5">
+      <div class="footer-main-grid-{{ section.id }}">
+        <!-- Logo & Description column -->
+        <div class="brand-column-{{ section.id }}">
+          {%- if section.settings.logo != blank -%}
+            <img
+              src="{{ section.settings.logo | image_url: width: 400 }}"
+              alt="{{ shop.name | escape }}"
+              class="brand-logo-{{ section.id }}"
+              loading="lazy"
+              height="auto"
+              width="auto"
+            >
+          {%- endif -%}
+          {%- if section.settings.description != blank -%}
+            <p class="brand-desc-{{ section.id }}">{{ section.settings.description }}</p>
+          {%- endif -%}
+        </div>
+
+        <!-- Desktop Grid vs Tablet 2x2 Grid wrap -->
+        <div class="columns-2x2-grid-{{ section.id }}">
+          <!-- Column 1: Our Business -->
+          <div class="menu-column-{{ section.id }}">
+            <h3>{{ section.settings.menu_title_1 }}</h3>
+            {%- if section.settings.menu_1 != blank -%}
+              <ul class="footer-menu-{{ section.id }}">
+                {%- for link in linklists[section.settings.menu_1].links -%}
+                  <li>
+                    <a href="{{ link.url }}">{{ link.title }}</a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </div>
+
+          <!-- Column 2: Important Links -->
+          <div class="menu-column-{{ section.id }}">
+            <h3>{{ section.settings.menu_title_2 }}</h3>
+            {%- if section.settings.menu_2 != blank -%}
+              <ul class="footer-menu-{{ section.id }}">
+                {%- for link in linklists[section.settings.menu_2].links -%}
+                  <li>
+                    <a href="{{ link.url }}">{{ link.title }}</a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </div>
+
+          <!-- Column 3: Useful Links -->
+          <div class="menu-column-{{ section.id }}">
+            <h3>{{ section.settings.menu_title_3 }}</h3>
+            {%- if section.settings.menu_3 != blank -%}
+              <ul class="footer-menu-{{ section.id }}">
+                {%- for link in linklists[section.settings.menu_3].links -%}
+                  <li>
+                    <a href="{{ link.url }}">{{ link.title }}</a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </div>
+
+          <!-- Column 4: Available On (Contact details) -->
+          <div class="contact-column-{{ section.id }}">
+            <h3>{{ section.settings.contact_title }}</h3>
+            <div class="contact-list-{{ section.id }}">
+              {%- if section.settings.contact_email != blank -%}
+                <div class="contact-item-{{ section.id }}">
+                  {%- if section.settings.email_icon != blank -%}
+                    <img
+                      src="{{ section.settings.email_icon | image_url: width: 60 }}"
+                      alt="Email"
+                      class="contact-icon-{{ section.id }}"
+                      loading="lazy"
+                      height="auto"
+                      width="auto"
+                    >
+                  {%- else -%}
+                    <i class="far fa-envelope contact-icon-{{ section.id }}"></i>
+                  {%- endif -%}
+                  <span class="contact-text-{{ section.id }}">
+                    <a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email }}</a>
+                  </span>
+                </div>
+              {%- endif -%}
+
+              {%- if section.settings.contact_phone != blank -%}
+                <div class="contact-item-{{ section.id }}">
+                  {%- if section.settings.phone_icon != blank -%}
+                    <img
+                      src="{{ section.settings.phone_icon | image_url: width: 60 }}"
+                      alt="Phone"
+                      class="contact-icon-{{ section.id }}"
+                      loading="lazy"
+                      height="auto"
+                      width="auto"
+                    >
+                  {%- else -%}
+                    <i class="fas fa-phone-alt contact-icon-{{ section.id }}"></i>
+                  {%- endif -%}
+                  <span class="contact-text-{{ section.id }}">
+                    <a href="tel:{{ section.settings.contact_phone }}">{{ section.settings.contact_phone }}</a>
+                  </span>
+                </div>
+              {%- endif -%}
+
+              {%- if section.settings.contact_address != blank -%}
+                <div class="contact-item-{{ section.id }}">
+                  {%- if section.settings.address_icon != blank -%}
+                    <img
+                      src="{{ section.settings.address_icon | image_url: width: 60 }}"
+                      alt="Address"
+                      class="contact-icon-{{ section.id }}"
+                      loading="lazy"
+                      height="auto"
+                      width="auto"
+                    >
+                  {%- else -%}
+                    <i class="fas fa-map-marker-alt contact-icon-{{ section.id }}"></i>
+                  {%- endif -%}
+                  <span class="contact-text-{{ section.id }}">{{ section.settings.contact_address }}</span>
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Systems & Socials (DESKTOP VERSION) -->
+  <div
+    id="footer-systems-desktop-{{ section.id }}"
+    class="footer-systems-{{ section.id }} footer-systems-desktop-{{ section.id }}"
+  >
+    <div class="container-fluid px-4 px-md-5">
+      <div class="systems-grid-{{ section.id }}">
+        <!-- Payment System -->
+        <div class="system-block-{{ section.id }} payment-block-{{ section.id }}">
+          <h4>{{ section.settings.payment_title }}</h4>
+          <div class="system-images-{{ section.id }}">
+            {%- for i in (1..6) -%}
+              {%- liquid
+                assign img_key = 'payment_img_' | append: i
+                assign img = section.settings[img_key]
+                assign width_key = 'payment_width_' | append: i
+                assign height_key = 'payment_height_' | append: i
+                assign w = section.settings[width_key]
+                assign h = section.settings[height_key]
+              -%}
+              {%- if img != blank -%}
+                <img
+                  src="{{ img | image_url: width: 120 }}"
+                  alt="Payment gateway"
+                  class="system-img-{{ section.id }}"
+                  style="width: {{ w }}px; height: {{ h }}px;"
+                  loading="lazy"
+                  height="auto"
+                  width="auto"
+                >
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+
+        <!-- Shipping System -->
+        <div class="system-block-{{ section.id }} shipping-block-{{ section.id }}">
+          <h4>{{ section.settings.shipping_title }}</h4>
+          <div class="system-images-{{ section.id }}">
+            {%- for i in (1..6) -%}
+              {%- liquid
+                assign img_key = 'shipping_img_' | append: i
+                assign img = section.settings[img_key]
+                assign width_key = 'shipping_width_' | append: i
+                assign height_key = 'shipping_height_' | append: i
+                assign w = section.settings[width_key]
+                assign h = section.settings[height_key]
+              -%}
+              {%- if img != blank -%}
+                <img
+                  src="{{ img | image_url: width: 120 }}"
+                  alt="Shipping carrier"
+                  class="system-img-{{ section.id }}"
+                  style="width: {{ w }}px; height: {{ h }}px;"
+                  loading="lazy"
+                  height="auto"
+                  width="auto"
+                >
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+
+        <!-- Social Links -->
+        <div class="system-block-{{ section.id }} social-block-{{ section.id }}">
+          <h4>{{ section.settings.socials_title }}</h4>
+          <div class="social-links-{{ section.id }}">
+            {%- if section.settings.facebook_link != blank -%}
+              <a
+                href="{{ section.settings.facebook_link }}"
+                target="_blank"
+                class="social-icon-btn-{{ section.id }} facebook"
+                aria-label="Facebook"
+              >
+                <i class="fab fa-facebook-f"></i>
+              </a>
+            {%- endif -%}
+            {%- if section.settings.instagram_link != blank -%}
+              <a
+                href="{{ section.settings.instagram_link }}"
+                target="_blank"
+                class="social-icon-btn-{{ section.id }} instagram"
+                aria-label="Instagram"
+              >
+                <i class="fab fa-instagram"></i>
+              </a>
+            {%- endif -%}
+            {%- if section.settings.youtube_link != blank -%}
+              <a
+                href="{{ section.settings.youtube_link }}"
+                target="_blank"
+                class="social-icon-btn-{{ section.id }} youtube"
+                aria-label="YouTube"
+              >
+                <i class="fab fa-youtube"></i>
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Systems & Socials (TABLET & MOBILE VERSION) -->
+  <div
+    id="footer-systems-mobile-{{ section.id }}"
+    class="footer-systems-{{ section.id }} footer-systems-mobile-{{ section.id }}"
+  >
+    <div class="container-fluid px-4 px-md-5">
+      <div class="systems-mobile-row1-{{ section.id }}">
+        <!-- Payment System -->
+        <div class="system-block-{{ section.id }} payment-block-{{ section.id }}">
+          <h4>{{ section.settings.payment_title }}</h4>
+          <div class="system-images-{{ section.id }}">
+            {%- for i in (1..6) -%}
+              {%- liquid
+                assign img_key = 'payment_img_' | append: i
+                assign img = section.settings[img_key]
+                assign width_key = 'payment_width_' | append: i
+                assign height_key = 'payment_height_' | append: i
+                assign w = section.settings[width_key]
+                assign h = section.settings[height_key]
+              -%}
+              {%- if img != blank -%}
+                <img
+                  src="{{ img | image_url: width: 120 }}"
+                  alt="Payment gateway"
+                  class="system-img-{{ section.id }}"
+                  style="width: {{ w }}px; height: {{ h }}px;"
+                  loading="lazy"
+                  height="auto"
+                  width="auto"
+                >
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+
+        <!-- Shipping System -->
+        <div class="system-block-{{ section.id }} shipping-block-{{ section.id }}">
+          <h4>{{ section.settings.shipping_title }}</h4>
+          <div class="system-images-{{ section.id }}">
+            {%- for i in (1..6) -%}
+              {%- liquid
+                assign img_key = 'shipping_img_' | append: i
+                assign img = section.settings[img_key]
+                assign width_key = 'shipping_width_' | append: i
+                assign height_key = 'shipping_height_' | append: i
+                assign w = section.settings[width_key]
+                assign h = section.settings[height_key]
+              -%}
+              {%- if img != blank -%}
+                <img
+                  src="{{ img | image_url: width: 120 }}"
+                  alt="Shipping carrier"
+                  class="system-img-{{ section.id }}"
+                  style="width: {{ w }}px; height: {{ h }}px;"
+                  loading="lazy"
+                  height="auto"
+                  width="auto"
+                >
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+
+      <div class="systems-mobile-row2-{{ section.id }}">
+        <!-- Social Links -->
+        <div class="system-block-{{ section.id }} social-block-{{ section.id }}">
+          <h4>{{ section.settings.socials_title }}</h4>
+          <div class="social-links-{{ section.id }}">
+            {%- if section.settings.facebook_link != blank -%}
+              <a
+                href="{{ section.settings.facebook_link }}"
+                target="_blank"
+                class="social-icon-btn-{{ section.id }} facebook"
+                aria-label="Facebook"
+              >
+                <i class="fab fa-facebook-f"></i>
+              </a>
+            {%- endif -%}
+            {%- if section.settings.instagram_link != blank -%}
+              <a
+                href="{{ section.settings.instagram_link }}"
+                target="_blank"
+                class="social-icon-btn-{{ section.id }} instagram"
+                aria-label="Instagram"
+              >
+                <i class="fab fa-instagram"></i>
+              </a>
+            {%- endif -%}
+            {%- if section.settings.youtube_link != blank -%}
+              <a
+                href="{{ section.settings.youtube_link }}"
+                target="_blank"
+                class="social-icon-btn-{{ section.id }} youtube"
+                aria-label="YouTube"
+              >
+                <i class="fab fa-youtube"></i>
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Copyright Bottom -->
+  <div class="footer-bottom-{{ section.id }}">
+    <div class="container-fluid px-4 px-md-5">
+      {%- if section.settings.copyright_text != blank -%}
+        <p class="copyright-text-{{ section.id }}">{{ section.settings.copyright_text }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Site Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Color Schemes"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#001e3d"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_muted_color",
+      "label": "Muted Text Color",
+      "default": "#b8c5d6"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link Color",
+      "default": "#b8c5d6"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Link Hover Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Separator Borders Color",
+      "default": "#0e2e50"
+    },
+    {
+      "type": "header",
+      "content": "Section 1: Benefits settings"
+    },
+    {
+      "type": "text",
+      "id": "benefit_text_1",
+      "label": "Benefit 1 Text",
+      "default": "Free Shipping"
+    },
+    {
+      "type": "image_picker",
+      "id": "benefit_img_1",
+      "label": "Benefit 1 Icon Image"
+    },
+    {
+      "type": "text",
+      "id": "benefit_text_2",
+      "label": "Benefit 2 Text",
+      "default": "24/7 Support."
+    },
+    {
+      "type": "image_picker",
+      "id": "benefit_img_2",
+      "label": "Benefit 2 Icon Image"
+    },
+    {
+      "type": "text",
+      "id": "benefit_text_3",
+      "label": "Benefit 3 Text",
+      "default": "Online Payment."
+    },
+    {
+      "type": "image_picker",
+      "id": "benefit_img_3",
+      "label": "Benefit 3 Icon Image"
+    },
+    {
+      "type": "text",
+      "id": "benefit_text_4",
+      "label": "Benefit 4 Text",
+      "default": "Fast Delivery"
+    },
+    {
+      "type": "image_picker",
+      "id": "benefit_img_4",
+      "label": "Benefit 4 Icon Image"
+    },
+    {
+      "type": "range",
+      "id": "benefit_img_width_desktop",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop Icon Width",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "benefit_img_height_desktop",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop Icon Height",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "benefit_img_width_tablet",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Tablet Icon Width",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "benefit_img_height_tablet",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Tablet Icon Height",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "benefit_img_width_mobile",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Icon Width",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "benefit_img_height_mobile",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Icon Height",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Section 2: Brand & Columns"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Footer Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width_desktop",
+      "min": 50,
+      "max": 350,
+      "step": 5,
+      "unit": "px",
+      "label": "Desktop Logo Width",
+      "default": 200
+    },
+    {
+      "type": "range",
+      "id": "logo_height_desktop",
+      "min": 20,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Desktop Logo Height",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "logo_width_tablet",
+      "min": 50,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "label": "Tablet Logo Width",
+      "default": 180
+    },
+    {
+      "type": "range",
+      "id": "logo_height_tablet",
+      "min": 20,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Tablet Logo Height",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "min": 50,
+      "max": 250,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Logo Width",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "logo_height_mobile",
+      "min": 20,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Logo Height",
+      "default": 60
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description text",
+      "default": "At Gulf Coast Outfitters, it is our mission to outfit boaters with the highest-quality marine hardware and boat accessories."
+    },
+    {
+      "type": "text",
+      "id": "menu_title_1",
+      "label": "Menu 1 Title",
+      "default": "Our Business"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_1",
+      "label": "Menu 1 Link List"
+    },
+    {
+      "type": "text",
+      "id": "menu_title_2",
+      "label": "Menu 2 Title",
+      "default": "Important Links"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_2",
+      "label": "Menu 2 Link List"
+    },
+    {
+      "type": "text",
+      "id": "menu_title_3",
+      "label": "Menu 3 Title",
+      "default": "Useful Links"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_3",
+      "label": "Menu 3 Link List"
+    },
+    {
+      "type": "text",
+      "id": "contact_title",
+      "label": "Contact Section Title",
+      "default": "Available On"
+    },
+    {
+      "type": "image_picker",
+      "id": "email_icon",
+      "label": "Email Icon"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Contact Email",
+      "default": "support@gulfcoastmarine.net"
+    },
+    {
+      "type": "image_picker",
+      "id": "phone_icon",
+      "label": "Phone Icon"
+    },
+    {
+      "type": "text",
+      "id": "contact_phone",
+      "label": "Contact Phone",
+      "default": "+1 (985) 662 1036"
+    },
+    {
+      "type": "image_picker",
+      "id": "address_icon",
+      "label": "Address Icon"
+    },
+    {
+      "type": "text",
+      "id": "contact_address",
+      "label": "Contact Address",
+      "default": "505 S Main St, Picayune MS 39466"
+    },
+    {
+      "type": "range",
+      "id": "contact_icon_width_desktop",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop Contact Icon Width",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "contact_icon_height_desktop",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop Contact Icon Height",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "contact_icon_width_tablet",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Tablet Contact Icon Width",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "contact_icon_height_tablet",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Tablet Contact Icon Height",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "contact_icon_width_mobile",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Contact Icon Width",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "contact_icon_height_mobile",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Contact Icon Height",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Section 3: Systems & Socials"
+    },
+    {
+      "type": "text",
+      "id": "payment_title",
+      "label": "Payment System Title",
+      "default": "Payment System:"
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_img_1",
+      "label": "Payment Partner Image 1"
+    },
+    {
+      "type": "range",
+      "id": "payment_width_1",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Payment 1 Width",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "payment_height_1",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Payment 1 Height",
+      "default": 30
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_img_2",
+      "label": "Payment Partner Image 2"
+    },
+    {
+      "type": "range",
+      "id": "payment_width_2",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Payment 2 Width",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "payment_height_2",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Payment 2 Height",
+      "default": 30
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_img_3",
+      "label": "Payment Partner Image 3"
+    },
+    {
+      "type": "range",
+      "id": "payment_width_3",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Payment 3 Width",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "payment_height_3",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Payment 3 Height",
+      "default": 30
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_img_4",
+      "label": "Payment Partner Image 4"
+    },
+    {
+      "type": "range",
+      "id": "payment_width_4",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Payment 4 Width",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "payment_height_4",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Payment 4 Height",
+      "default": 30
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_img_5",
+      "label": "Payment Partner Image 5"
+    },
+    {
+      "type": "range",
+      "id": "payment_width_5",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Payment 5 Width",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "payment_height_5",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Payment 5 Height",
+      "default": 30
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_img_6",
+      "label": "Payment Partner Image 6"
+    },
+    {
+      "type": "range",
+      "id": "payment_width_6",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Payment 6 Width",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "payment_height_6",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Payment 6 Height",
+      "default": 30
+    },
+    {
+      "type": "text",
+      "id": "shipping_title",
+      "label": "Shipping System Title",
+      "default": "Shipping System:"
+    },
+    {
+      "type": "image_picker",
+      "id": "shipping_img_1",
+      "label": "Shipping Partner Image 1"
+    },
+    {
+      "type": "range",
+      "id": "shipping_width_1",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Shipping 1 Width",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "shipping_height_1",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Shipping 1 Height",
+      "default": 30
+    },
+    {
+      "type": "image_picker",
+      "id": "shipping_img_2",
+      "label": "Shipping Partner Image 2"
+    },
+    {
+      "type": "range",
+      "id": "shipping_width_2",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Shipping 2 Width",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "shipping_height_2",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Shipping 2 Height",
+      "default": 30
+    },
+    {
+      "type": "image_picker",
+      "id": "shipping_img_3",
+      "label": "Shipping Partner Image 3"
+    },
+    {
+      "type": "range",
+      "id": "shipping_width_3",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Shipping 3 Width",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "shipping_height_3",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Shipping 3 Height",
+      "default": 30
+    },
+    {
+      "type": "image_picker",
+      "id": "shipping_img_4",
+      "label": "Shipping Partner Image 4"
+    },
+    {
+      "type": "range",
+      "id": "shipping_width_4",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Shipping 4 Width",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "shipping_height_4",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Shipping 4 Height",
+      "default": 30
+    },
+    {
+      "type": "image_picker",
+      "id": "shipping_img_5",
+      "label": "Shipping Partner Image 5"
+    },
+    {
+      "type": "range",
+      "id": "shipping_width_5",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Shipping 5 Width",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "shipping_height_5",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Shipping 5 Height",
+      "default": 30
+    },
+    {
+      "type": "image_picker",
+      "id": "shipping_img_6",
+      "label": "Shipping Partner Image 6"
+    },
+    {
+      "type": "range",
+      "id": "shipping_width_6",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Shipping 6 Width",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "shipping_height_6",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Shipping 6 Height",
+      "default": 30
+    },
+    {
+      "type": "text",
+      "id": "socials_title",
+      "label": "Social Media Title",
+      "default": "Our Social Links:"
+    },
+    {
+      "type": "url",
+      "id": "facebook_link",
+      "label": "Facebook Link"
+    },
+    {
+      "type": "url",
+      "id": "instagram_link",
+      "label": "Instagram Link"
+    },
+    {
+      "type": "url",
+      "id": "youtube_link",
+      "label": "YouTube Link"
+    },
+    {
+      "type": "color",
+      "id": "social_bg_color",
+      "label": "Social Icon Background Color",
+      "default": "#0056b3"
+    },
+    {
+      "type": "color",
+      "id": "social_hover_bg_color",
+      "label": "Social Icon Hover Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "social_icon_color",
+      "label": "Social Icon Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section 4: Copyright settings"
+    },
+    {
+      "type": "textarea",
+      "id": "copyright_text",
+      "label": "Copyright Text",
+      "default": "© 2026 Gulf Coast Outfitters. All Rights Reserved. | Developed by Mediusware Ltd."
+    },
+    {
+      "type": "header",
+      "content": "Paddings & Spacing Control (Desktop)"
+    },
+    {
+      "type": "range",
+      "id": "benefit_padding_desktop",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "label": "Benefits Padding Desktop (px)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "benefit_gap_desktop",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "label": "Benefits Gap Desktop (px)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "main_padding_desktop",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "label": "Main Content Padding Desktop (px)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "main_gap_desktop",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "label": "Main Content Gap Desktop (px)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "systems_padding_desktop",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "label": "Systems Padding Desktop (px)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "systems_gap_desktop",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "label": "Systems Gap Desktop (px)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "bottom_padding_desktop",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "label": "Copyright Padding Desktop (px)",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Paddings & Spacing Control (Tablet)"
+    },
+    {
+      "type": "range",
+      "id": "benefit_gap_tablet",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "label": "Benefits Gap Tablet (px)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "main_gap_tablet",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "label": "Main Content Gap Tablet (px)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "systems_gap_tablet",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "label": "Systems Gap Tablet (px)",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Paddings & Spacing Control (Mobile)"
+    },
+    {
+      "type": "range",
+      "id": "benefit_padding_mobile",
+      "min": 5,
+      "max": 60,
+      "step": 1,
+      "label": "Benefits Padding Mobile (px)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "benefit_gap_mobile",
+      "min": 5,
+      "max": 60,
+      "step": 1,
+      "label": "Benefits Gap Mobile (px)",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "main_padding_mobile",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "label": "Main Content Padding Mobile (px)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "main_gap_mobile",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "label": "Main Content Gap Mobile (px)",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "systems_padding_mobile",
+      "min": 5,
+      "max": 60,
+      "step": 1,
+      "label": "Systems Padding Mobile (px)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "systems_gap_mobile",
+      "min": 5,
+      "max": 60,
+      "step": 1,
+      "label": "Systems Gap Mobile (px)",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Site Footer",
+      "category": "Footer"
+    }
+  ]
+}
+{% endschema %}
