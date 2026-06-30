@@ -33,9 +33,7 @@
     "why_choose_us": {
       "type": "why-choose-us",
       "settings": {
-        "subtitle": "Our Commitment",
-        "title": "Why Choose Gulf Coast Outfitters",
-        "content": "We offer premium quality gear designed specifically for Destin and Gulf Coast conditions, with expert customer advice and hassle-free support."
+        "title": "Why Choose Gulf Coast Outfitters"
       }
     },
     "testimonials": {

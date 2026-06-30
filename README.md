@@ -1,1 +1,0 @@
-# gulfcoast-custom-theme-shopify

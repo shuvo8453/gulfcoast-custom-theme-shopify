@@ -7,7 +7,7 @@
     {%- if section.settings.subtitle != blank -%}
       <p class="brand-grid-subtitle">{{ section.settings.subtitle | escape }}</p>
     {%- endif -%}
-    
+
     {%- if section.settings.heading != blank -%}
       <h2 class="brand-grid-heading">{{ section.settings.heading | escape }}</h2>
     {%- endif -%}
@@ -15,7 +15,7 @@
     <div class="brand-grid-layout">
       {%- for vendor in shop.vendors -%}
         {%- assign matched_logo = blank -%}
-        
+
         {%- comment -%}
           Search through blocks to find a matching vendor name
         {%- endcomment -%}
@@ -315,4 +315,3 @@
   ]
 }
 {% endschema %}
-
