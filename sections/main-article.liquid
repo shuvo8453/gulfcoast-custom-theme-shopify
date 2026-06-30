@@ -1,25 +1,764 @@
 <article class="article-section py-5">
-  <div class="container">
-    {% render 'breadcrumb' %}
+  <!-- Dynamic Styles Based on Theme Settings -->
+  <style>
+    :root {
+      --art-primary-color: {{ section.settings.primary_color }};
+      --art-primary-hover: {{ section.settings.primary_hover_color }};
+      --art-text-color: {{ section.settings.text_color }};
+      --art-heading-color: {{ section.settings.heading_color }};
 
-    <div class="row g-5 justify-content-center mt-2">
-      <div class="col-12 col-lg-8">
-        <!-- Post Header -->
-        <header class="article-header mb-4">
+      /* TOC Customizations */
+      --toc-bg: {{ section.settings.toc_bg_color }};
+      --toc-border: {{ section.settings.toc_border_color }};
+      --toc-text: {{ section.settings.toc_text_color }};
+      --toc-hover: {{ section.settings.toc_hover_color }};
+
+      /* Related Slider Card customizations */
+      --blog-card-bg: {{ section.settings.card_bg_color }};
+      --blog-card-border: {{ section.settings.card_border_color }};
+      --blog-card-radius: {{ section.settings.card_border_radius }}px;
+
+      {% case section.settings.card_shadow %}
+        {% when 'none' %}
+          --blog-card-shadow: none;
+        {% when 'small' %}
+          --blog-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        {% when 'medium' %}
+          --blog-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        {% when 'large' %}
+          --blog-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      {% endcase %}
+
+      --blog-badge-bg: {{ section.settings.badge_bg_color }};
+      --blog-badge-text: {{ section.settings.badge_text_color }};
+      --blog-date-bg: {{ section.settings.date_bg_color }};
+      --blog-date-num: {{ section.settings.date_number_color }};
+      --blog-date-mon: {{ section.settings.date_month_color }};
+
+      --blog-title-color: {{ section.settings.title_color }};
+      --blog-title-hover: {{ section.settings.title_hover_color }};
+
+      --blog-excerpt-color: {{ section.settings.excerpt_color }};
+      --blog-readmore-color: {{ section.settings.read_more_color }};
+      --blog-readmore-hover: {{ section.settings.read_more_hover_color }};
+
+      /* Sidebar Customizations */
+      --blog-sidebar-bg: {{ section.settings.sidebar_widget_bg }};
+      --blog-sidebar-border: {{ section.settings.sidebar_widget_border }};
+      --blog-sidebar-title-color: {{ section.settings.sidebar_widget_title_color }};
+      --blog-sidebar-title-border: {{ section.settings.sidebar_widget_title_border }};
+      --blog-sidebar-link: {{ section.settings.sidebar_link_color }};
+      --blog-sidebar-link-hover: {{ section.settings.sidebar_link_hover_color }};
+    }
+
+    /* Layout Alignment */
+    .article-section {
+      color: var(--art-text-color);
+    }
+    .article-card {
+      background-color: var(--blog-sidebar-bg);
+      border: 1px solid var(--blog-sidebar-border);
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+    @media (max-width: 767px) {
+      .article-card {
+        padding: 24px;
+      }
+    }
+    /* Author Bio Box */
+    .article-author-box {
+      background-color: var(--blog-sidebar-bg);
+      border: 1px solid var(--blog-sidebar-border);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .article-author-box__avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af;
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+    .article-author-box__content {
+      flex-grow: 1;
+    }
+    .article-author-box__name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--art-heading-color);
+      margin-bottom: 8px;
+      font-family: 'Outfit', sans-serif;
+    }
+    .article-author-box__bio {
+      font-size: 14px;
+      color: var(--art-text-color);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .article-author-box__link {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--art-primary-color);
+      text-decoration: none;
+    }
+    .article-author-box__link:hover {
+      color: var(--art-primary-hover);
+      text-decoration: underline;
+    }
+
+    /* Prev / Next Navigation */
+    .article-nav-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .article-nav-card {
+      flex: 1;
+      background-color: var(--blog-sidebar-bg);
+      border: 1px solid var(--blog-sidebar-border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-decoration: none !important;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      min-width: 0;
+    }
+    .article-nav-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+    .article-nav-card__chevron {
+      font-size: 18px;
+      color: var(--art-primary-color);
+      flex-shrink: 0;
+    }
+    .article-nav-card__content {
+      flex-grow: 1;
+      min-width: 0;
+    }
+    .article-nav-card__label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .article-nav-card__title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--art-heading-color);
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.4;
+      font-family: 'Outfit', sans-serif;
+    }
+    .article-nav-grid-btn {
+      width: 48px;
+      height: 48px;
+      background-color: var(--blog-sidebar-bg);
+      border: 1px solid var(--blog-sidebar-border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--art-primary-color);
+      font-size: 18px;
+      text-decoration: none;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      transition: all 0.2s ease;
+    }
+    .article-nav-grid-btn:hover {
+      background-color: var(--art-primary-color);
+      color: #ffffff;
+      border-color: var(--art-primary-color);
+    }
+
+    /* Social Share Box */
+    .article-share-box {
+      background-color: var(--blog-sidebar-bg);
+      border: 1px solid var(--blog-sidebar-border);
+      border-radius: 12px;
+      padding: 24px 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .article-share-box__label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #6b7280;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-family: 'Outfit', sans-serif;
+    }
+    .article-share-box__list {
+      display: flex;
+      gap: 12px;
+    }
+    .article-share-box__link {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff !important;
+      font-size: 14px;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+    .article-share-box__link:hover {
+      transform: scale(1.1);
+    }
+    .article-share-box__link--facebook { background-color: #1877f2; }
+    .article-share-box__link--twitter { background-color: #000000; }
+    .article-share-box__link--pinterest { background-color: #e60023; }
+    .article-share-box__link--linkedin { background-color: #0077b5; }
+    .article-share-box__link--telegram { background-color: #0088cc; }
+
+    @media (max-width: 767px) {
+      .article-author-box {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+        padding: 24px;
+      }
+      .article-nav-row {
+        gap: 8px;
+      }
+      .article-nav-card {
+        padding: 12px 16px;
+      }
+      .article-share-box {
+        padding: 20px 24px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+    }
+    /* Table of Contents Styling */
+    .toc-container {
+      background-color: var(--toc-bg);
+      border: 1px solid var(--toc-border);
+      border-radius: 12px;
+      margin-bottom: 30px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      position: sticky;
+      top: 100px;
+      z-index: 99;
+      transition: all 0.3s ease;
+    }
+    .toc-header {
+      padding: 16px 24px;
+      background-color: rgba(6, 46, 103, 0.02);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 1px solid var(--toc-border);
+    }
+    .toc-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--art-heading-color);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Outfit', sans-serif;
+    }
+    .toc-title i {
+      color: var(--art-primary-color);
+    }
+    .toc-chevron {
+      font-size: 14px;
+      color: #9ca3af;
+      transition: transform 0.2s ease;
+    }
+    .toc-body {
+      padding: 20px 24px;
+      max-height: 400px;
+      overflow-y: auto;
+      transition: all 0.3s ease;
+    }
+    .toc-body.collapsed {
+      display: none;
+    }
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .toc-link {
+      color: var(--toc-text);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s ease, padding-left 0.2s ease;
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+    }
+    .toc-link:hover {
+      color: var(--toc-hover);
+      padding-left: 6px;
+    }
+
+    /* Auto HTML styling override for user posts content */
+    .article-body {
+      font-family: 'Inter', sans-serif;
+    }
+    .article-body h1, .article-body h2, .article-body h3, .article-body h4, .article-body h5, .article-body h6 {
+      color: var(--art-heading-color);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      line-height: 1.35;
+    }
+    .article-body h1 { font-size: 32px; }
+    .article-body h2 {
+      font-size: 26px;
+      border-left: 4px solid var(--art-primary-color);
+      padding-left: 14px;
+    }
+    .article-body h3 { font-size: 22px; }
+    .article-body h4 { font-size: 19px; }
+    .article-body h5 { font-size: 16px; }
+    .article-body h6 { font-size: 14px; }
+
+    .article-body p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--art-text-color);
+      margin-bottom: 1.5rem;
+    }
+    .article-body a {
+      color: var(--art-primary-color);
+      text-decoration: underline;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+    .article-body a:hover {
+      color: var(--art-primary-hover);
+    }
+    .article-body ul, .article-body ol {
+      padding-left: 24px;
+      margin-bottom: 1.5rem;
+    }
+    .article-body li {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--art-text-color);
+      margin-bottom: 0.5rem;
+    }
+    .article-body blockquote {
+      border-left: 4px solid #f59e0b;
+      background-color: #fffbeb;
+      padding: 16px 24px;
+      margin: 2rem 0;
+      font-style: italic;
+      font-size: 16px;
+      color: #78350f;
+      border-radius: 4px;
+    }
+    .article-body button, .article-body .button {
+      display: inline-block;
+      background-color: var(--art-primary-color);
+      color: #ffffff;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none !important;
+      transition: all 0.3s ease;
+    }
+    .article-body button:hover, .article-body .button:hover {
+      background-color: var(--art-primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(6,46,103,0.15);
+      color: #ffffff;
+    }
+    .article-body img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      margin: 2rem 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    .article-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+    }
+    .article-body th, .article-body td {
+      border: 1px solid #e5e7eb;
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 14px;
+    }
+    .article-body th {
+      background-color: #f8fafc;
+      font-weight: 700;
+      color: var(--art-heading-color);
+    }
+
+    /* Meta avatar */
+    .article-meta-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af;
+      font-size: 12px;
+    }
+
+    /* Related posts slider section */
+    .related-posts-slider {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 24px;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 8px 4px;
+    }
+    .related-posts-slider::-webkit-scrollbar {
+      display: none;
+    }
+    .related-posts-slide {
+      flex: 0 0 calc(50% - 12px);
+      scroll-snap-align: start;
+    }
+    @media (max-width: 767px) {
+      .related-posts-slide {
+        flex: 0 0 100%;
+      }
+    }
+
+    /* Card styling */
+    .custom-blog-card {
+      background-color: var(--blog-card-bg);
+      border: 1px solid var(--blog-card-border);
+      border-radius: var(--blog-card-radius);
+      box-shadow: var(--blog-card-shadow);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+    .custom-blog-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+    }
+    .custom-blog-card__image-container {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16 / 10;
+      border-top-left-radius: calc(var(--blog-card-radius) - 1px);
+      border-top-right-radius: calc(var(--blog-card-radius) - 1px);
+    }
+    .custom-blog-card__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .custom-blog-card:hover .custom-blog-card__img {
+      transform: scale(1.05);
+    }
+    .custom-blog-card__date-badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background-color: var(--blog-date-bg);
+      padding: 8px 14px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      z-index: 5;
+      text-align: center;
+      min-width: 60px;
+    }
+    .custom-blog-card__date-day {
+      display: block;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--blog-date-num);
+      line-height: 1.1;
+      font-family: 'Outfit', sans-serif;
+    }
+    .custom-blog-card__date-month {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--blog-date-mon);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-blog-card__body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .custom-blog-card__badge-wrapper {
+      margin-bottom: 12px;
+    }
+    .custom-blog-card__category-badge {
+      display: inline-block;
+      background-color: var(--blog-badge-bg);
+      color: var(--blog-badge-text);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 50px;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      font-family: 'Outfit', sans-serif;
+    }
+    .custom-blog-card__title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.35;
+      font-family: 'Outfit', sans-serif;
+    }
+    .custom-blog-card__title-link {
+      color: var(--blog-title-color);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .custom-blog-card__title-link:hover {
+      color: var(--blog-title-hover);
+    }
+    .custom-blog-card__excerpt {
+      color: var(--blog-excerpt-color);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      flex-grow: 1;
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-blog-card__read-more-link {
+      color: var(--blog-readmore-color);
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
+      transition: color 0.2s ease;
+      font-family: 'Outfit', sans-serif;
+    }
+    .custom-blog-card__read-more-link:hover {
+      color: var(--blog-readmore-hover);
+      text-decoration: underline;
+    }
+
+    /* Related Posts container */
+    .related-posts-section {
+      background-color: var(--blog-sidebar-bg);
+      border: 1px solid var(--blog-sidebar-border);
+      border-radius: 12px;
+      padding: 40px;
+      margin-top: 40px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+    .related-posts-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--art-heading-color);
+      margin-top: 0 !important;
+      margin-bottom: 24px;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Slider dots */
+    .related-slider-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .related-slider-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #e2e8f0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .related-slider-dot--active {
+      background-color: #007bff;
+      width: 24px;
+      border-radius: 4px;
+    }
+    @media (max-width: 767px) {
+      .related-posts-section {
+        padding: 24px;
+      }
+    }
+
+    /* Sidebar Widget Design */
+    .blog-sidebar-widget {
+      background-color: var(--blog-sidebar-bg);
+      border: 1px solid var(--blog-sidebar-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+    .blog-sidebar-widget__title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--blog-sidebar-title-color);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid var(--blog-sidebar-title-border);
+      font-family: 'Outfit', sans-serif;
+    }
+    .blog-sidebar-categories {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .blog-sidebar-categories__item {
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .blog-sidebar-categories__item:last-child {
+      border-bottom: none;
+    }
+    .blog-sidebar-categories__link {
+      display: block;
+      padding: 10px 0;
+      color: var(--blog-sidebar-link);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .blog-sidebar-categories__link:hover {
+      color: var(--blog-sidebar-link-hover);
+      padding-left: 5px;
+      font-weight: 600;
+    }
+    .blog-sidebar-recent {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .blog-sidebar-recent__item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .blog-sidebar-recent__img-wrapper {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .blog-sidebar-recent__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .blog-sidebar-recent__content {
+      min-width: 0;
+    }
+    .blog-sidebar-recent__title {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.35;
+      margin: 0 0 4px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-family: 'Outfit', sans-serif;
+    }
+    .blog-sidebar-recent__title-link {
+      color: #1f2937;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .blog-sidebar-recent__title-link:hover {
+      color: var(--blog-sidebar-link-hover);
+    }
+    .blog-sidebar-recent__date {
+      font-size: 11px;
+      color: #9ca3af;
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+
+  <div class="container">
+    <div class="row g-4 mt-2">
+      <!-- Main Content -->
+      <div class="col-12 {% if section.settings.show_sidebar %}col-lg-9{% endif %}">
+        <div class="article-card">
+          <!-- Post Header -->
+          <header class="article-header mb-4">
           {% if article.tags.size > 0 %}
             <div class="article-tags mb-3 d-flex gap-2">
               {% for tag in article.tags %}
-                <span class="badge bg-primary px-3 py-2 rounded-pill small">{{ tag }}</span>
+                <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="custom-blog-card__category-badge">
+                  {{- tag -}}
+                </a>
               {% endfor %}
             </div>
           {% endif %}
-          
+
           <h1 class="article-title fw-bold text-dark mb-3">{{ article.title }}</h1>
-          
+
           <div class="article-meta text-muted d-flex align-items-center gap-3 border-bottom pb-3">
             <div class="author-info d-flex align-items-center gap-2">
-              <i class="fa-solid fa-user-circle fa-lg text-primary"></i>
-              <span class="small fw-semibold">{{ article.author }}</span>
+              <div class="article-meta-avatar">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <span class="small fw-semibold">Posted by {{ article.author }}</span>
             </div>
             <span>&bull;</span>
             <div class="publish-date d-flex align-items-center gap-2">
@@ -32,56 +771,660 @@
         <!-- Article Featured Image -->
         {% if article.image %}
           <div class="article-featured-image rounded overflow-hidden mb-5 shadow-sm">
-            <img src="{{ article.image | image_url: width: 1000 }}" class="img-fluid w-100" alt="{{ article.title | escape }}" loading="eager">
+            <img
+              src="{{ article.image | image_url: width: 1000 }}"
+              class="img-fluid w-100"
+              alt="{{ article.title | escape }}"
+              loading="eager"
+              width="auto"
+              height="auto"
+            >
           </div>
         {% endif %}
 
+        <!-- Collapsible Table of Contents Card -->
+        <div class="toc-container" id="toc-container">
+          <div class="toc-header" id="toc-header">
+            <h2 class="toc-title"><i class="fa-solid fa-list"></i> Table of Contents</h2>
+            <i class="fa-solid fa-chevron-down toc-chevron" id="toc-chevron"></i>
+          </div>
+          <div class="toc-body" id="toc-body">
+            <ul class="toc-list" id="toc-list"></ul>
+          </div>
+        </div>
+
         <!-- Article Main Content -->
-        <div class="article-body leading-relaxed text-muted mb-5">
+        <div class="article-body leading-relaxed mb-5">
           {{ article.content }}
         </div>
+      </div>
 
-        <!-- Social Share Bar -->
-        <div class="article-share-bar p-3 border rounded bg-light d-flex align-items-center justify-content-between my-5">
-          <span class="fw-bold text-dark small"><i class="fa-solid fa-share-nodes me-2 text-primary"></i>{{ 'blogs.article.share' | t }}</span>
-          <div class="share-icons d-flex gap-2">
-            <a href="https://www.facebook.com/sharer/sharer.php?u={{ canonical_url }}" target="_blank" class="btn btn-sm btn-outline-secondary border-0" aria-label="Share on Facebook"><i class="fa-brands fa-facebook fa-lg"></i></a>
-            <a href="https://twitter.com/intent/tweet?text={{ article.title | escape }}&url={{ canonical_url }}" target="_blank" class="btn btn-sm btn-outline-secondary border-0" aria-label="Share on Twitter"><i class="fa-brands fa-x-twitter fa-lg"></i></a>
-            <a href="https://pinterest.com/pin/create/button/?url={{ canonical_url }}&media={{ article.image | image_url: width: 800 }}&description={{ article.title | escape }}" target="_blank" class="btn btn-sm btn-outline-secondary border-0" aria-label="Share on Pinterest"><i class="fa-brands fa-pinterest fa-lg"></i></a>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ canonical_url }}&title={{ article.title | escape }}" target="_blank" class="btn btn-sm btn-outline-secondary border-0" aria-label="Share on LinkedIn"><i class="fa-brands fa-linkedin fa-lg"></i></a>
-          </div>
+      <!-- Author Bio Box -->
+      <div class="article-author-box">
+        <div class="article-author-box__avatar">
+          <i class="fa-solid fa-user"></i>
         </div>
-
-        <!-- Author Bio Box -->
-        <div class="author-bio-card p-4 border rounded bg-light d-flex gap-4 align-items-center mb-5">
-          <div class="author-avatar rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 70px; height: 70px; min-width: 70px; font-size: 28px;">
-            <i class="fa-solid fa-user"></i>
-          </div>
-          <div>
-            <h5 class="fw-bold text-dark mb-1">{{ article.author }}</h5>
-            <p class="text-muted small mb-0">Gulf Coast Outfitters editorial contributor sharing tips, tutorials, and product reviews for boating, angling, and kayaking adventures.</p>
-          </div>
+        <div class="article-author-box__content">
+          <h3 class="article-author-box__name">About {{ article.author }}</h3>
+          <p class="article-author-box__bio">
+            {% if article.user.bio != blank %}
+              {{ article.user.bio }}
+            {% else %}
+              A marine enthusiast, 15 years outfitting Gulf Coast anglers, 400+ installations across Florida coastlines.
+            {% endif %}
+          </p>
+          <a href="{{ blog.url }}" class="article-author-box__link">View all posts by {{ article.author }}</a>
         </div>
+      </div>
 
-        <!-- Prev / Next Post Link Links -->
-        {% if blog.next_article or blog.previous_article %}
-          <div class="article-navigation border-top border-bottom py-4 d-flex justify-content-between align-items-center my-5 flex-wrap gap-3">
-            {% if blog.previous_article %}
-              <div class="prev-article-link">
-                <span class="d-block text-muted small fw-medium">{{ 'blogs.article.prev_post' | t }}</span>
-                <a href="{{ blog.previous_article.url }}" class="fw-bold text-primary">{{ blog.previous_article.title | truncate: 35 }}</a>
+      <!-- Prev / Next Navigation -->
+      {% if blog.next_article or blog.previous_article %}
+        <div class="article-nav-row">
+          {% if blog.previous_article %}
+            <a href="{{ blog.previous_article.url }}" class="article-nav-card">
+              <i class="fa-solid fa-chevron-left article-nav-card__chevron"></i>
+              <div class="article-nav-card__content">
+                <span class="article-nav-card__label">Older</span>
+                <h4 class="article-nav-card__title">{{ blog.previous_article.title }}</h4>
+              </div>
+            </a>
+          {% else %}
+            <div class="article-nav-card" style="visibility: hidden; opacity: 0; pointer-events: none;"></div>
+          {% endif %}
+
+          <a href="{{ blog.url }}" class="article-nav-grid-btn" title="Back to Blog Archive">
+            <i class="fa-solid fa-th-large"></i>
+          </a>
+
+          {% if blog.next_article %}
+            <a href="{{ blog.next_article.url }}" class="article-nav-card">
+              <div class="article-nav-card__content text-end">
+                <span class="article-nav-card__label">Newer</span>
+                <h4 class="article-nav-card__title">{{ blog.next_article.title }}</h4>
+              </div>
+              <i class="fa-solid fa-chevron-right article-nav-card__chevron"></i>
+            </a>
+          {% else %}
+            <div class="article-nav-card" style="visibility: hidden; opacity: 0; pointer-events: none;"></div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <!-- Social Share Box -->
+      <div class="article-share-box">
+        <span class="article-share-box__label">Share:</span>
+        <div class="article-share-box__list">
+          {% assign article_full_url = shop.url | append: article.url %}
+          {% assign article_encoded_url = article_full_url | url_encode %}
+          {% assign article_encoded_title = article.title | escape | url_encode %}
+
+          <a
+            href="https://www.facebook.com/sharer/sharer.php?u={{ article_encoded_url }}"
+            target="_blank"
+            rel="noopener"
+            class="article-share-box__link article-share-box__link--facebook"
+            title="Share on Facebook"
+          >
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a
+            href="https://twitter.com/intent/tweet?text={{ article_encoded_title }}&url={{ article_encoded_url }}"
+            target="_blank"
+            rel="noopener"
+            class="article-share-box__link article-share-box__link--twitter"
+            title="Share on X"
+          >
+            <i class="fab fa-x-twitter"></i>
+          </a>
+          <a
+            href="https://pinterest.com/pin/create/button/?url={{ article_encoded_url }}&media={{ article.image | image_url: width: 1000 | url_encode }}&description={{ article_encoded_title }}"
+            target="_blank"
+            rel="noopener"
+            class="article-share-box__link article-share-box__link--pinterest"
+            title="Pin it"
+          >
+            <i class="fab fa-pinterest-p"></i>
+          </a>
+          <a
+            href="https://www.linkedin.com/sharing/share-offsite/?url={{ article_encoded_url }}"
+            target="_blank"
+            rel="noopener"
+            class="article-share-box__link article-share-box__link--linkedin"
+            title="Share on LinkedIn"
+          >
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a
+            href="https://t.me/share/url?url={{ article_encoded_url }}&text={{ article_encoded_title }}"
+            target="_blank"
+            rel="noopener"
+            class="article-share-box__link article-share-box__link--telegram"
+            title="Share on Telegram"
+          >
+            <i class="fab fa-telegram-plane"></i>
+          </a>
+        </div>
+      </div>
+
+        <!-- Related Posts Slider -->
+        {% assign current_article_id = article.id %}
+        {% assign related_count = 0 %}
+        {% assign related_limit = 6 %}
+
+        <!-- Pre-calculate if there are related articles to render -->
+        {% capture related_posts_html %}
+          {% for related_article in blog.articles %}
+            {% if related_article.id != current_article_id and related_count < related_limit %}
+              {% assign related_count = related_count | plus: 1 %}
+              <div class="related-posts-slide">
+                <article class="custom-blog-card h-100">
+                  <div class="custom-blog-card__image-container">
+                    {% if related_article.image %}
+                      <a href="{{ related_article.url }}">
+                        <img src="{{ related_article.image | image_url: width: 600 }}" class="custom-blog-card__img" alt="{{ related_article.title | escape }}" loading="lazy" width="auto" height="auto">
+                      </a>
+                    {% else %}
+                      <div class="bg-secondary-subtle d-flex align-items-center justify-content-center h-100">
+                        <i class="fa-regular fa-image fa-3x text-muted"></i>
+                      </div>
+                    {% endif %}
+                    
+                    <div class="custom-blog-card__date-badge">
+                      <span class="custom-blog-card__date-day">{{ related_article.published_at | date: "%d" }}</span>
+                      <span class="custom-blog-card__date-month">{{ related_article.published_at | date: "%b" | upcase }}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="custom-blog-card__body">
+                    <div class="custom-blog-card__badge-wrapper">
+                      {% if related_article.tags.size > 0 %}
+                        {% assign primary_tag = related_article.tags | first %}
+                        <span class="custom-blog-card__category-badge">{{ primary_tag }}</span>
+                      {% else %}
+                        <span class="custom-blog-card__category-badge">Blog</span>
+                      {% endif %}
+                    </div>
+
+                    <h4 class="custom-blog-card__title">
+                      <a href="{{ related_article.url }}" class="custom-blog-card__title-link">
+                        {{ related_article.title }}
+                      </a>
+                    </h4>
+
+                    <!-- Author and Share Row -->
+                    <div class="custom-blog-card__meta-row">
+                      <div class="custom-blog-card__author">
+                        <div class="custom-blog-card__avatar">
+                          <i class="fa-solid fa-user text-white"></i>
+                        </div>
+                        <span class="custom-blog-card__author-text">Posted by {{ related_article.author }}</span>
+                      </div>
+                      
+                      <div class="custom-blog-card__share">
+                        <button class="custom-blog-card__share-btn" aria-label="Share article">
+                          <i class="fas fa-share-alt"></i>
+                        </button>
+                        
+                        <!-- Share Popup Tooltip -->
+                        <div class="custom-blog-card__share-tooltip">
+                          {% assign related_full_url = shop.url | append: related_article.url %}
+                          {% assign related_encoded_url = related_full_url | url_encode %}
+                          {% assign related_encoded_title = related_article.title | escape | url_encode %}
+                          
+                          <a href="https://www.facebook.com/sharer/sharer.php?u={{ related_encoded_url }}" target="_blank" rel="noopener" class="custom-blog-card__social-link custom-blog-card__social-link--facebook" title="Share on Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                          </a>
+                          <a href="https://twitter.com/intent/tweet?text={{ related_encoded_title }}&url={{ related_encoded_url }}" target="_blank" rel="noopener" class="custom-blog-card__social-link custom-blog-card__social-link--twitter" title="Share on X">
+                            <i class="fab fa-x-twitter"></i>
+                          </a>
+                          <a href="https://pinterest.com/pin/create/button/?url={{ related_encoded_url }}&media={{ related_article.image | image_url: width: 1000 | url_encode }}&description={{ related_encoded_title }}" target="_blank" rel="noopener" class="custom-blog-card__social-link custom-blog-card__social-link--pinterest" title="Pin it">
+                            <i class="fab fa-pinterest-p"></i>
+                          </a>
+                          <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ related_encoded_url }}" target="_blank" rel="noopener" class="custom-blog-card__social-link custom-blog-card__social-link--linkedin" title="Share on LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                          </a>
+                          <a href="https://t.me/share/url?url={{ related_encoded_url }}&text={{ related_encoded_title }}" target="_blank" rel="noopener" class="custom-blog-card__social-link custom-blog-card__social-link--telegram" title="Share on Telegram">
+                            <i class="fab fa-telegram-plane"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <hr class="custom-blog-card__divider">
+
+                    <p class="custom-blog-card__excerpt">
+                      {% if related_article.excerpt.size > 0 %}
+                        {{ related_article.excerpt | strip_html | truncatewords: 18 }}
+                      {% else %}
+                        {{ related_article.content | strip_html | truncatewords: 18 }}
+                      {% endif %}
+                    </p>
+                    
+                    <div>
+                      <a href="{{ related_article.url }}" class="custom-blog-card__read-more-link">Continue Reading</a>
+                    </div>
+                  </div>
+                </article>
               </div>
             {% endif %}
-            
-            {% if blog.next_article %}
-              <div class="next-article-link text-md-end ms-auto">
-                <span class="d-block text-muted small fw-medium">{{ 'blogs.article.next_post' | t }}</span>
-                <a href="{{ blog.next_article.url }}" class="fw-bold text-primary">{{ blog.next_article.title | truncate: 35 }}</a>
+          {% endfor %}
+        {% endcapture %}
+
+        {% if related_count > 0 %}
+          <div class="related-posts-section">
+            <h3 class="related-posts-title fw-bold text-dark mb-4">{{ section.settings.related_posts_title }}</h3>
+            <div class="position-relative">
+              <div class="related-posts-slider" id="relatedPostsSlider">
+                {{ related_posts_html }}
               </div>
-            {% endif %}
+              <div class="related-slider-dots" id="relatedSliderDots"></div>
+            </div>
           </div>
         {% endif %}
       </div>
+
+      <!-- Blog Sidebar (Hidden on Tablet and Mobile) -->
+      {% if section.settings.show_sidebar %}
+        <div class="col-12 col-lg-3 d-none d-lg-block">
+          <aside class="blog-sidebar">
+            <!-- Categories Widget -->
+            {% if blog.all_tags.size > 0 %}
+              <div class="blog-sidebar-widget">
+                <h4 class="blog-sidebar-widget__title">{{ section.settings.categories_title }}</h4>
+                <ul class="blog-sidebar-categories">
+                  {% for tag in blog.all_tags %}
+                    <li class="blog-sidebar-categories__item">
+                      <a
+                        href="{{ blog.url }}/tagged/{{ tag | handle }}"
+                        class="blog-sidebar-categories__link{% if current_tags contains tag %} blog-sidebar-categories__link--active{% endif %}"
+                      >
+                        {{ tag }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+
+            <!-- Recent Posts Widget -->
+            <div class="blog-sidebar-widget">
+              <h4 class="blog-sidebar-widget__title">{{ section.settings.recent_posts_title }}</h4>
+              <div class="blog-sidebar-recent">
+                {% for recent_article in blog.articles limit: section.settings.recent_posts_limit %}
+                  <div class="blog-sidebar-recent__item">
+                    <div class="blog-sidebar-recent__img-wrapper">
+                      {% if recent_article.image %}
+                        <img
+                          src="{{ recent_article.image | image_url: width: 120 }}"
+                          class="blog-sidebar-recent__img"
+                          alt="{{ recent_article.title | escape }}"
+                          loading="lazy"
+                          width="auto"
+                          height="auto"
+                        >
+                      {% else %}
+                        <div class="bg-secondary-subtle d-flex align-items-center justify-content-center h-100">
+                          <i class="fa-regular fa-image text-muted"></i>
+                        </div>
+                      {% endif %}
+                    </div>
+                    <div class="blog-sidebar-recent__content">
+                      <h5 class="blog-sidebar-recent__title">
+                        <a href="{{ recent_article.url }}" class="blog-sidebar-recent__title-link">
+                          {{ recent_article.title }}
+                        </a>
+                      </h5>
+                      <span class="blog-sidebar-recent__date">
+                        {{- recent_article.published_at | date: '%B %d, %Y' -}}
+                      </span>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </aside>
+        </div>
+      {% endif %}
     </div>
   </div>
 </article>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // 1. Table of Contents Dropdown Toggling
+    const tocHeader = document.getElementById('toc-header');
+    const tocBody = document.getElementById('toc-body');
+    const tocChevron = document.getElementById('toc-chevron');
+
+    if (tocHeader && tocBody && tocChevron) {
+      tocHeader.addEventListener('click', function () {
+        tocBody.classList.toggle('collapsed');
+        tocChevron.classList.toggle('fa-chevron-down');
+        tocChevron.classList.toggle('fa-chevron-up');
+      });
+    }
+
+    // 2. Parse H2 headings dynamically to build the TOC
+    const articleBody = document.querySelector('.article-body');
+    const tocList = document.getElementById('toc-list');
+    const tocContainer = document.getElementById('toc-container');
+
+    if (articleBody && tocList && tocContainer) {
+      const headings = articleBody.querySelectorAll('h2');
+      if (headings.length === 0) {
+        tocContainer.style.display = 'none';
+      } else {
+        headings.forEach((heading, idx) => {
+          const headingId = 'toc-heading-' + idx;
+          heading.id = headingId;
+
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = '#' + headingId;
+          a.className = 'toc-link';
+          a.textContent = heading.textContent.trim();
+
+          a.addEventListener('click', function (e) {
+            e.preventDefault();
+            const offsetTop = heading.getBoundingClientRect().top + window.pageYOffset - 120;
+            window.scrollTo({
+              top: offsetTop,
+              behavior: 'smooth',
+            });
+          });
+
+          li.appendChild(a);
+          tocList.appendChild(li);
+        });
+      }
+    }
+
+    // 3. Related Posts Slider Dot Controls
+    const slider = document.getElementById('relatedPostsSlider');
+    const dotsContainer = document.getElementById('relatedSliderDots');
+
+    if (slider && dotsContainer) {
+      const slides = slider.querySelectorAll('.related-posts-slide');
+      dotsContainer.innerHTML = '';
+
+      if (slides.length > 0) {
+        slides.forEach((slide, idx) => {
+          const dot = document.createElement('div');
+          dot.className = 'related-slider-dot' + (idx === 0 ? ' related-slider-dot--active' : '');
+          dot.dataset.index = idx;
+
+          dot.addEventListener('click', function () {
+            const slideWidth = slide.offsetWidth + 24;
+            slider.scrollTo({
+              left: idx * slideWidth,
+              behavior: 'smooth',
+            });
+          });
+          dotsContainer.appendChild(dot);
+        });
+
+        // Update active dot on scroll
+        let scrollTimeout;
+        slider.addEventListener('scroll', function () {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(function () {
+            const scrollPos = slider.scrollLeft;
+            const slideItem = slider.querySelector('.related-posts-slide');
+            if (slideItem) {
+              const slideWidth = slideItem.offsetWidth + 24;
+              const activeIdx = Math.round(scrollPos / slideWidth);
+
+              const dots = dotsContainer.querySelectorAll('.related-slider-dot');
+              dots.forEach((dot, idx) => {
+                if (idx === activeIdx) {
+                  dot.classList.add('related-slider-dot--active');
+                } else {
+                  dot.classList.remove('related-slider-dot--active');
+                }
+              });
+            }
+          }, 50);
+        });
+      }
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Article Details",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sidebar",
+      "label": "Show Sidebar (Desktop Only)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Theme Colors"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary Accent Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "color",
+      "id": "primary_hover_color",
+      "label": "Accent Hover Color",
+      "default": "#004b93"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#4b5563"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#1f2937"
+    },
+    {
+      "type": "header",
+      "content": "Table of Contents Styling"
+    },
+    {
+      "type": "color",
+      "id": "toc_bg_color",
+      "label": "TOC Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "toc_border_color",
+      "label": "TOC Border Color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "toc_text_color",
+      "label": "TOC Text Color",
+      "default": "#4b5563"
+    },
+    {
+      "type": "color",
+      "id": "toc_hover_color",
+      "label": "TOC Text Hover Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "header",
+      "content": "Related Posts Settings"
+    },
+    {
+      "type": "text",
+      "id": "related_posts_title",
+      "label": "Related Posts Section Title",
+      "default": "Related Posts"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card Border Color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Border Radius",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "card_shadow",
+      "label": "Card Shadow Type",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge Background Color",
+      "default": "#f59e0b"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "date_bg_color",
+      "label": "Date Badge Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "date_number_color",
+      "label": "Date Day Number Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "color",
+      "id": "date_month_color",
+      "label": "Date Month Text Color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Card Title Color",
+      "default": "#1f2937"
+    },
+    {
+      "type": "color",
+      "id": "title_hover_color",
+      "label": "Card Title Hover Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "color",
+      "id": "excerpt_color",
+      "label": "Card Excerpt Color",
+      "default": "#4b5563"
+    },
+    {
+      "type": "color",
+      "id": "read_more_color",
+      "label": "Read More Link Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "color",
+      "id": "read_more_hover_color",
+      "label": "Read More Hover Color",
+      "default": "#004b93"
+    },
+    {
+      "type": "header",
+      "content": "Sidebar Styling"
+    },
+    {
+      "type": "text",
+      "id": "categories_title",
+      "label": "Categories Widget Title",
+      "default": "CATEGORIES"
+    },
+    {
+      "type": "text",
+      "id": "recent_posts_title",
+      "label": "Recent Posts Widget Title",
+      "default": "RECENT POSTS"
+    },
+    {
+      "type": "range",
+      "id": "recent_posts_limit",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "label": "Recent Posts Limit",
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "sidebar_widget_bg",
+      "label": "Sidebar Widget Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_widget_border",
+      "label": "Sidebar Widget Border",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_widget_title_color",
+      "label": "Sidebar Widget Title Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_widget_title_border",
+      "label": "Widget Title Border Color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_link_color",
+      "label": "Sidebar Link Color",
+      "default": "#4b5563"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_link_hover_color",
+      "label": "Sidebar Link Hover Color",
+      "default": "#062e67"
+    }
+  ]
+}
+{% endschema %}
