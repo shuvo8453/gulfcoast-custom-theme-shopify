@@ -3,39 +3,44 @@
   <div class="product-card-image position-relative">
     <a href="{{ product.url | within: collection }}" class="d-block w-100 h-100">
       {% if product.featured_image != blank %}
-        <img src="{{ product.featured_image | image_url: width: 500, height: 500, crop: 'center' }}" 
-             alt="{{ product.title | escape }}" 
-             class="img-fluid"
-             loading="lazy">
+        <img
+          src="{{ product.featured_image | image_url: width: 500, height: 500, crop: 'center' }}"
+          alt="{{ product.title | escape }}"
+          class="img-fluid"
+          loading="lazy"
+          width="500"
+          height="500"
+        >
       {% else %}
         {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg border rounded' }}
       {% endif %}
     </a>
 
-    <!-- Discount / Save Badge -->
-    {% if product.compare_at_price > product.price %}
-      {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
-      <span class="badge bg-danger position-absolute top-0 start-0 m-3 rounded-pill px-3 py-2 text-uppercase fw-bold" style="z-index: 2;">
-        Sale {{ discount }}%
+    <!-- Badges (In Stock / Out of Stock) -->
+    {% if product.available %}
+      <span
+        class="badge bg-success position-absolute top-0 start-0 m-3 rounded-pill px-3 py-2 text-uppercase fw-bold"
+        style="z-index: 2; background-color: #10b981 !important;"
+      >
+        In Stock
+      </span>
+    {% else %}
+      <span
+        class="badge bg-danger position-absolute top-0 start-0 m-3 rounded-pill px-3 py-2 text-uppercase fw-bold"
+        style="z-index: 2; background-color: #ef4444 !important;"
+      >
+        Out of Stock
       </span>
     {% endif %}
-
-    <!-- Action Buttons (Wishlist and Compare Toggles) -->
-    <div class="product-card-actions">
-      <button class="card-action-btn wishlist-btn-toggle" data-handle="{{ product.handle }}" aria-label="Add to Wishlist" title="Add to Wishlist">
-        <i class="fa-regular fa-heart"></i>
-      </button>
-      <button class="card-action-btn compare-btn-toggle" data-handle="{{ product.handle }}" aria-label="Compare Product" title="Compare Product">
-        <i class="fa-solid fa-code-compare"></i>
-      </button>
-    </div>
   </div>
 
   <!-- Product Details Info -->
   <div class="product-card-info p-3 d-flex flex-column flex-grow-1">
     <!-- Vendor -->
-    <span class="text-uppercase text-muted small fw-bold tracking-wider mb-1" style="font-size: 11px;">{{ product.vendor }}</span>
-    
+    <span class="text-uppercase text-muted small fw-bold tracking-wider mb-1" style="font-size: 11px;">
+      {{- product.vendor -}}
+    </span>
+
     <!-- Title -->
     <h6 class="product-card-title fw-bold mb-2">
       <a href="{{ product.url | within: collection }}" class="text-dark hover:text-primary text-decoration-none">
@@ -43,17 +48,63 @@
       </a>
     </h6>
 
-    <!-- Star Review Placeholder -->
-    <div class="product-card-review mb-2 small text-warning">
-      <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-      <span class="text-muted small ms-1">(5.0)</span>
+    <!-- Stock Status Pill (Green for In Stock, Red for Out of Stock) -->
+    <div class="product-card-stock mb-2">
+      {% if product.available %}
+        <span class="stock-status-pill stock-in"> <i class="fa-solid fa-circle-check"></i> In stock </span>
+      {% else %}
+        <span class="stock-status-pill stock-out"> <i class="fa-solid fa-circle-xmark"></i> Out of stock </span>
+      {% endif %}
     </div>
 
     <!-- Pricing -->
-    <div class="product-card-price mt-auto pt-2 border-top border-light-subtle d-flex align-items-center gap-2">
+    <div class="product-card-price mt-auto pt-2 border-top border-light-subtle d-flex align-items-center gap-2 mb-3">
       <span class="fw-bold text-primary">{{ product.price | money }}</span>
       {% if product.compare_at_price > product.price %}
         <span class="text-muted text-decoration-line-through small">{{ product.compare_at_price | money }}</span>
+      {% endif %}
+    </div>
+
+    <!-- Actions Footer (Wishlist, Compare, Add to Cart or Notify) -->
+    <div class="product-card-buttons d-flex align-items-center gap-2 mt-auto w-100">
+      <button
+        class="card-action-btn wishlist-btn-toggle"
+        data-handle="{{ product.handle }}"
+        aria-label="Add to Wishlist"
+        title="Add to Wishlist"
+      >
+        <i class="fa-regular fa-heart"></i>
+      </button>
+      <button
+        class="card-action-btn compare-btn-toggle"
+        data-handle="{{ product.handle }}"
+        aria-label="Compare Product"
+        title="Compare Product"
+      >
+        <i class="fa-solid fa-code-compare"></i>
+      </button>
+
+      {% if product.available %}
+        <form method="post" action="/cart/add" class="d-inline-block flex-grow-1 mb-0">
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          <button
+            type="submit"
+            class="btn btn-primary product-card-btn-add w-100 py-2 d-flex align-items-center justify-content-center gap-2 text-white border-0"
+            style="background-color: var(--color-primary); border-radius: 60px;"
+          >
+            <i class="fa-solid fa-cart-shopping"></i> <span class="d-none d-sm-inline">Add To Cart</span>
+          </button>
+        </form>
+      {% else %}
+        <button
+          type="button"
+          class="btn btn-danger product-card-btn-notify flex-grow-1 py-2 d-flex align-items-center justify-content-center gap-2 text-white border-0"
+          style="background-color: var(--color-error); border-radius: 60px;"
+          data-bs-toggle="modal"
+          data-bs-target="#notifyModal"
+        >
+          <i class="fa-regular fa-bell"></i> <span class="d-none d-sm-inline">Notify</span>
+        </button>
       {% endif %}
     </div>
   </div>

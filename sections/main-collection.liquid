@@ -12,31 +12,209 @@
 
     <div class="row g-4 mt-2">
       <!-- Left: Sidebar Filters -->
-      <div class="col-12 col-md-3">
-        <div class="collection-filters-sidebar border rounded p-4 bg-white shadow-sm">
-          <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa-solid fa-filter me-2 text-primary"></i>Filters</h5>
-          
-          <form class="filter-form d-flex flex-column gap-4">
+      <div class="col-12 col-lg-3 collection-sidebar-column" id="collection-filters-drawer">
+        <div class="collection-filters-sidebar">
+          <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+            <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-filter me-2 text-primary"></i>Filters</h5>
+            <!-- Close Button for Mobile/Tablet Drawer -->
+            <button
+              type="button"
+              class="btn-close d-lg-none text-dark"
+              id="mobile-filter-close"
+              aria-label="Close filters"
+            ></button>
+          </div>
+
+          <form class="filter-form d-flex flex-column">
+            <!-- FILTER BY CATEGORY -->
+            <div class="filter-group mb-4">
+              <h6 class="fw-bold text-dark mb-2 text-uppercase sidebar-heading">Filter by Category</h6>
+              <select
+                class="form-select rounded-pill px-3 py-2 border-light-subtle text-muted small"
+                onchange="if(this.value) window.location.href=this.value;"
+              >
+                <option value="/collections/all">Select a category</option>
+                {%- for c in collections -%}
+                  <option
+                    value="{{ c.url }}"
+                    {% if collection.handle == c.handle %}
+                      selected
+                    {% endif %}
+                  >
+                    {{ c.title }} ({{ c.products_count }})
+                  </option>
+                {%- endfor -%}
+              </select>
+            </div>
+
+            <!-- FILTER BY BRAND -->
+            {%- assign brand_filter = null -%}
             {%- for filter in collection.filters -%}
-              <div class="filter-group">
-                <h6 class="fw-bold text-dark mb-3">{{ filter.label }}</h6>
-                
+              {%- if filter.label == 'Brand' or filter.label == 'Vendor' or filter.param_name contains 'vendor' -%}
+                {%- assign brand_filter = filter -%}
+              {%- endif -%}
+            {%- endfor -%}
+
+            {%- assign clear_brand_url = collection.url -%}
+            {%- if clear_brand_url == blank or clear_brand_url contains 'vendors' -%}
+              {%- assign clear_brand_url = '/collections/all' -%}
+            {%- endif -%}
+
+            <div class="filter-group mb-4">
+              <h6 class="fw-bold text-dark mb-2 text-uppercase sidebar-heading">Filter by Brand</h6>
+              {%- if brand_filter != null -%}
+                <select
+                  class="form-select rounded-pill px-3 py-2 border-light-subtle text-muted small"
+                  onchange="if(this.value) window.location.href=this.value;"
+                >
+                  <option value="{{ clear_brand_url }}">Select a brand</option>
+                  {%- for value in brand_filter.values -%}
+                    {%- assign val_url = collection.url
+                      | append: '?'
+                      | append: value.param_name
+                      | append: '='
+                      | append: value.value
+                    -%}
+                    {%- if value.active -%}
+                      {%- assign val_url = clear_brand_url -%}
+                    {%- endif -%}
+                    <option
+                      value="{{ val_url }}"
+                      {% if value.active %}
+                        selected
+                      {% endif %}
+                    >
+                      {{ value.label }} ({{ value.count }})
+                    </option>
+                  {%- endfor -%}
+                </select>
+              {%- else -%}
+                <select
+                  class="form-select rounded-pill px-3 py-2 border-light-subtle text-muted small"
+                  onchange="if(this.value) window.location.href=this.value;"
+                >
+                  <option value="{{ clear_brand_url }}">Select a brand</option>
+                  {%- for product_vendor in shop.vendors -%}
+                    {%- assign vendor_url = product_vendor | url_for_vendor -%}
+                    {%- assign vendor_count = 0 -%}
+                    {%- for p in collection.products -%}
+                      {%- if p.vendor == product_vendor -%}
+                        {%- assign vendor_count = vendor_count | plus: 1 -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                    <option
+                      value="{{ vendor_url }}"
+                      {% if collection.current_vendor == product_vendor %}
+                        selected
+                      {% endif %}
+                    >
+                      {{ product_vendor }} ({{ vendor_count }})
+                    </option>
+                  {%- endfor -%}
+                </select>
+              {%- endif -%}
+            </div>
+
+            <!-- STATUS (Availability) -->
+            {%- assign availability_filter = null -%}
+            {%- for filter in collection.filters -%}
+              {%- if filter.param_name == 'filter.v.availability' -%}
+                {%- assign availability_filter = filter -%}
+              {%- endif -%}
+            {%- endfor -%}
+
+            <div class="filter-group mb-4">
+              <h6 class="fw-bold text-dark mb-2 text-uppercase sidebar-heading">Status</h6>
+              {%- if availability_filter != null -%}
+                <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+                  {%- for value in availability_filter.values -%}
+                    <li class="form-check d-flex justify-content-between align-items-center">
+                      <div>
+                        <input
+                          type="checkbox"
+                          name="{{ value.param_name }}"
+                          value="{{ value.value }}"
+                          id="Filter-{{ availability_filter.label | handle }}-{{ forloop.index }}"
+                          class="form-check-input"
+                          {% if value.active %}
+                            checked
+                          {% endif %}
+                          {% if value.count == 0 and value.active == false %}
+                            disabled
+                          {% endif %}
+                          onchange="this.form.submit()"
+                        >
+                        <label
+                          class="form-check-label small {% if value.count == 0 and value.active == false %}text-muted{% endif %}"
+                          for="Filter-{{ availability_filter.label | handle }}-{{ forloop.index }}"
+                        >
+                          {{ value.label }}
+                        </label>
+                      </div>
+                      <span class="text-muted small">({{ value.count }})</span>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- else -%}
+                <!-- Fallback mockup if Availability is not configured in Search & Discovery -->
+                <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+                  <li class="form-check d-flex justify-content-between align-items-center">
+                    <div>
+                      <input type="checkbox" id="status-in-stock" class="form-check-input" checked disabled>
+                      <label class="form-check-label small text-muted" for="status-in-stock">In Stock</label>
+                    </div>
+                    <span class="text-muted small">(18125)</span>
+                  </li>
+                  <li class="form-check d-flex justify-content-between align-items-center">
+                    <div>
+                      <input type="checkbox" id="status-on-sale" class="form-check-input" disabled>
+                      <label class="form-check-label small text-muted" for="status-on-sale">On Sale</label>
+                    </div>
+                    <span class="text-muted small">(3162)</span>
+                  </li>
+                </ul>
+              {%- endif -%}
+            </div>
+
+            <!-- Other Filters -->
+            {%- for filter in collection.filters -%}
+              {%- if filter.param_name == 'filter.v.availability'
+                or filter.label == 'Brand'
+                or filter.label == 'Vendor'
+              -%}
+                {%- continue -%}
+              {%- endif -%}
+
+              <div class="filter-group mb-4">
+                <h6 class="fw-bold text-dark mb-2 text-uppercase sidebar-heading">{{ filter.label }}</h6>
                 {%- case filter.type -%}
                   {%- when 'list' -%}
                     <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
                       {%- for value in filter.values -%}
-                        <li class="form-check">
-                          <input type="checkbox" 
-                                 name="{{ value.param_name }}" 
-                                 value="{{ value.value }}" 
-                                 id="Filter-{{ filter.label | handle }}-{{ forloop.index }}" 
-                                 class="form-check-input"
-                                 {% if value.active %}checked{% endif %}
-                                 {% if value.count == 0 and value.active == false %}disabled{% endif %}
-                                 onchange="this.form.submit()">
-                          <label class="form-check-label small {% if value.count == 0 and value.active == false %}text-muted{% endif %}" for="Filter-{{ filter.label | handle }}-{{ forloop.index }}">
-                            {{ value.label }} ({{ value.count }})
-                          </label>
+                        <li class="form-check d-flex justify-content-between align-items-center">
+                          <div>
+                            <input
+                              type="checkbox"
+                              name="{{ value.param_name }}"
+                              value="{{ value.value }}"
+                              id="Filter-{{ filter.label | handle }}-{{ forloop.index }}"
+                              class="form-check-input"
+                              {% if value.active %}
+                                checked
+                              {% endif %}
+                              {% if value.count == 0 and value.active == false %}
+                                disabled
+                              {% endif %}
+                              onchange="this.form.submit()"
+                            >
+                            <label
+                              class="form-check-label small {% if value.count == 0 and value.active == false %}text-muted{% endif %}"
+                              for="Filter-{{ filter.label | handle }}-{{ forloop.index }}"
+                            >
+                              {{ value.label }}
+                            </label>
+                          </div>
+                          <span class="text-muted small">({{ value.count }})</span>
                         </li>
                       {%- endfor -%}
                     </ul>
@@ -44,46 +222,119 @@
                     <div class="price-range-inputs d-flex align-items-center gap-2">
                       <div class="input-group input-group-sm">
                         <span class="input-group-text">$</span>
-                        <input name="{{ filter.min_value.param_name }}"
-                               id="Filter-{{ filter.label | handle }}-Min"
-                               {%- if filter.min_value.value -%}
-                                 value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
-                               {%- endif -%}
-                               type="number"
-                               placeholder="Min"
-                               min="0"
-                               max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
-                               class="form-control"
-                               onchange="this.form.submit()">
+                        <input
+                          name="{{ filter.min_value.param_name }}"
+                          id="Filter-{{ filter.label | handle }}-Min"
+                          {%- if filter.min_value.value -%}
+                            value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                          {%- endif -%}
+                          type="number"
+                          placeholder="Min"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          class="form-control"
+                          onchange="this.form.submit()"
+                        >
                       </div>
                       <span class="text-muted small">to</span>
                       <div class="input-group input-group-sm">
                         <span class="input-group-text">$</span>
-                        <input name="{{ filter.max_value.param_name }}"
-                               id="Filter-{{ filter.label | handle }}-Max"
-                               {%- if filter.max_value.value -%}
-                                 value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
-                               {%- endif -%}
-                               type="number"
-                               placeholder="Max"
-                               min="0"
-                               max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
-                               class="form-control"
-                               onchange="this.form.submit()">
+                        <input
+                          name="{{ filter.max_value.param_name }}"
+                          id="Filter-{{ filter.label | handle }}-Max"
+                          {%- if filter.max_value.value -%}
+                            value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                          {%- endif -%}
+                          type="number"
+                          placeholder="Max"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          class="form-control"
+                          onchange="this.form.submit()"
+                        >
                       </div>
                     </div>
                 {%- endcase -%}
               </div>
             {%- endfor -%}
+
+            <!-- PRODUCTS Sidebar List -->
+            <div class="filter-group mb-4 border-top pt-4">
+              <h6 class="fw-bold text-dark mb-3 text-uppercase sidebar-heading">Products</h6>
+              <div class="sidebar-products-list d-flex flex-column gap-3">
+                {%- for sidebar_product in collections.all.products limit: 5 -%}
+                  <div class="sidebar-product-item d-flex gap-3 align-items-center">
+                    <a href="{{ sidebar_product.url }}" class="flex-shrink-0" style="width: 60px; height: 60px;">
+                      {%- if sidebar_product.featured_image != blank -%}
+                        <img
+                          src="{{ sidebar_product.featured_image | image_url: width: 120, height: 120, crop: 'center' }}"
+                          alt="{{ sidebar_product.title | escape }}"
+                          class="img-fluid rounded border"
+                          width="60"
+                          height="60"
+                          loading="lazy"
+                        >
+                      {%- else -%}
+                        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg border rounded img-fluid' }}
+                      {%- endif -%}
+                    </a>
+                    <div class="sidebar-product-info">
+                      <a
+                        href="{{ sidebar_product.url }}"
+                        class="text-dark fw-semibold text-decoration-none d-block small hover:text-primary"
+                        style="line-height: 1.3; font-size: 13px;"
+                      >
+                        {{ sidebar_product.title | truncate: 45 }}
+                      </a>
+                      <span class="text-primary fw-bold small">{{ sidebar_product.price | money }}</span>
+                    </div>
+                  </div>
+                {%- endfor -%}
+              </div>
+            </div>
           </form>
         </div>
       </div>
 
       <!-- Right: Products Grid -->
-      <div class="col-12 col-md-9">
+      <div class="col-12 col-lg-9">
         {% paginate collection.products by section.settings.products_per_page %}
           {% if collection.products.size > 0 %}
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+            <!-- Top Bar Sorting & Results Count -->
+            <div class="collection-top-bar d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom flex-column flex-sm-row gap-3">
+              <div class="text-muted small">
+                {%- assign current_offset_plus_1 = paginate.current_offset | plus: 1 -%}
+                {%- assign current_products_shown = paginate.current_offset | plus: collection.products.size -%}
+                {%- if current_products_shown > collection.products_count -%}
+                  {%- assign current_products_shown = collection.products_count -%}
+                {%- endif -%}
+                Showing {{ current_offset_plus_1 }}–{{ current_products_shown }} of
+                {{ collection.products_count }} results
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                <select
+                  name="sort_by"
+                  id="SortBy"
+                  class="form-select rounded-pill px-3 py-2 text-muted border-light-subtle small"
+                  style="width: auto; min-width: 200px;"
+                  onchange="window.location.href = window.location.pathname + '?sort_by=' + this.value;"
+                >
+                  {%- for option in collection.sort_options -%}
+                    <option
+                      value="{{ option.value }}"
+                      {% if option.value == sort_by %}
+                        selected
+                      {% endif %}
+                    >
+                      {{ option.name }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+              </div>
+            </div>
+
+            <div class="row row-cols-2 row-cols-sm-2 row-cols-lg-3 g-2 g-md-4">
               {% for product in collection.products %}
                 <div class="col">
                   {% render 'product-card', product: product %}
@@ -96,19 +347,31 @@
               <nav class="d-flex justify-content-center mt-5" aria-label="Page navigation">
                 <ul class="pagination pagination-sm">
                   {% if paginate.previous %}
-                    <li class="page-item"><a class="page-link rounded-circle px-3 py-2 me-2" href="{{ paginate.previous.url }}"><i class="fa-solid fa-chevron-left"></i></a></li>
+                    <li class="page-item">
+                      <a class="page-link rounded-circle px-3 py-2 me-2" href="{{ paginate.previous.url }}"
+                        ><i class="fa-solid fa-chevron-left"></i
+                      ></a>
+                    </li>
                   {% endif %}
-                  
+
                   {% for part in paginate.parts %}
                     {% if part.is_link %}
-                      <li class="page-item"><a class="page-link rounded-circle px-3 py-2 me-2" href="{{ part.url }}">{{ part.title }}</a></li>
+                      <li class="page-item">
+                        <a class="page-link rounded-circle px-3 py-2 me-2" href="{{ part.url }}">{{ part.title }}</a>
+                      </li>
                     {% else %}
-                      <li class="page-item active"><span class="page-link rounded-circle px-3 py-2 me-2">{{ part.title }}</span></li>
+                      <li class="page-item active">
+                        <span class="page-link rounded-circle px-3 py-2 me-2">{{ part.title }}</span>
+                      </li>
                     {% endif %}
                   {% endfor %}
 
                   {% if paginate.next %}
-                    <li class="page-item"><a class="page-link rounded-circle px-3 py-2" href="{{ paginate.next.url }}"><i class="fa-solid fa-chevron-right"></i></a></li>
+                    <li class="page-item">
+                      <a class="page-link rounded-circle px-3 py-2" href="{{ paginate.next.url }}"
+                        ><i class="fa-solid fa-chevron-right"></i
+                      ></a>
+                    </li>
                   {% endif %}
                 </ul>
               </nav>
@@ -129,12 +392,15 @@
         <h3 class="faq-section-title fw-bold text-dark mb-4 border-bottom pb-2">
           <i class="fa-regular fa-circle-question me-2 text-primary"></i>{{ 'products.general.faqs_title' | t }}
         </h3>
-        
+
         <div class="faq-accordion-container d-flex flex-column gap-3">
           {% assign faqs = collection.metafields.custom.faqs.value %}
           {% for faq in faqs %}
             <div class="faq-item border-bottom pb-3">
-              <button class="faq-trigger d-flex justify-content-between align-items-center w-100 bg-transparent border-0 text-start py-2" aria-expanded="false">
+              <button
+                class="faq-trigger d-flex justify-content-between align-items-center w-100 bg-transparent border-0 text-start py-2"
+                aria-expanded="false"
+              >
                 <span class="faq-question fw-bold text-dark fs-6">{{ faq.question }}</span>
                 <span class="faq-icon text-primary"><i class="fa-solid fa-plus"></i></span>
               </button>
@@ -168,6 +434,56 @@
     {% endif %}
   </div>
 </section>
+
+<!-- Floating Filter Button for Mobile & Tablet -->
+<button
+  type="button"
+  class="btn btn-primary floating-filter-btn d-lg-none"
+  id="mobile-filter-toggle"
+  aria-label="Open filters"
+>
+  <i class="fa-solid fa-filter"></i>
+</button>
+
+<!-- Back in Stock Modal -->
+<div
+  class="modal fade"
+  id="notifyModal"
+  tabindex="-1"
+  aria-labelledby="notifyModalLabel"
+  aria-hidden="true"
+  style="z-index: 1060;"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 shadow">
+      <div class="modal-header border-0 pb-0">
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body px-4 pb-4 pt-2 text-center">
+        <h4 class="fw-bold mb-3" id="notifyModalLabel">Get Notified When This Product Is Back In Stock</h4>
+        <form
+          id="notify-form"
+          class="d-flex flex-row gap-2 justify-content-center align-items-center mt-3 w-100"
+        >
+          <input
+            type="email"
+            class="form-control rounded-pill px-3 flex-grow-1"
+            placeholder="Enter your email"
+            required
+            style="height: 48px; max-width: 320px; min-width: 0;"
+          >
+          <button
+            type="submit"
+            class="btn btn-primary rounded-pill px-4 text-white fw-bold text-nowrap"
+            style="height: 48px; background-color: var(--color-primary); border: 0; white-space: nowrap;"
+          >
+            Notify Me
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% schema %}
 {

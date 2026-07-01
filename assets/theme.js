@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollToTop();
   initFAQAccordion();
   initDrawers();
+  initCollectionFiltersMobileDrawer();
+  initNotifyModal();
 });
 
 // Toast Notification System
@@ -184,5 +186,78 @@ function initDrawers() {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') close();
     });
+  });
+}
+
+// Mobile Filters Drawer Open/Close Handler
+function initCollectionFiltersMobileDrawer() {
+  const toggleBtn = document.getElementById('mobile-filter-toggle');
+  const closeBtn = document.getElementById('mobile-filter-close');
+  const drawer = document.getElementById('collection-filters-drawer');
+  
+  if (!toggleBtn || !drawer) return;
+  
+  // Create or select the overlay
+  let overlay = document.querySelector('.collection-drawer-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.className = 'collection-drawer-overlay';
+    document.body.appendChild(overlay);
+  }
+  
+  function openDrawer() {
+    drawer.classList.add('show-drawer');
+    overlay.classList.add('show');
+    document.body.style.overflow = 'hidden'; // Prevent body scroll
+  }
+  
+  function closeDrawer() {
+    drawer.classList.remove('show-drawer');
+    overlay.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  
+  toggleBtn.addEventListener('click', openDrawer);
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeDrawer);
+  }
+  overlay.addEventListener('click', closeDrawer);
+  
+  // Close drawer on window resize if layout switches to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 992) {
+      closeDrawer();
+    }
+  });
+}
+
+// Back-in-Stock Notification Form handler
+function initNotifyModal() {
+  const notifyForm = document.getElementById('notify-form');
+  if (!notifyForm) return;
+
+  notifyForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const emailInput = notifyForm.querySelector('input[type="email"]');
+    if (emailInput && emailInput.value) {
+      const modalEl = document.getElementById('notifyModal');
+      
+      // Bootstrap 5 modal hide
+      if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        if (modal) modal.hide();
+      } else {
+        // Fallback if bootstrap object is not fully initialized
+        modalEl.classList.remove('show');
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) backdrop.remove();
+      }
+
+      if (typeof window.showGcfToast === 'function') {
+        window.showGcfToast('Thank you! We will notify you when this item is back in stock.', 'success');
+      }
+      emailInput.value = '';
+    }
   });
 }
