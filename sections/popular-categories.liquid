@@ -109,7 +109,7 @@
     font-weight: 600;
     text-align: center;
     line-height: 1.4;
-    margin: 0;
+    margin-bottom: 20px;
     transition: color 0.2s;
   }
   #PopCat-{{ section.id }} .pc-card:hover .pc-card-title {
@@ -164,7 +164,6 @@
 
 <section id="PopCat-{{ section.id }}" class="popular-categories-section">
   <div class="container">
-
     <!-- Section Header -->
     <div class="text-center">
       {% if section.settings.subtitle != blank %}
@@ -180,12 +179,12 @@
 
     {% if pc_collections.size > 0 %}
       <div class="pc-slider-wrapper">
-
         <!-- Prev Button -->
         <button
           class="pc-nav-btn pc-prev-btn"
           id="PcPrev-{{ section.id }}"
           aria-label="Previous categories"
+          style="margin-right: -30px;"
         >
           <i class="fa-solid fa-chevron-left"></i>
         </button>
@@ -229,16 +228,23 @@
           class="pc-nav-btn pc-next-btn"
           id="PcNext-{{ section.id }}"
           aria-label="Next categories"
+          style="margin-left: -30px;"
         >
           <i class="fa-solid fa-chevron-right"></i>
         </button>
-
       </div>
     {% else %}
       <!-- Dummy placeholder cards when no collections are set -->
-      {%- assign dummy_labels = 'Electrical,Boat Outfitting,Paddlesports,Automotive/RV,Marine Navigation' | split: ',' -%}
+      {%- assign dummy_labels = 'Electrical,Boat Outfitting,Paddlesports,Automotive/RV,Marine Navigation'
+        | split: ','
+      -%}
       <div class="pc-slider-wrapper">
-        <button class="pc-nav-btn pc-prev-btn" id="PcPrev-{{ section.id }}" aria-label="Previous categories">
+        <button
+          class="pc-nav-btn pc-prev-btn"
+          id="PcPrev-{{ section.id }}"
+          aria-label="Previous categories"
+          style="margin-right: -30px;"
+        >
           <i class="fa-solid fa-chevron-left"></i>
         </button>
         <div class="pc-track-outer" id="PcOuter-{{ section.id }}">
@@ -255,103 +261,106 @@
             {% endfor %}
           </div>
         </div>
-        <button class="pc-nav-btn pc-next-btn" id="PcNext-{{ section.id }}" aria-label="Next categories">
+        <button
+          class="pc-nav-btn pc-next-btn"
+          id="PcNext-{{ section.id }}"
+          aria-label="Next categories"
+          style="margin-left: -30px;"
+        >
           <i class="fa-solid fa-chevron-right"></i>
         </button>
       </div>
     {% endif %}
-
-
   </div>
 </section>
 
 <script>
-(function () {
-  var id       = '{{ section.id }}';
-  var track    = document.getElementById('PcTrack-' + id);
-  var outer    = document.getElementById('PcOuter-' + id);
-  var prevBtn  = document.getElementById('PcPrev-' + id);
-  var nextBtn  = document.getElementById('PcNext-' + id);
+  (function () {
+    var id       = '{{ section.id }}';
+    var track    = document.getElementById('PcTrack-' + id);
+    var outer    = document.getElementById('PcOuter-' + id);
+    var prevBtn  = document.getElementById('PcPrev-' + id);
+    var nextBtn  = document.getElementById('PcNext-' + id);
 
-  if (!track || !outer || !prevBtn || !nextBtn) return;
+    if (!track || !outer || !prevBtn || !nextBtn) return;
 
-  var gap      = {{ section.settings.item_gap }};
-  var deskCols = {{ section.settings.desktop_cols }};
-  var tabCols  = {{ section.settings.tablet_cols }};
-  var mobCols  = {{ section.settings.mobile_cols }};
-  var current  = 0;
-  var isAnimating = false;
+    var gap      = {{ section.settings.item_gap }};
+    var deskCols = {{ section.settings.desktop_cols }};
+    var tabCols  = {{ section.settings.tablet_cols }};
+    var mobCols  = {{ section.settings.mobile_cols }};
+    var current  = 0;
+    var isAnimating = false;
 
-  // --- Clone slides for infinite loop ---
-  var realSlides = Array.from(track.querySelectorAll('.pc-slide'));
-  var totalReal  = realSlides.length;
-  if (totalReal === 0) return;
+    // --- Clone slides for infinite loop ---
+    var realSlides = Array.from(track.querySelectorAll('.pc-slide'));
+    var totalReal  = realSlides.length;
+    if (totalReal === 0) return;
 
-  // Append clones of all real slides at the end (for looping forward)
-  realSlides.forEach(function (s) {
-    track.appendChild(s.cloneNode(true));
-  });
-  // Prepend clones of all real slides at the start (for looping backward)
-  var prependFrag = document.createDocumentFragment();
-  realSlides.forEach(function (s) {
-    prependFrag.appendChild(s.cloneNode(true));
-  });
-  track.insertBefore(prependFrag, track.firstChild);
+    // Append clones of all real slides at the end (for looping forward)
+    realSlides.forEach(function (s) {
+      track.appendChild(s.cloneNode(true));
+    });
+    // Prepend clones of all real slides at the start (for looping backward)
+    var prependFrag = document.createDocumentFragment();
+    realSlides.forEach(function (s) {
+      prependFrag.appendChild(s.cloneNode(true));
+    });
+    track.insertBefore(prependFrag, track.firstChild);
 
-  var allSlides = Array.from(track.querySelectorAll('.pc-slide'));
+    var allSlides = Array.from(track.querySelectorAll('.pc-slide'));
 
-  function getCols() {
-    if (window.innerWidth <= 575) return mobCols;
-    if (window.innerWidth <= 991) return tabCols;
-    return deskCols;
-  }
+    function getCols() {
+      if (window.innerWidth <= 575) return mobCols;
+      if (window.innerWidth <= 991) return tabCols;
+      return deskCols;
+    }
 
-  function getSlideWidth() {
-    return allSlides[0] ? allSlides[0].offsetWidth : 0;
-  }
+    function getSlideWidth() {
+      return allSlides[0] ? allSlides[0].offsetWidth : 0;
+    }
 
-  function setPosition(idx, animated) {
-    var slideW = getSlideWidth();
-    track.style.transition = animated ? 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)' : 'none';
-    track.style.transform  = 'translateX(-' + (idx * (slideW + gap)) + 'px)';
-  }
+    function setPosition(idx, animated) {
+      var slideW = getSlideWidth();
+      track.style.transition = animated ? 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)' : 'none';
+      track.style.transform  = 'translateX(-' + (idx * (slideW + gap)) + 'px)';
+    }
 
-  // Start at first real slide (after the prepended clones)
-  current = totalReal;
-  setPosition(current, false);
+    // Start at first real slide (after the prepended clones)
+    current = totalReal;
+    setPosition(current, false);
 
-  function goTo(idx) {
-    if (isAnimating) return;
-    isAnimating = true;
-    current = idx;
-    setPosition(current, true);
+    function goTo(idx) {
+      if (isAnimating) return;
+      isAnimating = true;
+      current = idx;
+      setPosition(current, true);
 
-    // After transition ends, silently jump to real position if on clone
-    setTimeout(function () {
-      if (current < totalReal) {
-        // Was on prepended clone — jump to real end
-        current = current + totalReal;
+      // After transition ends, silently jump to real position if on clone
+      setTimeout(function () {
+        if (current < totalReal) {
+          // Was on prepended clone — jump to real end
+          current = current + totalReal;
+          setPosition(current, false);
+        } else if (current >= totalReal * 2) {
+          // Was on appended clone — jump to real start
+          current = current - totalReal;
+          setPosition(current, false);
+        }
+        isAnimating = false;
+      }, 420);
+    }
+
+    prevBtn.addEventListener('click', function () { goTo(current - 1); });
+    nextBtn.addEventListener('click', function () { goTo(current + 1); });
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
         setPosition(current, false);
-      } else if (current >= totalReal * 2) {
-        // Was on appended clone — jump to real start
-        current = current - totalReal;
-        setPosition(current, false);
-      }
-      isAnimating = false;
-    }, 420);
-  }
-
-  prevBtn.addEventListener('click', function () { goTo(current - 1); });
-  nextBtn.addEventListener('click', function () { goTo(current + 1); });
-
-  var resizeTimer;
-  window.addEventListener('resize', function () {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () {
-      setPosition(current, false);
-    }, 100);
-  });
-})();
+      }, 100);
+    });
+  })();
 </script>
 
 {% schema %}
