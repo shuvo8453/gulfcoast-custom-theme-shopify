@@ -1,0 +1,129 @@
+<div class="product-recommendations" 
+     data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.limit }}">
+  {%- if recommendations.performed? and recommendations.products_count > 0 -%}
+    <div class="container my-5 py-4 border-top">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0" style="font-family: 'Outfit', sans-serif; color: #0b1d33;">
+          {{ section.settings.title | escape }}
+        </h3>
+        
+        <!-- Navigation Arrows -->
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center slider-arrow arrow-prev" 
+                  style="width: 40px; height: 40px; padding: 0;"
+                  aria-label="Previous slide">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center slider-arrow arrow-next" 
+                  style="width: 40px; height: 40px; padding: 0;"
+                  aria-label="Next slide">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Slider Track -->
+      <div class="related-products-slider-container position-relative">
+        <div class="related-products-slider-track d-flex gap-4 pb-3" style="overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none;">
+          {%- for recommendation in recommendations.products -%}
+            <div class="related-product-slide-item col-12 col-sm-6 col-md-4 col-lg-3" style="scroll-snap-align: start; flex: 0 0 auto;">
+              {%- render 'product-card', product: recommendation -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .related-products-slider-track::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+
+    <script>
+      (function() {
+        const container = document.currentScript.closest('.product-recommendations');
+        const track = container.querySelector('.related-products-slider-track');
+        const prevBtn = container.querySelector('.arrow-prev');
+        const nextBtn = container.querySelector('.arrow-next');
+        const items = container.querySelectorAll('.related-product-slide-item');
+
+        if (!track || items.length === 0) return;
+
+        if (prevBtn) {
+          prevBtn.addEventListener('click', function() {
+            const slideWidth = items[0].offsetWidth + 24; // slide width + gap
+            track.scrollBy({
+              left: -slideWidth,
+              behavior: 'smooth'
+            });
+          });
+        }
+
+        if (nextBtn) {
+          nextBtn.addEventListener('click', function() {
+            const slideWidth = items[0].offsetWidth + 24; // slide width + gap
+            track.scrollBy({
+              left: slideWidth,
+              behavior: 'smooth'
+            });
+          });
+        }
+      })();
+    </script>
+  {%- else -%}
+    <script>
+      (function() {
+        const self = document.currentScript.closest('.product-recommendations');
+        const url = self.dataset.url;
+        if (!url) return;
+
+        fetch(url)
+          .then(response => response.text())
+          .then(text => {
+            const html = document.createElement('div');
+            html.innerHTML = text;
+            const recContainer = html.querySelector('.product-recommendations');
+            if (recContainer && recContainer.innerHTML.trim().length > 0) {
+              self.innerHTML = recContainer.innerHTML;
+              // Execute nested scripts
+              self.querySelectorAll('script').forEach(oldScript => {
+                const newScript = document.createElement('script');
+                newScript.textContent = oldScript.textContent;
+                oldScript.parentNode.replaceChild(newScript, oldScript);
+              });
+            }
+          })
+          .catch(e => console.error(e));
+      })();
+    </script>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Related Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Related Products"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "label": "Number of products",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Products"
+    }
+  ]
+}
+{% endschema %}

@@ -32,6 +32,41 @@
         Out of Stock
       </span>
     {% endif %}
+
+    <!-- Quick View Trigger Button -->
+    <button
+      type="button"
+      class="quick-view-btn btn position-absolute start-50 rounded-pill border-0 px-3 py-2 text-nowrap"
+      style="background-color: #eff6ff; color: #1e3a8a; font-weight: 500; font-size: 13px; z-index: 3; bottom: 12px;"
+      data-handle="{{ product.handle }}"
+      data-title="{{ product.title | escape }}"
+      data-price="{{ product.price | money }}"
+      data-compare-price="{% if product.compare_at_price > product.price %}{{ product.compare_at_price | money }}{% endif %}"
+      data-image="{{ product.featured_image | image_url: width: 600 }}"
+      data-available="{{ product.available }}"
+      data-sku="{{ product.variants.first.sku | default: '-' }}"
+      data-vendor="{{ product.vendor | escape | default: '-' }}"
+      data-url="{{ product.url }}"
+      data-weight="{% if product.variants.first.weight > 0 %}{{ product.variants.first.weight | weight_with_unit }}{% else %}-{% endif %}"
+      data-dimensions="{% if product.metafields.custom.box_length != blank %}{{ product.metafields.custom.box_length }}{% if product.metafields.custom.box_width != blank %} &times; {{ product.metafields.custom.box_width }}{% endif %}{% if product.metafields.custom.box_height != blank %} &times; {{ product.metafields.custom.box_height }}{% endif %} in{% else %}-{% endif %}"
+      data-mpn="{{ product.metafields.custom.manufacturer_part_number | default: '-' }}"
+      data-drop-ships="{% if product.metafields.custom.drop_ships_direct.value == true or product.metafields.custom.drop_ships_direct == 'true' or product.metafields.custom.drop_ships_direct == true %}yes{% else %}no{% endif %}"
+      data-hazardous="{% if product.metafields.custom.hazardous_materials.value == true or product.metafields.custom.hazardous_materials == 'true' or product.metafields.custom.hazardous_materials == true %}yes{% else %}no{% endif %}"
+      data-truck-freight="{% if product.metafields.custom.truck_freight.value == true or product.metafields.custom.truck_freight == 'true' or product.metafields.custom.truck_freight == true %}yes{% else %}no{% endif %}"
+      data-exportable="{% if product.metafields.custom.exportable.value == true or product.metafields.custom.exportable == 'true' or product.metafields.custom.exportable == true %}yes{% else %}no{% endif %}"
+      data-first-class="{% if product.metafields.custom.first_class_mail.value == true or product.metafields.custom.first_class_mail == 'true' or product.metafields.custom.first_class_mail == true %}yes{% else %}no{% endif %}"
+      data-oversized="{% if product.metafields.custom.oversized.value == true or product.metafields.custom.oversized == 'true' or product.metafields.custom.oversized == true %}yes{% else %}no{% endif %}"
+      data-remanufactured="{% if product.metafields.custom.remanufactured.value == true or product.metafields.custom.remanufactured == 'true' or product.metafields.custom.remanufactured == true %}yes{% else %}no{% endif %}"
+      data-closeout="{% if product.metafields.custom.closeout.value == true or product.metafields.custom.closeout == 'true' or product.metafields.custom.closeout == true %}yes{% else %}no{% endif %}"
+      data-country-origin="{{ product.metafields.custom.country_of_origin | default: '-' }}"
+      data-prop-65="{% if product.metafields.custom.prop_65.value == true or product.metafields.custom.prop_65 == 'true' or product.metafields.custom.prop_65 == true %}yes{% else %}no{% endif %}"
+      data-returnable="{% if product.metafields.custom.returnable.value == true or product.metafields.custom.returnable == 'true' or product.metafields.custom.returnable == true %}yes{% else %}no{% endif %}"
+      data-google-category="{{ product.metafields.custom.google_merchant_category | default: '-' }}"
+      data-categories="{% for col in product.collections %}{{ col.title }}{% unless forloop.last %}, {% endunless %}{% endfor %}"
+      data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+    >
+      <i class="fa-regular fa-eye me-1"></i> Quick View
+    </button>
   </div>
 
   <!-- Product Details Info -->

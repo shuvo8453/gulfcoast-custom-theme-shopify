@@ -790,3 +790,50 @@ a:hover {
   }
 }
 
+/* Quick View Button Hover Behavior & Modal Styles */
+.product-card-image .quick-view-btn {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, background-color 0.2s ease;
+  transform: translateX(-50%) scale(0.9);
+}
+
+.product-card-image:hover .quick-view-btn {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
+}
+
+.product-card-image .quick-view-btn:hover {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
+}
+
+/* Modal Specs Scrollbar Styling */
+.quick-view-specs-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.quick-view-specs-scroll::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+.quick-view-specs-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.quick-view-specs-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Modal spec rows styling */
+.quick-view-specs-scroll table tr {
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+.quick-view-specs-scroll table tr:last-child {
+  border-bottom: none !important;
+}
+.quick-view-specs-scroll table td {
+  padding: 8px 4px;
+}
+
+

@@ -89,6 +89,217 @@
     {% comment %}{% section 'mobile-floating-nav' %}{% endcomment %}
     {% section 'cart-recovery-toast' %}
 
+    <!-- Quick View Modal -->
+    <div
+      class="modal fade"
+      id="quickViewModal"
+      tabindex="-1"
+      aria-labelledby="quickViewModalLabel"
+      aria-hidden="true"
+      style="z-index: 1060;"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="max-width: 1150px; width: 100%;">
+          <!-- Modal Header (close button only) -->
+          <div class="modal-header border-0 pb-0 position-absolute end-0 top-0" style="z-index: 10;">
+            <button
+              type="button"
+              class="btn-close bg-light p-2 rounded-circle"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              style="font-size: 12px; margin: 15px;"
+            ></button>
+          </div>
+          <div class="modal-body p-4" style="max-height: 85vh; overflow-y: auto;">
+            <div class="row g-4">
+              <!-- Left Column: Product Image -->
+              <div
+                class="col-12 col-md-6 d-flex align-items-center justify-content-center bg-light rounded-4 overflow-hidden"
+                style="min-height: 380px; padding: 30px;"
+              >
+                <img
+                  id="qv-product-image"
+                  src=""
+                  alt=""
+                  class="img-fluid rounded"
+                  height=""
+                  width=""
+                  style="max-height: 500px; object-fit: contain;"
+                >
+              </div>
+              <!-- Right Column: Product details & Specs -->
+              <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
+                <div>
+                  <h2
+                    id="qv-product-title"
+                    class="fw-bold text-dark fs-3 mb-3"
+                    style="font-family: 'Outfit', sans-serif; padding-right: 40px; line-height: 1.3;"
+                  ></h2>
+                  <div class="d-flex align-items-baseline gap-2 mb-2">
+                    <span id="qv-product-price" class="fs-4 fw-bold text-primary"></span>
+                    <span id="qv-product-compare-price" class="fs-6 text-muted text-decoration-line-through"></span>
+                  </div>
+                  <div class="mb-3">
+                    <span id="qv-product-stock" class="stock-status-pill stock-in">
+                      <i class="fa-solid fa-circle-check"></i> In stock
+                    </span>
+                  </div>
+
+                  <!-- Scrollable Specs Table -->
+                  <div
+                    class="quick-view-specs-scroll border-top border-bottom py-2 my-3"
+                    style="max-height: 230px; overflow-y: auto;"
+                  >
+                    <table class="table table-sm table-borderless mb-0" style="font-size: 14px;">
+                      <tbody>
+                        <tr>
+                          <td class="text-muted py-1" style="width: 50%;">Weight</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-weight">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Dimensions</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-dimensions">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Manufacturer Part Number</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-mpn">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Manufacturer Name</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-vendor">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Drop Ships Direct from vendor</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-drop-ships">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Hazardous materials</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-hazardous">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Truck Freight</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-truck-freight">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Exportable</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-exportable">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">First Class Mail</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-first-class">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Oversized</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-oversized">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Remanufactured</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-remanufactured">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Closeout</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-closeout">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Country Of Origin</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-country-origin">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Prop 65</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-prop-65">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Returnable</td>
+                          <td class="text-dark fw-bold text-end py-1 qv-spec-returnable">-</td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Google Merchant Category</td>
+                          <td
+                            class="text-dark fw-bold text-end py-1 qv-spec-google-category"
+                            style="word-break: break-word;"
+                          >
+                            -
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div>
+                  <!-- ATC Form -->
+                  <form method="post" action="/cart/add" class="quick-view-add-form mb-4" id="qv-add-to-cart-form">
+                    <input type="hidden" name="id" id="qv-variant-id" value="">
+                    <div class="d-flex align-items-center gap-2">
+                      <!-- Quantity selector -->
+                      <div
+                        class="quantity-controls d-flex align-items-center border rounded-pill overflow-hidden bg-white"
+                        style="width: 110px; height: 42px; flex-shrink: 0; border-color: #dee2e6 !important; padding: 0 2px;"
+                      >
+                        <button
+                          type="button"
+                          class="qty-btn qty-minus bg-transparent border-0 h-100"
+                          style="font-size: 14px; width: 35px; border-right: 1px solid #dee2e6 !important;"
+                        >
+                          <i class="fa-solid fa-minus text-muted"></i>
+                        </button>
+                        <input
+                          type="text"
+                          name="quantity"
+                          class="qty-input bg-transparent border-0 text-center h-100"
+                          min="1"
+                          value="1"
+                          style="font-weight: 600; width: 35px; font-size: 14px;"
+                        >
+                        <button
+                          type="button"
+                          class="qty-btn qty-plus bg-transparent border-0 h-100"
+                          style="font-size: 14px; width: 35px; border-left: 1px solid #dee2e6 !important;"
+                        >
+                          <i class="fa-solid fa-plus text-muted"></i>
+                        </button>
+                      </div>
+                      <!-- Submit button -->
+                      <button
+                        type="submit"
+                        class="btn btn-primary flex-grow-1 rounded-pill d-flex align-items-center justify-content-center gap-2 text-white border-0"
+                        style="height: 42px; background-color: #3b52c4; font-weight: 600; font-size: 14px;"
+                      >
+                        <i class="fa-solid fa-cart-shopping"></i> Add To Cart
+                      </button>
+                    </div>
+                  </form>
+
+                  <!-- Separator and Metadata -->
+                  <hr class="text-muted my-4" style="opacity: 0.15;">
+                  <div class="quick-view-metadata small d-flex flex-column gap-3" style="font-size: 13px; line-height: 1.6;">
+                    <div class="d-flex justify-content-between">
+                      <span class="text-dark fw-medium">SKU:</span>
+                      <span class="text-muted qv-meta-sku">-</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <span class="text-dark fw-medium">Categories:</span>
+                      <span class="text-muted text-end qv-meta-categories">-</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <span class="text-dark fw-medium">Brand:</span>
+                      <span class="text-muted qv-meta-brand">-</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <span class="text-dark fw-medium">Share:</span>
+                      <div class="d-flex gap-2 qv-meta-share">
+                        <!-- Share icons populated dynamically -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Bootstrap 5 Bundle JS -->
     <script src="{{ 'bootstrap.bundle.min.js' | asset_url }}" defer="defer"></script>
   </body>

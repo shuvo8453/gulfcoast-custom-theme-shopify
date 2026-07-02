@@ -1,208 +1,1100 @@
-<section class="product-page-section py-5" data-section-id="{{ section.id }}" data-section-type="product">
-  <div class="container">
-    {% render 'breadcrumb' %}
+<style>
+  .product-title-bar {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .product-tabs-nav {
+    background-color: #f5f7fa;
+    padding: 6px;
+    border-radius: 12px;
+    border: none !important;
+    display: flex;
+    gap: 4px;
+  }
+  .nav-link-custom {
+    color: #5a6b82 !important;
+    font-weight: 500;
+    font-size: 14px;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 16px !important;
+    background-color: transparent !important;
+    width: 100%;
+    transition: all 0.2s ease;
+  }
+  .nav-link-custom.active {
+    color: #062e67 !important;
+    font-weight: 700;
+    background-color: #ffffff !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+  }
+  .thumb-wrapper.active {
+    border-color: #062e67 !important;
+    border-width: 2px !important;
+  }
+  .quantity-controls .qty-btn {
+    transition: background-color 0.2s;
+  }
+  .quantity-controls .qty-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+  }
+  .hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-3px);
+  }
+  .hover-shadow {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .hover-shadow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  }
+  .product-tabs-wrapper table.table-borderless tr {
+    border-bottom: 1px solid #dee2e6 !important;
+  }
+  .product-tabs-wrapper table.table-borderless tr:last-child {
+    border-bottom: none !important;
+  }
+  @media (min-width: 992px) {
+    .sticky-sidebar {
+      position: sticky;
+      top: 100px;
+      z-index: 10;
+    }
+  }
+</style>
 
-    <div class="row g-5 mt-2">
-      <!-- Left: Product Media Gallery -->
-      <div class="col-12 col-md-6">
-        <div class="product-gallery">
-          <div class="main-image-wrapper border rounded overflow-hidden mb-3">
+<section class="product-page-section py-4" data-section-id="{{ section.id }}" data-section-type="product">
+  <!-- Breadcrumb (centered on this page) -->
+  <div class="container text-center mb-3">
+    {% render 'breadcrumb' %}
+  </div>
+
+  <div class="container">
+    <div class="row g-4 mt-2 align-items-start">
+      <!-- Left Column: Product Gallery, 4 Badges, Tabs, Customer Reviews -->
+      <div class="col-12 col-lg-8">
+        <!-- Gallery Card -->
+        <div class="product-gallery bg-white p-3 border rounded-4 shadow-sm mb-4">
+          <div class="main-image-wrapper border rounded-4 overflow-hidden mb-3 bg-light">
             {% if product.selected_or_first_available_variant.featured_image != blank %}
-              <img src="{{ product.selected_or_first_available_variant.featured_image | image_url: width: 800 }}" 
-                   id="ProductMainImage" 
-                   class="img-fluid w-100" 
-                   alt="{{ product.title | escape }}"
-                   loading="eager">
+              <img
+                src="{{ product.selected_or_first_available_variant.featured_image | image_url: width: 800 }}"
+                id="ProductMainImage"
+                class="img-fluid w-100"
+                alt="{{ product.title | escape }}"
+                height=""
+                width=""
+                loading="eager"
+                style="max-height: 550px; object-fit: contain;"
+              >
             {% else %}
-              <img src="{{ product.featured_image | image_url: width: 800 }}" 
-                   id="ProductMainImage" 
-                   class="img-fluid w-100" 
-                   alt="{{ product.title | escape }}"
-                   loading="eager">
+              <img
+                src="{{ product.featured_image | image_url: width: 800 }}"
+                id="ProductMainImage"
+                class="img-fluid w-100"
+                alt="{{ product.title | escape }}"
+                height=""
+                width=""
+                loading="eager"
+                style="max-height: 550px; object-fit: contain;"
+              >
             {% endif %}
           </div>
-          
+
           {% if product.media.size > 1 %}
             <div class="row g-2 thumb-images-grid">
               {% for media in product.media %}
-                <div class="col-3">
-                  <div class="thumb-wrapper border rounded overflow-hidden cursor-pointer {% if forloop.first %}active border-primary{% endif %}" onclick="changeProductMainImage('{{ media | image_url: width: 800 }}', this)">
-                    <img src="{{ media | image_url: width: 150 }}" class="img-fluid w-100" alt="{{ product.title | escape }}" loading="lazy">
+                <div class="col-3 col-sm-2">
+                  <div
+                    class="thumb-wrapper border rounded-3 overflow-hidden cursor-pointer {% if forloop.first %}active border-primary{% endif %}"
+                    onclick="changeProductMainImage('{{ media | image_url: width: 800 }}', this)"
+                    style="aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa;"
+                  >
+                    <img
+                      src="{{ media | image_url: width: 150 }}"
+                      class="img-fluid w-100 h-100"
+                      alt="{{ product.title | escape }}"
+                      loading="lazy"
+                      height=""
+                      width=""
+                      style="object-fit: contain;"
+                    >
                   </div>
                 </div>
               {% endfor %}
             </div>
           {% endif %}
         </div>
+
+        <!-- 4 Core Trust Badges -->
+        <div class="row g-2 g-md-3 mb-4 text-center">
+          <div class="col-6 col-md-3">
+            <div class="p-3 border rounded-4 bg-white h-100 d-flex flex-column align-items-center justify-content-center shadow-sm">
+              <div
+                class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center mb-2"
+                style="width: 50px; height: 50px;"
+              >
+                <i class="fa-solid fa-truck fa-lg"></i>
+              </div>
+              <h6 class="fw-bold text-dark mb-1" style="font-size: 13px;">Free Shipping</h6>
+              <span class="text-muted" style="font-size: 11px;">Orders over $150</span>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <a href="https://wa.me/19856621036" target="_blank" class="text-decoration-none d-block h-100 hover-lift">
+              <div
+                class="p-3 border rounded-4 bg-white h-100 d-flex flex-column align-items-center justify-content-center shadow-sm"
+                style="cursor: pointer;"
+              >
+                <div
+                  class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center mb-2"
+                  style="width: 50px; height: 50px;"
+                >
+                  <i class="fas fa-headset fa-lg"></i>
+                </div>
+                <h6 class="fw-bold text-dark mb-1" style="font-size: 13px;">24/7 Support</h6>
+                <span class="text-muted" style="font-size: 11px;">Professional help</span>
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="p-3 border rounded-4 bg-white h-100 d-flex flex-column align-items-center justify-content-center shadow-sm">
+              <div
+                class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center mb-2"
+                style="width: 50px; height: 50px;"
+              >
+                <i class="fa-solid fa-shield-halved fa-lg"></i>
+              </div>
+              <h6 class="fw-bold text-dark mb-1" style="font-size: 13px;">Secure Payment</h6>
+              <span class="text-muted" style="font-size: 11px;">Safe checkout options</span>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="p-3 border rounded-4 bg-white h-100 d-flex flex-column align-items-center justify-content-center shadow-sm">
+              <div
+                class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center mb-2"
+                style="width: 50px; height: 50px;"
+              >
+                <i class="fa-solid fa-truck-fast fa-lg"></i>
+              </div>
+              <h6 class="fw-bold text-dark mb-1" style="font-size: 13px;">Fast Delivery</h6>
+              <span class="text-muted" style="font-size: 11px;">Nationwide shipping</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Details Tabs -->
+        {%- assign has_user_guide = false -%}
+        {%- if product.metafields.custom.owners_manual_pdf_url != blank
+          or product.metafields.custom.brochure_pdf_url != blank
+          or product.metafields.custom.quick_guide_pdf_url != blank
+          or product.metafields.custom.installation_guide_pdf_url != blank
+        -%}
+          {%- assign has_user_guide = true -%}
+        {%- endif -%}
+
+        <div class="product-tabs-wrapper bg-white border rounded-4 p-4 shadow-sm mb-4">
+          <ul class="nav nav-tabs product-tabs-nav mb-4" id="productDetailTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link nav-link-custom active"
+                id="desc-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#desc-pane"
+                type="button"
+                role="tab"
+                aria-controls="desc-pane"
+                aria-selected="true"
+              >
+                Description
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link nav-link-custom"
+                id="additional-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#additional-pane"
+                type="button"
+                role="tab"
+                aria-controls="additional-pane"
+                aria-selected="false"
+              >
+                Additional Information
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link nav-link-custom"
+                id="spec-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#spec-pane"
+                type="button"
+                role="tab"
+                aria-controls="spec-pane"
+                aria-selected="false"
+              >
+                Specifications
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link nav-link-custom"
+                id="user-guide-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#user-guide-pane"
+                type="button"
+                role="tab"
+                aria-controls="user-guide-pane"
+                aria-selected="false"
+              >
+                User Guide
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content px-2" id="productDetailTabsContent">
+            <!-- Tab 1: Description -->
+            <div
+              class="tab-pane fade show active leading-relaxed text-muted"
+              id="desc-pane"
+              role="tabpanel"
+              aria-labelledby="desc-tab"
+              tabindex="0"
+            >
+              {% if product.description != blank %}
+                {{ product.description }}
+              {% else %}
+                <p class="text-muted mb-0">No description available for this product.</p>
+              {% endif %}
+            </div>
+
+            <!-- Tab 2: Additional Information -->
+            <div
+              class="tab-pane fade"
+              id="additional-pane"
+              role="tabpanel"
+              aria-labelledby="additional-tab"
+              tabindex="0"
+            >
+              <h5 class="fw-bold text-dark mb-4" style="font-family: 'Outfit', sans-serif; font-size: 20px;">
+                Product Information
+              </h5>
+              {%- assign weight_value = product.variants.first.weight -%}
+              {%- assign length = product.metafields.custom.box_length -%}
+              {%- assign width = product.metafields.custom.box_width -%}
+              {%- assign height = product.metafields.custom.box_height -%}
+
+              {% if weight_value > 0 or length != blank or width != blank or height != blank %}
+                <table class="table table-borderless">
+                  <tbody>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row" style="width: 25%;">Weight:</th>
+                      <td class="py-3 text-dark fw-medium">
+                        {%- if weight_value > 0 -%}
+                          {{ weight_value | weight_with_unit }}
+                        {%- else -%}
+                          -
+                        {%- endif -%}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row" style="width: 25%;">Dimensions:</th>
+                      <td class="py-3 text-dark fw-medium">
+                        {%- if length != blank or width != blank or height != blank -%}
+                          {%- if length != blank -%}{{ length }}{%- endif -%}
+                          {%- if width != blank -%}&times; {{ width }}{%- endif -%}
+                          {%- if height != blank -%}&times; {{ height }}{%- endif -%}
+                          in
+                        {%- else -%}
+                          -
+                        {%- endif -%}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              {% else %}
+                <p class="text-muted mb-0">No additional information available for this product.</p>
+              {% endif %}
+            </div>
+
+            <!-- Tab 3: Specifications -->
+            <div class="tab-pane fade" id="spec-pane" role="tabpanel" aria-labelledby="spec-tab" tabindex="0">
+              <h5 class="fw-bold text-dark mb-4" style="font-family: 'Outfit', sans-serif; font-size: 20px;">
+                Product Specifications
+              </h5>
+              <div class="table-responsive">
+                <table class="table table-borderless">
+                  <tbody>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row" style="width: 50%;">
+                        Manufacturer Part Number
+                      </th>
+                      <td class="py-3 text-dark fw-bold text-end">
+                        {%- if product.metafields.custom.manufacturer_part_number != blank -%}
+                          {{ product.metafields.custom.manufacturer_part_number }}
+                        {%- else -%}
+                          -
+                        {%- endif -%}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row">Manufacturer Name</th>
+                      <td class="py-3 text-dark fw-bold text-end">{{ product.vendor | default: '-' }}</td>
+                    </tr>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row">Drop Ships Direct from vendor</th>
+                      <td class="py-3 text-dark fw-bold text-end">
+                        {%- if product.metafields.custom.drop_ships_direct.value == true
+                          or product.metafields.custom.drop_ships_direct == 'true'
+                          or product.metafields.custom.drop_ships_direct == true
+                        -%}
+                          yes
+                        {%- else -%}
+                          no
+                        {%- endif -%}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row">Hazardous materials</th>
+                      <td class="py-3 text-dark fw-bold text-end">
+                        {%- if product.metafields.custom.hazardous_materials.value == true
+                          or product.metafields.custom.hazardous_materials == 'true'
+                          or product.metafields.custom.hazardous_materials == true
+                        -%}
+                          yes
+                        {%- else -%}
+                          no
+                        {%- endif -%}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row">Truck Freight</th>
+                      <td class="py-3 text-dark fw-bold text-end">
+                        {%- if product.metafields.custom.truck_freight.value == true
+                          or product.metafields.custom.truck_freight == 'true'
+                          or product.metafields.custom.truck_freight == true
+                        -%}
+                          yes
+                        {%- else -%}
+                          no
+                        {%- endif -%}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row">Exportable</th>
+                      <td class="py-3 text-dark fw-bold text-end">
+                        {%- if product.metafields.custom.exportable.value == true
+                          or product.metafields.custom.exportable == 'true'
+                          or product.metafields.custom.exportable == true
+                        -%}
+                          yes
+                        {%- else -%}
+                          no
+                        {%- endif -%}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row">First Class Mail</th>
+                      <td class="py-3 text-dark fw-bold text-end">
+                        {%- if product.metafields.custom.first_class_mail.value == true
+                          or product.metafields.custom.first_class_mail == 'true'
+                          or product.metafields.custom.first_class_mail == true
+                        -%}
+                          yes
+                        {%- else -%}
+                          no
+                        {%- endif -%}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row">Oversized</th>
+                      <td class="py-3 text-dark fw-bold text-end">
+                        {%- if product.metafields.custom.oversized.value == true
+                          or product.metafields.custom.oversized == 'true'
+                          or product.metafields.custom.oversized == true
+                        -%}
+                          yes
+                        {%- else -%}
+                          no
+                        {%- endif -%}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row">Remanufactured</th>
+                      <td class="py-3 text-dark fw-bold text-end">
+                        {%- if product.metafields.custom.remanufactured.value == true
+                          or product.metafields.custom.remanufactured == 'true'
+                          or product.metafields.custom.remanufactured == true
+                        -%}
+                          yes
+                        {%- else -%}
+                          no
+                        {%- endif -%}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row">Closeout</th>
+                      <td class="py-3 text-dark fw-bold text-end">
+                        {%- if product.metafields.custom.closeout.value == true
+                          or product.metafields.custom.closeout == 'true'
+                          or product.metafields.custom.closeout == true
+                        -%}
+                          yes
+                        {%- else -%}
+                          no
+                        {%- endif -%}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row">Prop 65</th>
+                      <td class="py-3 text-dark fw-bold text-end">
+                        {%- if product.metafields.custom.prop_65.value == true
+                          or product.metafields.custom.prop_65 == 'true'
+                          or product.metafields.custom.prop_65 == true
+                        -%}
+                          yes
+                        {%- else -%}
+                          no
+                        {%- endif -%}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="py-3 text-muted fw-normal" scope="row">Returnable</th>
+                      <td class="py-3 text-dark fw-bold text-end">
+                        {%- if product.metafields.custom.returnable.value == true
+                          or product.metafields.custom.returnable == 'true'
+                          or product.metafields.custom.returnable == true
+                        -%}
+                          yes
+                        {%- else -%}
+                          no
+                        {%- endif -%}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {% if product.metafields.custom.prop_65.value == true
+                or product.metafields.custom.hazardous_materials.value == true
+              %}
+                <div class="d-flex flex-column gap-3 mt-4">
+                  {% if product.metafields.custom.prop_65.value == true %}
+                    <div
+                      class="alert alert-warning border-warning-subtle d-flex align-items-start gap-3 rounded-4 p-3 mb-0"
+                      style="background-color: #fffbeb;"
+                    >
+                      <i class="fa-solid fa-triangle-exclamation fa-lg text-warning mt-1"></i>
+                      <div>
+                        <h6 class="fw-bold text-warning-emphasis mb-1">California Proposition 65 Warning</h6>
+                        <p class="text-muted small mb-0">
+                          This product can expose you to chemicals known to the State of California to cause cancer and
+                          birth defects or other reproductive harm.
+                        </p>
+                      </div>
+                    </div>
+                  {% endif %}
+                  {% if product.metafields.custom.hazardous_materials.value == true %}
+                    <div
+                      class="alert alert-danger border-danger-subtle d-flex align-items-start gap-3 rounded-4 p-3 mb-0"
+                      style="background-color: #fef2f2;"
+                    >
+                      <i class="fa-solid fa-biohazard fa-lg text-danger mt-1"></i>
+                      <div>
+                        <h6 class="fw-bold text-danger mb-1">Hazardous Materials Warning</h6>
+                        <p class="text-muted small mb-0">
+                          Classified as hazardous material. Special handling, shipping fees, or carrier restrictions may
+                          apply during transport.
+                        </p>
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Tab 4: User Guide -->
+            <div
+              class="tab-pane fade"
+              id="user-guide-pane"
+              role="tabpanel"
+              aria-labelledby="user-guide-tab"
+              tabindex="0"
+            >
+              <h5 class="fw-bold text-dark mb-4" style="font-family: 'Outfit', sans-serif; font-size: 20px;">
+                Product Manuals & Guides
+              </h5>
+              {% if product.metafields.custom.installation_guide_pdf_url != blank
+                or product.metafields.custom.quick_guide_pdf_url != blank
+                or product.metafields.custom.brochure_pdf_url != blank
+                or product.metafields.custom.owners_manual_pdf_url != blank
+              %}
+                <div class="row g-3">
+                  {% if product.metafields.custom.installation_guide_pdf_url != blank %}
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <a
+                        href="{{ product.metafields.custom.installation_guide_pdf_url }}"
+                        target="_blank"
+                        class="text-decoration-none"
+                      >
+                        <div
+                          class="d-flex align-items-center gap-3 p-3 border rounded-3 bg-light hover-shadow"
+                          style="transition: all 0.2s; cursor: pointer;"
+                        >
+                          <i class="fa-regular fa-file-pdf fa-2x text-danger"></i>
+                          <span class="text-primary fw-semibold">Installation Guide</span>
+                        </div>
+                      </a>
+                    </div>
+                  {% endif %}
+                  {% if product.metafields.custom.quick_guide_pdf_url != blank %}
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <a
+                        href="{{ product.metafields.custom.quick_guide_pdf_url }}"
+                        target="_blank"
+                        class="text-decoration-none"
+                      >
+                        <div
+                          class="d-flex align-items-center gap-3 p-3 border rounded-3 bg-light hover-shadow"
+                          style="transition: all 0.2s; cursor: pointer;"
+                        >
+                          <i class="fa-regular fa-file-pdf fa-2x text-danger"></i>
+                          <span class="text-primary fw-semibold">Quick Guide</span>
+                        </div>
+                      </a>
+                    </div>
+                  {% endif %}
+                  {% if product.metafields.custom.brochure_pdf_url != blank %}
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <a
+                        href="{{ product.metafields.custom.brochure_pdf_url }}"
+                        target="_blank"
+                        class="text-decoration-none"
+                      >
+                        <div
+                          class="d-flex align-items-center gap-3 p-3 border rounded-3 bg-light hover-shadow"
+                          style="transition: all 0.2s; cursor: pointer;"
+                        >
+                          <i class="fa-regular fa-file-pdf fa-2x text-danger"></i>
+                          <span class="text-primary fw-semibold">Brochure</span>
+                        </div>
+                      </a>
+                    </div>
+                  {% endif %}
+                  {% if product.metafields.custom.owners_manual_pdf_url != blank %}
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <a
+                        href="{{ product.metafields.custom.owners_manual_pdf_url }}"
+                        target="_blank"
+                        class="text-decoration-none"
+                      >
+                        <div
+                          class="d-flex align-items-center gap-3 p-3 border rounded-3 bg-light hover-shadow"
+                          style="transition: all 0.2s; cursor: pointer;"
+                        >
+                          <i class="fa-regular fa-file-pdf fa-2x text-danger"></i>
+                          <span class="text-primary fw-semibold">Owners Manual</span>
+                        </div>
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              {% else %}
+                <p class="text-muted mb-0">No user guides or manuals available for this product.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Right: Product Information & Purchase -->
-      <div class="col-12 col-md-6">
-        <div class="product-details-panel">
-          <!-- Vendor / Title -->
-          <span class="text-uppercase text-muted small fw-bold tracking-wider">{{ product.vendor }}</span>
-          <h1 class="product-title fw-bold my-2 text-dark">{{ product.title }}</h1>
+      <!--
+        Right Column: Product Title, Info, ATC Form, Metadata List, Returns Card, Payment Methods, Help assistance
+      -->
+      <div class="col-12 col-lg-4 sticky-sidebar">
+        <div class="product-details-panel p-4 border rounded-4 shadow-sm" style="background-color: rgb(249, 250, 251);">
+          <!-- Title at the top of the right sidebar -->
+          <h1 class="fs-4 fw-bold text-dark mb-2" style="font-family: 'Outfit', sans-serif; line-height: 1.3;">
+            {{ product.title }}
+          </h1>
 
-          <!-- Review Stars Overlay -->
-          <div class="product-reviews-badge my-3">
-            <span class="text-warning"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
-            <span class="text-muted small ms-2">(Customer Reviews)</span>
+        <!-- Arrives by Widget -->
+        <div class="d-flex align-items-center gap-2 mb-3 py-1">
+          <i class="fa-solid fa-truck text-primary"></i>
+          <span class="small text-muted fw-semibold"> Arrives by <span id="dynamic-arrival-date"></span> </span>
+          <i
+            class="fa-solid fa-circle-info text-muted small"
+            style="cursor: pointer;"
+            title="Estimated delivery date"
+          ></i>
+        </div>
+
+        <hr class="text-muted my-3">
+
+        <!-- Price Display -->
+        <div class="product-price-container d-flex align-items-center gap-3 mb-3">
+          <span class="fs-2 fw-bold text-primary">{{ product.price | money }}</span>
+          {% if product.compare_at_price > product.price %}
+            <span class="fs-5 text-muted text-decoration-line-through">{{ product.compare_at_price | money }}</span>
+            <span class="badge bg-danger rounded-pill px-3"
+              >Save {{ product.compare_at_price | minus: product.price | money -}}
+            </span>
+          {% endif %}
+        </div>
+
+        <!-- Only X left! Badge (shown if product inventory is less than or equal to 10) -->
+        {% assign current_variant = product.selected_or_first_available_variant %}
+        {% if current_variant.available %}
+          {% if current_variant.inventory_management != blank
+            and current_variant.inventory_quantity > 0
+            and current_variant.inventory_quantity <= 10
+          %}
+            <div class="mb-3">
+              <span
+                class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2"
+                style="background-color: #e8f5e9; color: #2e7d32; font-size: 13px;"
+              >
+                <i class="fa-solid fa-bolt-lightning"></i> Only {{ current_variant.inventory_quantity }} left!
+              </span>
+            </div>
+          {% endif %}
+        {% endif %}
+
+        <!-- Add to Cart Form -->
+        {% form 'product', product, id: 'AddToCartForm', class: 'purchase-form' %}
+          <!-- Hidden Input for selected variant -->
+          <input
+            type="hidden"
+            name="id"
+            id="SelectedVariantId"
+            value="{{ product.selected_or_first_available_variant.id }}"
+          >
+
+          <!-- Variant Selector Dropdowns (Standard Option loop) -->
+          {% unless product.has_only_default_variant %}
+            <div class="product-option-selectors d-flex flex-column gap-3 mb-3">
+              {% for option in product.options_with_values %}
+                <div class="option-row">
+                  <label class="form-label fw-semibold text-dark small mb-1" for="Option-{{ forloop.index0 }}">
+                    {{ option.name }}
+                  </label>
+                  <select
+                    id="Option-{{ forloop.index0 }}"
+                    class="form-select variant-select-input rounded-pill px-3 py-2"
+                    onchange="onVariantOptionChange()"
+                  >
+                    {% for value in option.values %}
+                      <option
+                        value="{{ value | escape }}"
+                        {% if option.selected_value == value %}
+                          selected
+                        {% endif %}
+                      >
+                        {{ value }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                </div>
+              {% endfor %}
+            </div>
+          {% endunless %}
+
+          <!-- Quantity & ATC Action Buttons -->
+          <div class="d-flex align-items-center gap-2 mt-3 mb-3">
+            <!-- Quantity Control widget -->
+            <div
+              class="quantity-controls d-flex align-items-center border rounded-pill overflow-hidden bg-white"
+              style="width: 120px; height: 48px; flex-shrink: 0; border-color: #dee2e6 !important;"
+            >
+              <button
+                type="button"
+                class="qty-btn qty-minus bg-transparent border-0 h-100"
+                style="font-size: 16px; width: 40px; border-right: 1px solid #dee2e6 !important;"
+              >
+                <i class="fa-solid fa-minus text-muted"></i>
+              </button>
+              <input
+                type="text"
+                name="quantity"
+                class="qty-input bg-transparent border-0 text-center h-100"
+                min="1"
+                value="1"
+                style="font-weight: 600; width: 40px;"
+              >
+              <button
+                type="button"
+                class="qty-btn qty-plus bg-transparent border-0 h-100"
+                style="font-size: 16px; width: 40px; border-left: 1px solid #dee2e6 !important;"
+              >
+                <i class="fa-solid fa-plus text-muted"></i>
+              </button>
+            </div>
+
+            <!-- ATC Submit Button -->
+            <button
+              type="submit"
+              name="add"
+              id="AddToCartButton"
+              class="btn btn-primary flex-grow-1 rounded-pill py-3 d-flex align-items-center justify-content-center"
+              style="height: 48px; background-color: #3b52c4; border: 0; font-weight: 600;"
+              {% unless product.available %}
+                disabled
+              {% endunless %}
+            >
+              {% if product.available %}
+                <span>Add To Cart</span>
+              {% else %}
+                <span>Sold Out</span>
+              {% endif %}
+            </button>
           </div>
+        {% endform %}
 
-          <!-- Price -->
-          <div class="product-price-container my-3 d-flex align-items-center gap-3">
-            <span class="fs-3 fw-bold text-primary">{{ product.price | money }}</span>
-            {% if product.compare_at_price > product.price %}
-              <span class="fs-5 text-muted text-decoration-line-through">{{ product.compare_at_price | money }}</span>
-              <span class="badge bg-danger">Save {{ product.compare_at_price | minus: product.price | money }}</span>
-            {% endif %}
-          </div>
+        <!-- Wishlist / Compare links row -->
+        <div class="d-flex align-items-center justify-content-start gap-4 py-2 my-2 border-top border-bottom">
+          <a
+            href="#"
+            class="wishlist-btn-toggle text-dark text-decoration-none small d-flex align-items-center gap-1 hover:text-primary"
+            data-handle="{{ product.handle }}"
+          >
+            <i class="fa-regular fa-heart"></i> Add to wishlist
+          </a>
+          <a
+            href="#"
+            class="compare-btn-toggle text-dark text-decoration-none small d-flex align-items-center gap-1 hover:text-primary"
+            data-handle="{{ product.handle }}"
+          >
+            <i class="fa-solid fa-arrow-right-arrow-left"></i> Compare
+          </a>
+        </div>
 
-          <!-- Est Arrival Widget -->
-          <div class="est-arrival-badge alert alert-info py-2 px-3 my-4 d-flex align-items-center gap-2 border-0 rounded" style="background-color: #eff6ff; color: #1e3a8a;">
-            <i class="fa-solid fa-truck-fast"></i>
-            <span class="small fw-semibold">
-              <!-- Liquid Date Math: Default to adding 3 days -->
-              {% assign delivery_seconds = 259200 %}
-              {{ 'products.product.arrives_by' | t: date: html | replace: "html", "" }}
-              <strong id="dynamic-arrival-date"></strong>
+        <!-- Product Meta Information List -->
+        <div class="product-metadata-list d-flex flex-column gap-2 py-2 small">
+          {% assign current_variant = product.selected_or_first_available_variant %}
+          {% if current_variant.sku != blank %}
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="text-dark fw-medium">SKU:</span>
+              <span class="text-muted">{{ current_variant.sku }}</span>
+            </div>
+          {% endif %}
+          {% if product.collections.size > 0 %}
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="text-dark fw-medium">Categories:</span>
+              <span class="text-muted text-end">
+                {% for col in product.collections %}
+                  <a href="{{ col.url }}" class="text-decoration-none text-muted hover:text-primary">{{ col.title }}</a>
+                  {%- unless forloop.last %}, {% endunless %}
+                {% endfor %}
+              </span>
+            </div>
+          {% endif %}
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="text-dark fw-medium">Brand:</span>
+            <span class="text-muted">
+              <a
+                href="{{ product.vendor | url_for_vendor }}"
+                class="text-decoration-none text-muted hover:text-primary"
+              >
+                {{- product.vendor -}}
+              </a>
             </span>
           </div>
-
-          <!-- Add to Cart Form -->
-          {% form 'product', product, id: 'AddToCartForm', class: 'purchase-form my-4' %}
-            <!-- Hidden Input for selected variant -->
-            <input type="hidden" name="id" id="SelectedVariantId" value="{{ product.selected_or_first_available_variant.id }}">
-
-            <!-- Variant Selector Dropdowns (Standard Shopify option loop) -->
-            {% unless product.has_only_default_variant %}
-              <div class="product-option-selectors d-flex flex-column gap-3 mb-4">
-                {% for option in product.options_with_values %}
-                  <div class="option-row">
-                    <label class="form-label fw-semibold text-dark small" for="Option-{{ forloop.index0 }}">
-                      {{ option.name }}
-                    </label>
-                    <select id="Option-{{ forloop.index0 }}" class="form-select variant-select-input" onchange="onVariantOptionChange()">
-                      {% for value in option.values %}
-                        <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>
-                          {{ value }}
-                        </option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                {% endfor %}
-              </div>
-            {% endunless %}
-
-            <!-- Quantity & CTA Actions -->
-            <div class="purchase-actions d-flex flex-wrap gap-3 align-items-center">
-              <div>
-                <label class="form-label text-muted small d-block mb-1">{{ 'products.product.quantity' | t }}</label>
-                {% render 'quantity-selector' %}
-              </div>
-
-              <div class="flex-grow-1 align-self-end">
-                <button type="submit" name="add" id="AddToCartButton" class="btn btn-primary w-100 btn-lg rounded-pill text-uppercase py-3 d-flex align-items-center justify-content-center gap-2" {% unless product.available %}disabled{% endunless %}>
-                  {% if product.available %}
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span>{{ 'products.product.add_to_cart' | t }}</span>
-                  {% else %}
-                    <span>{{ 'products.product.sold_out' | t }}</span>
-                  {% endif %}
-                </button>
-              </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="text-dark fw-medium">Share:</span>
+            <div class="d-flex gap-2">
+              <a
+                href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url | append: product.url }}"
+                target="_blank"
+                class="text-muted hover:text-primary"
+                ><i class="fa-brands fa-facebook-f"></i
+              ></a>
+              <a
+                href="https://twitter.com/intent/tweet?text={{ product.title | escape }}&url={{ shop.url | append: product.url }}"
+                target="_blank"
+                class="text-muted hover:text-primary"
+                ><i class="fa-brands fa-twitter"></i
+              ></a>
+              <a
+                href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: product.url }}&media={{ product.featured_image | image_url: width: 800 }}&description={{ product.title | escape }}"
+                target="_blank"
+                class="text-muted hover:text-primary"
+                ><i class="fa-brands fa-pinterest-p"></i
+              ></a>
+              <a
+                href="https://www.linkedin.com/shareArticle?mini=true&url={{ shop.url | append: product.url }}&title={{ product.title | escape }}"
+                target="_blank"
+                class="text-muted hover:text-primary"
+                ><i class="fa-brands fa-linkedin-in"></i
+              ></a>
+              <a
+                href="https://t.me/share/url?url={{ shop.url | append: product.url }}&text={{ product.title | escape }}"
+                target="_blank"
+                class="text-muted hover:text-primary"
+                ><i class="fa-brands fa-telegram"></i
+              ></a>
             </div>
-          {% endform %}
-
-          <!-- Support Assistance Box -->
-          {% render 'assistance-box' %}
+          </div>
         </div>
+
+        <!-- Free 30 Day Returns box -->
+        <div
+          class="p-3 border rounded-3 d-flex align-items-center justify-content-between my-2"
+          style="background-color: #f8fafc; border-color: #e2e8f0 !important;"
+        >
+          <span class="text-dark fw-semibold small">Free 30 Day Returns</span>
+          <a
+            href="/refund-returns/"
+            class="small text-decoration-underline text-primary fw-medium"
+            style="font-style: italic;"
+            >More details</a
+          >
+        </div>
+
+        <!-- Trust Badges (Payment Methods) -->
+        <div class="d-flex align-items-center justify-content-between py-2 border-top flex-nowrap gap-1">
+          <span class="text-muted fw-semibold text-nowrap" style="font-size: 12px; color: #062e67; flex-shrink: 0; margin-right: 4px;">
+            Payment Methods:
+          </span>
+          <div class="d-flex gap-1 align-items-center flex-nowrap">
+            <img
+              src="{{ 'paypal' | payment_type_img_url }}"
+              class="border rounded-1 bg-white px-1"
+              style="height: 14px; width: auto; flex-shrink: 0;"
+              alt="PayPal"
+              height=""
+              width=""
+            >
+            <img
+              src="{{ 'master' | payment_type_img_url }}"
+              class="border rounded-1 bg-white px-1"
+              style="height: 14px; width: auto; flex-shrink: 0;"
+              alt="Mastercard"
+              height=""
+              width=""
+            >
+            <img
+              src="{{ 'visa' | payment_type_img_url }}"
+              class="border rounded-1 bg-white px-1"
+              style="height: 14px; width: auto; flex-shrink: 0;"
+              alt="Visa"
+              height=""
+              width=""
+            >
+            <img
+              src="{{ 'american_express' | payment_type_img_url }}"
+              class="border rounded-1 bg-white px-1"
+              style="height: 14px; width: auto; flex-shrink: 0;"
+              alt="Amex"
+              height=""
+              width=""
+            >
+            <img
+              src="{{ 'discover' | payment_type_img_url }}"
+              class="border rounded-1 bg-white px-1"
+              style="height: 14px; width: auto; flex-shrink: 0;"
+              alt="Discover"
+              height=""
+              width=""
+            >
+            <img
+              src="{{ 'google_pay' | payment_type_img_url }}"
+              class="border rounded-1 bg-white px-1"
+              style="height: 14px; width: auto; flex-shrink: 0;"
+              alt="Google Pay"
+              height=""
+              width=""
+            >
+            <img
+              src="{{ 'apple_pay' | payment_type_img_url }}"
+              class="border rounded-1 bg-white px-1"
+              style="height: 14px; width: auto; flex-shrink: 0;"
+              alt="Apple Pay"
+              height=""
+              width=""
+            >
+          </div>
+        </div>
+
+        <!-- Need Assistance? box -->
+        <div class="assistance-panel p-4 border rounded-4 bg-white shadow-sm mt-3">
+          <h5 class="fw-bold text-dark mb-2" style="font-family: 'Outfit', sans-serif; font-size: 18px;">
+            Need assistance?
+          </h5>
+          <p class="text-muted small mb-3">Get expert advice on product selection and custom requirements.</p>
+          <hr class="text-muted my-3">
+          <div class="d-flex align-items-center justify-content-between">
+            <a
+              href="https://wa.me/19856621036"
+              target="_blank"
+              class="text-primary text-decoration-none small fw-semibold d-flex align-items-center gap-2"
+            >
+              <i class="fa-solid fa-phone"></i> WhatsApp Me
+            </a>
+            <a
+              href="mailto:sales@gulfcoastoutfitters.com"
+              class="text-primary text-decoration-none small fw-semibold d-flex align-items-center gap-2"
+            >
+              <i class="fa-solid fa-envelope"></i> sales@gulfcoastoutfitters.com
+            </a>
+          </div>
+        </div>
+      </div>
       </div>
     </div>
 
-    <!-- Product Details Tabs -->
-    <div class="row mt-5 pt-4">
-      <div class="col-12">
-        <ul class="nav nav-tabs border-bottom mb-4" id="productDetailTabs" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link nav-link-custom active" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc-pane" type="button" role="tab" aria-controls="desc-pane" aria-selected="true">
-              {{ 'products.product.description' | t }}
-            </button>
-          </li>
-          {% if product.metafields.custom.specifications.value != blank %}
-            <li class="nav-item" role="presentation">
-              <button class="nav-link nav-link-custom" id="spec-tab" data-bs-toggle="tab" data-bs-target="#spec-pane" type="button" role="tab" aria-controls="spec-pane" aria-selected="false">
-                {{ 'products.product.specifications' | t }}
-              </button>
-            </li>
-          {% endif %}
-          {% if product.metafields.custom.owners_manual != blank %}
-            <li class="nav-item" role="presentation">
-              <button class="nav-link nav-link-custom" id="manual-tab" data-bs-toggle="tab" data-bs-target="#manual-pane" type="button" role="tab" aria-controls="manual-pane" aria-selected="false">
-                {{ 'products.product.manuals' | t }}
-              </button>
-            </li>
-          {% endif %}
-        </ul>
-        <div class="tab-content px-2" id="productDetailTabsContent">
-          <!-- Tab 1: Description -->
-          <div class="tab-pane fade show active leading-relaxed text-muted" id="desc-pane" role="tabpanel" aria-labelledby="desc-tab" tabindex="0">
-            {{ product.description }}
-          </div>
-          
-          <!-- Tab 2: Specifications -->
-          {% if product.metafields.custom.specifications.value != blank %}
-            <div class="tab-pane fade" id="spec-pane" role="tabpanel" aria-labelledby="spec-tab" tabindex="0">
-              <table class="table table-striped table-bordered mt-2">
-                <tbody>
-                  {% for spec in product.metafields.custom.specifications.value %}
-                    {% assign spec_split = spec | split: ":" %}
-                    <tr>
-                      <th class="w-25 text-dark fw-semibold" scope="row">{{ spec_split[0] | strip }}</th>
-                      <td class="text-muted">{{ spec_split[1] | strip }}</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          {% endif %}
+    <!-- Customer Reviews Panel (Full width container) -->
+    <div class="customer-reviews-section mt-5 mb-4">
+      <h4 class="fw-bold text-dark mb-4" style="font-family: 'Outfit', sans-serif; font-size: 20px;">
+        Customer reviews
+      </h4>
 
-          <!-- Tab 3: Downloads & Manuals -->
-          {% if product.metafields.custom.owners_manual != blank %}
-            <div class="tab-pane fade" id="manual-pane" role="tabpanel" aria-labelledby="manual-tab" tabindex="0">
-              <div class="d-flex flex-column gap-3 p-2">
-                <div class="d-flex align-items-center gap-3 p-3 bg-light rounded border">
-                  <i class="fa-regular fa-file-pdf fa-2x text-danger"></i>
-                  <div class="flex-grow-1">
-                    <h6 class="mb-1 text-dark fw-bold">Owner's Installation & Operation Manual</h6>
-                    <span class="text-muted small">PDF Document</span>
-                  </div>
-                  <a href="{{ product.metafields.custom.owners_manual | file_url }}" class="btn btn-outline-primary btn-sm rounded-pill px-3" target="_blank">
-                    <i class="fa-solid fa-download me-1"></i>Download
-                  </a>
-                </div>
-              </div>
+      <div class="row align-items-center mb-5 g-4">
+        <!-- Left side: average rating -->
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-center gap-4">
+          <div class="d-flex align-items-baseline">
+            <span
+              class="display-3 fw-bold text-dark"
+              style="font-size: 64px; line-height: 1; font-family: 'Outfit', sans-serif;"
+              >0</span
+            >
+            <span class="text-muted fs-4 ms-1">/ 5</span>
+          </div>
+          <div class="d-flex flex-column justify-content-center">
+            <div class="mb-1" style="font-size: 18px; letter-spacing: 2px;">
+              <i class="fa-solid fa-star" style="color: #e2e8f0;"></i>
+              <i class="fa-solid fa-star" style="color: #e2e8f0;"></i>
+              <i class="fa-solid fa-star" style="color: #e2e8f0;"></i>
+              <i class="fa-solid fa-star" style="color: #e2e8f0;"></i>
+              <i class="fa-solid fa-star" style="color: #e2e8f0;"></i>
             </div>
-          {% endif %}
+            <span class="text-muted small">0 reviews</span>
+          </div>
         </div>
+        <!-- Right side: progress bars -->
+        <div class="col-12 col-md-6">
+          <div class="d-flex flex-column gap-2" style="max-width: 320px; margin: 0 auto;">
+            {% for i in (1..5) reversed %}
+              <div class="d-flex align-items-center gap-3">
+                <span class="small text-muted" style="width: 25px; text-align: left; font-weight: 500;">{{ i }}★</span>
+                <div class="progress flex-grow-1" style="height: 6px; background-color: #f1f5f9;">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    style="width: 0%; background-color: #cbd5e1;"
+                    aria-valuenow="0"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+                <span class="small text-muted" style="width: 30px; text-align: right; font-weight: 500;">0%</span>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews Tab Bar with underline and Write a Review Button -->
+      <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+        <div class="d-flex align-items-center">
+          <div
+            class="pb-2 fw-bold text-dark position-relative"
+            style="font-size: 16px; border-bottom: 3px solid #062e67; margin-bottom: -11px; font-family: 'Outfit', sans-serif;"
+          >
+            Reviews <span class="fw-normal text-muted" style="font-size: 13px;">0</span>
+          </div>
+        </div>
+        <button
+          class="btn btn-primary rounded-pill px-4 py-2 text-capitalize"
+          style="background-color: #3b52c4; border: 0; font-size: 13px; font-weight: 600;"
+        >
+          Write a review
+        </button>
+      </div>
+
+      <!-- Filters Row -->
+      <div class="d-flex align-items-center gap-2 mb-5 flex-wrap">
+        <div class="position-relative" style="width: 200px;">
+          <i
+            class="fa-solid fa-magnifying-glass position-absolute text-muted"
+            style="left: 14px; top: 50%; transform: translateY(-50%); font-size: 13px;"
+          ></i>
+          <input
+            type="text"
+            class="form-control form-control-sm rounded-pill bg-white"
+            placeholder="Search reviews"
+            style="padding-left: 36px; height: 38px; border-color: #cbd5e1; font-size: 13px;"
+          >
+        </div>
+
+        <select
+          class="form-select form-select-sm rounded-pill bg-white px-3"
+          style="width: auto; height: 38px; border-color: #cbd5e1; font-size: 13px; font-weight: 500; color: #4a5568;"
+        >
+          <option>Most relevant</option>
+          <option>Most recent</option>
+          <option>Highest rating</option>
+          <option>Lowest rating</option>
+        </select>
+
+        <select
+          class="form-select form-select-sm rounded-pill bg-white px-3"
+          style="width: auto; height: 38px; border-color: #cbd5e1; font-size: 13px; font-weight: 500; color: #4a5568;"
+        >
+          <option>All ratings</option>
+          <option>5★</option>
+          <option>4★</option>
+          <option>3★</option>
+          <option>2★</option>
+          <option>1★</option>
+        </select>
+
+        <button
+          type="button"
+          class="btn btn-sm rounded-pill px-3 fw-medium text-muted"
+          style="background-color: #f1f5f9; border: 1px solid #cbd5e1; height: 38px; font-size: 13px;"
+        >
+          With media
+        </button>
+      </div>
+
+      <div class="text-center py-5">
+        <p class="text-dark fw-semibold mb-0" style="font-size: 15px;">No reviews yet</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- Desktop Sticky Add to Cart Footer Bar -->
-<div id="sticky-cart-bar" class="sticky-cart-bar d-none d-md-block bg-white border-top shadow py-3 position-fixed bottom-0 start-0 w-100" style="z-index: 1000; transform: translateY(100%); transition: transform 0.4s ease;">
-  <div class="container d-flex justify-content-between align-items-center">
+<div
+  id="sticky-cart-bar"
+  class="sticky-cart-bar d-none d-md-block bg-white border shadow p-3 position-fixed"
+  style="z-index: 1000; transform: translateY(150%); transition: transform 0.4s ease; bottom: 24px; right: 24px; width: 350px; border-radius: 16px;"
+>
+  <div class="d-flex flex-column gap-3">
     <div class="d-flex align-items-center gap-3">
-      <img src="{{ product.featured_image | image_url: width: 100 }}" class="rounded border" style="width: 50px; height: 50px; object-fit: cover;" alt="{{ product.title | escape }}">
-      <div>
-        <h6 class="mb-0 text-dark fw-bold">{{ product.title }}</h6>
-        <span class="fw-bold text-primary">{{ product.price | money }}</span>
+      <img
+        src="{{ product.featured_image | image_url: width: 100 }}"
+        class="rounded border"
+        style="width: 50px; height: 50px; object-fit: cover; flex-shrink: 0;"
+        height=""
+        width=""
+        alt="{{ product.title | escape }}"
+      >
+      <div class="overflow-hidden">
+        <h6 class="mb-0 text-dark fw-bold text-truncate" style="font-size: 14px; font-family: 'Outfit', sans-serif;">{{ product.title }}</h6>
+        <span class="fw-bold text-primary" style="font-size: 15px;">{{ product.price | money }}</span>
       </div>
     </div>
-    <div class="d-flex align-items-center gap-3">
-      <button type="button" class="btn btn-primary rounded-pill text-uppercase px-4 py-2" onclick="document.getElementById('AddToCartButton').click()">
-        <i class="fa-solid fa-cart-shopping me-2"></i>Add to Cart
+    <div class="d-flex align-items-center justify-content-end">
+      <button
+        type="button"
+        class="btn btn-primary rounded-pill text-uppercase w-100 py-2"
+        style="background-color: #3b52c4; border: 0; font-weight: 600; font-size: 13px; height: 40px;"
+        onclick="document.getElementById('AddToCartButton').click()"
+      >
+        Add To Cart
       </button>
     </div>
   </div>
@@ -222,7 +1114,7 @@
 
   // Variant Change Calculations
   const productVariants = {{ product.variants | json }};
-  
+
   function onVariantOptionChange() {
     // Collect selected option values
     const selectedOptions = [];
