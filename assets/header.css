@@ -259,6 +259,10 @@
   padding: 8px 0;
 }
 
+.browse-categories-dropdown-wrapper:hover .categories-menu-dropdown-list {
+  display: block;
+}
+
 .category-menu-item {
   color: var(--categories-item-color, #333333);
   padding: 10px 20px;
