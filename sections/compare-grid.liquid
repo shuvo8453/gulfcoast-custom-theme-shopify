@@ -4,8 +4,10 @@
 
     <div class="row mt-4">
       <div class="col-12">
-        <h1 class="fw-bold text-dark mb-4"><i class="fa-solid fa-code-compare text-primary me-2"></i>{{ page.title }}</h1>
-        
+        <h1 class="fw-bold text-dark mb-4">
+          <i class="fa-solid fas fa-exchange-alt text-primary me-2"></i>{{ page.title }}
+        </h1>
+
         <div id="compare-table-container" class="table-responsive border rounded bg-white shadow-sm mt-2">
           <!-- Loaded dynamically via client-side storage -->
           <div class="text-center py-5" id="compare-preloader">
@@ -23,14 +25,14 @@
     const list = JSON.parse(localStorage.getItem('gcf_compare') || '[]');
     const container = document.getElementById('compare-table-container');
     const preloader = document.getElementById('compare-preloader');
-    
+
     if (!container) return;
-    
+
     if (list.length === 0) {
       if (preloader) preloader.remove();
       container.parentNode.innerHTML = `
         <div class="text-center py-5 border rounded bg-light">
-          <i class="fa-solid fa-code-compare fa-3x text-muted mb-3"></i>
+          <i class="fa-solid fas fa-exchange-alt fa-3x text-muted mb-3"></i>
           <p class="text-muted mb-3">No products selected for comparison.</p>
           <a href="/collections/all" class="btn btn-primary rounded-pill px-4">Browse Products</a>
         </div>
@@ -38,24 +40,25 @@
       return;
     }
 
-    const promises = list.map(handle => 
-      fetch(`/products/${handle}.js`)
-        .then(res => {
-          if (!res.ok) throw new Error();
-          return res.json();
-        })
-        .catch(() => null) // Ignore missing products
+    const promises = list.map(
+      (handle) =>
+        fetch(`/products/${handle}.js`)
+          .then((res) => {
+            if (!res.ok) throw new Error();
+            return res.json();
+          })
+          .catch(() => null) // Ignore missing products
     );
 
     Promise.all(promises)
-      .then(products => {
+      .then((products) => {
         if (preloader) preloader.remove();
-        
-        const validProducts = products.filter(p => p !== null);
+
+        const validProducts = products.filter((p) => p !== null);
         if (validProducts.length === 0) {
           container.parentNode.innerHTML = `
             <div class="text-center py-5 border rounded bg-light">
-              <i class="fa-solid fa-code-compare fa-3x text-muted mb-3"></i>
+              <i class="fa-solid fas fa-exchange-alt fa-3x text-muted mb-3"></i>
               <p class="text-muted mb-3">No products selected for comparison.</p>
               <a href="/collections/all" class="btn btn-primary rounded-pill px-4">Browse Products</a>
             </div>
@@ -70,9 +73,9 @@
         let descRow = `<td><strong>Overview</strong></td>`;
         let actionRow = `<td><strong>Actions</strong></td>`;
 
-        validProducts.forEach(product => {
+        validProducts.forEach((product) => {
           const formattedPrice = formatMoney(product.price);
-          
+
           tableHeader += `
             <th class="text-center position-relative w-25">
               <span class="d-block fw-bold text-dark text-truncate">${product.title}</span>
@@ -81,7 +84,7 @@
               </button>
             </th>
           `;
-          
+
           imageRow += `
             <td class="text-center">
               <a href="${product.url}">
@@ -92,10 +95,15 @@
 
           priceRow += `<td class="text-center fw-bold text-primary">${formattedPrice}</td>`;
           vendorRow += `<td class="text-center text-muted">${product.vendor}</td>`;
-          
-          const cleanDesc = product.description.replace(/<\/?[^>]+(>|$)/g, "").split(" ").slice(0, 20).join(" ") + "...";
+
+          const cleanDesc =
+            product.description
+              .replace(/<\/?[^>]+(>|$)/g, '')
+              .split(' ')
+              .slice(0, 20)
+              .join(' ') + '...';
           descRow += `<td class="small leading-normal text-muted">${cleanDesc}</td>`;
-          
+
           actionRow += `
             <td class="text-center">
               <a href="${product.url}" class="btn btn-primary btn-sm rounded-pill px-3">View Details</a>
@@ -119,25 +127,26 @@
         `;
 
         // Bind delete action triggers
-        container.querySelectorAll('.compare-btn-toggle').forEach(btn => {
+        container.querySelectorAll('.compare-btn-toggle').forEach((btn) => {
           btn.addEventListener('click', () => {
             window.location.reload();
           });
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error('Failed to load comparison products:', err);
         if (preloader) preloader.remove();
-        container.innerHTML = '<p class="text-danger text-center p-4">An error occurred while loading comparison details.</p>';
+        container.innerHTML =
+          '<p class="text-danger text-center p-4">An error occurred while loading comparison details.</p>';
       });
 
     function formatMoney(cents) {
-      const formatString = window.theme ? window.theme.moneyFormat : "$ {{amount}}";
+      const formatString = window.theme ? window.theme.moneyFormat : '$ {{amount}}';
       const placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
 
-      if (isNaN(cents) || cents == null) return "$0.00";
+      if (isNaN(cents) || cents == null) return '$0.00';
       let formatted = (cents / 100.0).toFixed(2);
-      
+
       return formatString.replace(placeholderRegex, formatted);
     }
   });
