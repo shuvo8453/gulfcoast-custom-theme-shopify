@@ -247,7 +247,7 @@
               class="action-item d-flex align-items-center gap-2 text-white text-decoration-none text-uppercase fw-semibold small"
             >
               <i class="fa-regular fa-user"></i>
-              <span>Login / Register</span>
+              <span>{% if customer %}My Account{% else %}Login / Register{% endif %}</span>
             </a>
           {% endif %}
 
@@ -637,7 +637,7 @@
                 class="drawer-menu-link text-uppercase d-flex align-items-center gap-2 py-2 text-decoration-none"
               >
                 <i class="fa-regular fa-user mt-0"></i>
-                <span>Login / Register</span>
+                <span>{% if customer %}My Account{% else %}Login / Register{% endif %}</span>
               </a>
             </li>
           {% endif %}
