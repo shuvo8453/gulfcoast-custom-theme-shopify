@@ -253,7 +253,7 @@
 
           <!-- Wishlist -->
           <a
-            href="#"
+            href="{{ section.settings.wishlist_page.url | default: '#' }}"
             data-gcf-wishlist-drawer-toggle="true"
             class="action-item wishlist-btn position-relative text-white"
             aria-label="Wishlist"
@@ -276,7 +276,7 @@
 
           <!-- Compare -->
           <a
-            href="#"
+            href="{{ section.settings.compare_page.url | default: '#' }}"
             data-gcf-compare-drawer-toggle="true"
             class="action-item compare-btn position-relative text-white"
             aria-label="Compare"
@@ -299,7 +299,7 @@
 
           <!-- Cart -->
           <a
-            href="#"
+            href="{{ routes.cart_url }}"
             data-gcf-mini-cart-toggle="true"
             class="action-item cart-btn d-flex align-items-center gap-2 text-white text-decoration-none"
             aria-label="Cart"
@@ -360,7 +360,7 @@
         <div class="header-actions-mobile d-flex align-items-center gap-3 text-white">
           <!-- Wishlist -->
           <a
-            href="#"
+            href="{{ section.settings.wishlist_page.url | default: '#' }}"
             data-gcf-wishlist-drawer-toggle="true"
             class="action-item action-item-mobile wishlist-btn position-relative text-white"
             aria-label="Wishlist"
@@ -383,7 +383,7 @@
 
           <!-- Cart -->
           <a
-            href="#"
+            href="{{ routes.cart_url }}"
             data-gcf-mini-cart-toggle="true"
             class="action-item action-item-mobile cart-btn position-relative text-white"
             aria-label="Cart"
@@ -592,7 +592,7 @@
           {% endfor %}
           <li>
             <a
-              href="#"
+              href="{{ section.settings.compare_page.url | default: '#' }}"
               data-gcf-compare-drawer-toggle="true"
               class="drawer-menu-link text-uppercase d-flex align-items-center gap-2 py-2 text-decoration-none"
             >
@@ -1411,6 +1411,16 @@
       "id": "menu",
       "label": "Main Navigation Menu",
       "default": "main-menu"
+    },
+    {
+      "type": "page",
+      "id": "wishlist_page",
+      "label": "Wishlist Page"
+    },
+    {
+      "type": "page",
+      "id": "compare_page",
+      "label": "Compare Page"
     },
     {
       "type": "header",

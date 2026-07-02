@@ -169,6 +169,10 @@ function initDrawers() {
     
     toggles.forEach(toggle => {
       toggle.addEventListener('click', (e) => {
+        const href = toggle.getAttribute('href');
+        if (href && href !== '#' && href !== '' && !toggle.hasAttribute('data-gcf-mini-cart-toggle')) {
+          return; // Let the navigation redirect to the page
+        }
         e.preventDefault();
         open();
       });
