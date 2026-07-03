@@ -1,0 +1,1112 @@
+{%- style -%}
+  #FaqSection-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  /* Category Heading Styling */
+  #FaqSection-{{ section.id }} .category-heading {
+    font-size: {{ section.settings.cat_font_size_desktop }}px;
+    color: {{ section.settings.cat_color }};
+    font-weight: {{ section.settings.cat_font_weight }};
+    text-align: {{ section.settings.cat_alignment }};
+    
+    margin-top: {{ section.settings.cat_margin_top }}px;
+    margin-bottom: {{ section.settings.cat_margin_bottom }}px;
+    margin-left: {{ section.settings.cat_margin_left }}px;
+    margin-right: {{ section.settings.cat_margin_right }}px;
+    
+    padding-top: {{ section.settings.cat_padding_top }}px;
+    padding-bottom: {{ section.settings.cat_padding_bottom }}px;
+    padding-left: {{ section.settings.cat_padding_left }}px;
+    padding-right: {{ section.settings.cat_padding_right }}px;
+
+    {%- if section.settings.cat_font_family != blank -%}
+      font-family: {{ section.settings.cat_font_family }};
+    {%- endif -%}
+    line-height: 1.3;
+  }
+
+  /* FAQ Item Container Styling */
+  #FaqSection-{{ section.id }} .faq-item {
+    border: {{ section.settings.item_border_width }}px solid {{ section.settings.item_border_color }} !important;
+    border-radius: {{ section.settings.item_border_radius }}px !important;
+    margin-bottom: {{ section.settings.item_margin_bottom }}px !important;
+    overflow: hidden !important;
+    background: {{ section.settings.item_bg_color }} !important;
+    transition: all 0.3s ease !important;
+  }
+
+  #FaqSection-{{ section.id }} .faq-item.is-active {
+    border-color: {{ section.settings.item_active_border_color }} !important;
+  }
+
+  #FaqSection-{{ section.id }} .faq-item:hover {
+    border-color: {{ section.settings.item_active_border_color }} !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  /* Question Styling */
+  #FaqSection-{{ section.id }} .faq-question-btn {
+    width: 100%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    
+    background: {{ section.settings.q_bg_color }} !important;
+    color: {{ section.settings.q_color }} !important;
+    font-size: {{ section.settings.q_font_size_desktop }}px !important;
+    font-weight: {{ section.settings.q_font_weight }} !important;
+    
+    padding-top: {{ section.settings.q_padding_top }}px !important;
+    padding-bottom: {{ section.settings.q_padding_bottom }}px !important;
+    padding-left: {{ section.settings.q_padding_left }}px !important;
+    padding-right: {{ section.settings.q_padding_right }}px !important;
+
+    {%- if section.settings.q_font_family != blank -%}
+      font-family: {{ section.settings.q_font_family }};
+    {%- endif -%}
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  /* Active Question State */
+  #FaqSection-{{ section.id }} .faq-item.is-active .faq-question-btn {
+    background: {{ section.settings.q_active_bg_color }} !important;
+    color: {{ section.settings.q_active_color }} !important;
+  }
+
+  /* Chevron Icon Styling */
+  #FaqSection-{{ section.id }} .faq-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ section.settings.q_icon_color }};
+    transition: transform 0.3s ease, color 0.3s ease;
+    margin-left: 15px;
+    flex-shrink: 0;
+  }
+
+  #FaqSection-{{ section.id }} .faq-item.is-active .faq-icon {
+    transform: rotate(180deg);
+    color: {{ section.settings.q_active_icon_color | default: section.settings.q_active_color }};
+  }
+
+  /* Answer Styling */
+  #FaqSection-{{ section.id }} .faq-answer {
+    color: {{ section.settings.a_color }} !important;
+    background: {{ section.settings.a_bg_color }} !important;
+    font-size: {{ section.settings.a_font_size_desktop }}px !important;
+    line-height: {{ section.settings.a_line_height }} !important;
+    
+    padding-top: {{ section.settings.a_padding_top }}px !important;
+    padding-bottom: {{ section.settings.a_padding_bottom }}px !important;
+    padding-left: {{ section.settings.a_padding_left }}px !important;
+    padding-right: {{ section.settings.a_padding_right }}px !important;
+
+    {%- if section.settings.a_font_family != blank -%}
+      font-family: {{ section.settings.a_font_family }};
+    {%- endif -%}
+  }
+
+  /* Footer Call To Action Styling */
+  #FaqSection-{{ section.id }} .faq-footer-cta {
+    margin-top: {{ section.settings.cta_margin_top }}px;
+    margin-bottom: {{ section.settings.cta_margin_bottom }}px;
+    text-align: center;
+    font-size: 16px;
+    color: #1f2937;
+  }
+
+  #FaqSection-{{ section.id }} .faq-footer-cta a {
+    color: #0b3d77;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  /* Responsive Styling */
+  @media (max-width: 767px) {
+    #FaqSection-{{ section.id }} .category-heading {
+      font-size: {{ section.settings.cat_font_size_mobile }}px;
+    }
+    #FaqSection-{{ section.id }} .faq-question-btn {
+      font-size: {{ section.settings.q_font_size_mobile }}px !important;
+      padding-top: {{ section.settings.q_padding_top_mobile | default: section.settings.q_padding_top }}px !important;
+      padding-bottom: {{ section.settings.q_padding_bottom_mobile | default: section.settings.q_padding_bottom }}px !important;
+      padding-left: {{ section.settings.q_padding_left_mobile | default: section.settings.q_padding_left }}px !important;
+      padding-right: {{ section.settings.q_padding_right_mobile | default: section.settings.q_padding_right }}px !important;
+    }
+    #FaqSection-{{ section.id }} .faq-answer {
+      font-size: {{ section.settings.a_font_size_mobile }}px !important;
+      padding-top: {{ section.settings.a_padding_top_mobile | default: section.settings.a_padding_top }}px !important;
+      padding-bottom: {{ section.settings.a_padding_bottom_mobile | default: section.settings.a_padding_bottom }}px !important;
+      padding-left: {{ section.settings.a_padding_left_mobile | default: section.settings.a_padding_left }}px !important;
+      padding-right: {{ section.settings.a_padding_right_mobile | default: section.settings.a_padding_right }}px !important;
+    }
+  }
+{%- endstyle -%}
+
+<div id="FaqSection-{{ section.id }}" class="container faq-section-container">
+  <div class="row">
+    <div class="col-12">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'category_heading' -%}
+            {%- if block.settings.title != blank -%}
+              <h2 id="FaqBlock-{{ block.id }}" class="category-heading" {{ block.shopify_attributes }}>
+                {{ block.settings.title | escape }}
+              </h2>
+            {%- endif -%}
+
+          {%- when 'faq_item' -%}
+            {%- if block.settings.question != blank -%}
+              <div id="FaqBlock-{{ block.id }}" class="faq-item" {{ block.shopify_attributes }}>
+                <button class="faq-question-btn" type="button" aria-expanded="false">
+                  <span class="faq-question-text">{{ block.settings.question | escape }}</span>
+                  <span class="faq-icon">
+                    <svg class="chevron-down" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </span>
+                </button>
+                <div class="faq-answer-wrapper" style="max-height: 0px; overflow: hidden; transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                  <div class="faq-answer">
+                    {{ block.settings.answer }}
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+
+      {%- if section.settings.show_footer_cta and section.settings.footer_cta_text != blank -%}
+        <div class="faq-footer-cta">
+          {{ section.settings.footer_cta_text }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const faqContainer = document.getElementById('FaqSection-{{ section.id }}');
+    if (!faqContainer) return;
+
+    const faqItems = faqContainer.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+      const btn = item.querySelector('.faq-question-btn');
+      const wrapper = item.querySelector('.faq-answer-wrapper');
+
+      btn.addEventListener('click', function() {
+        const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+
+        // Accordion mode: close other items in this section if enabled
+        {% if section.settings.accordion_mode %}
+          if (!isExpanded) {
+            faqItems.forEach(otherItem => {
+              if (otherItem !== item) {
+                otherItem.classList.remove('is-active');
+                const otherBtn = otherItem.querySelector('.faq-question-btn');
+                const otherWrapper = otherItem.querySelector('.faq-answer-wrapper');
+                otherBtn.setAttribute('aria-expanded', 'false');
+                otherWrapper.style.maxHeight = '0px';
+              }
+            });
+          }
+        {% endif %}
+
+        if (isExpanded) {
+          btn.setAttribute('aria-expanded', 'false');
+          item.classList.remove('is-active');
+          wrapper.style.maxHeight = '0px';
+        } else {
+          btn.setAttribute('aria-expanded', 'true');
+          item.classList.add('is-active');
+          wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
+        }
+      });
+    });
+
+    // Theme editor integration: auto-expand block when selected
+    document.addEventListener('shopify:block:select', function(event) {
+      if (event.detail.sectionId !== '{{ section.id }}') return;
+      const selectedBlock = document.getElementById('FaqBlock-' + event.detail.blockId);
+      if (selectedBlock && selectedBlock.classList.contains('faq-item')) {
+        const btn = selectedBlock.querySelector('.faq-question-btn');
+        const wrapper = selectedBlock.querySelector('.faq-answer-wrapper');
+        
+        btn.setAttribute('aria-expanded', 'true');
+        selectedBlock.classList.add('is-active');
+        wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
+      }
+    });
+
+    document.addEventListener('shopify:block:deselect', function(event) {
+      if (event.detail.sectionId !== '{{ section.id }}') return;
+      const selectedBlock = document.getElementById('FaqBlock-' + event.detail.blockId);
+      if (selectedBlock && selectedBlock.classList.contains('faq-item')) {
+        const btn = selectedBlock.querySelector('.faq-question-btn');
+        const wrapper = selectedBlock.querySelector('.faq-answer-wrapper');
+        
+        btn.setAttribute('aria-expanded', 'false');
+        selectedBlock.classList.remove('is-active');
+        wrapper.style.maxHeight = '0px';
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Custom FAQ Section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section Padding Top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section Padding Bottom",
+      "default": 40
+    },
+    {
+      "type": "checkbox",
+      "id": "accordion_mode",
+      "label": "Enable Accordion Mode",
+      "info": "Closing other items when opening a new one.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Category Heading Styling"
+    },
+    {
+      "type": "text",
+      "id": "cat_font_family",
+      "label": "Font Family Override",
+      "info": "e.g., 'Outfit', sans-serif. Leave blank to use inherit."
+    },
+    {
+      "type": "range",
+      "id": "cat_font_size_desktop",
+      "min": 14,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size (Desktop)",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "cat_font_size_mobile",
+      "min": 12,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size (Mobile)",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "cat_font_weight",
+      "label": "Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-Bold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "cat_color",
+      "label": "Heading Text Color",
+      "default": "#1f2937"
+    },
+    {
+      "type": "select",
+      "id": "cat_alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "paragraph",
+      "content": "Category Heading Margin (Individual Control)"
+    },
+    {
+      "type": "range",
+      "id": "cat_margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "cat_margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "cat_margin_left",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Left",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "cat_margin_right",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Right",
+      "default": 0
+    },
+    {
+      "type": "paragraph",
+      "content": "Category Heading Padding (Individual Control)"
+    },
+    {
+      "type": "range",
+      "id": "cat_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "cat_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "cat_padding_left",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Left",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "cat_padding_right",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Right",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "FAQ Item Container Styling"
+    },
+    {
+      "type": "range",
+      "id": "item_margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between items (Margin Bottom)",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "item_bg_color",
+      "label": "Item Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "item_border_color",
+      "label": "Border Color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "item_active_border_color",
+      "label": "Active/Hover Border Color",
+      "default": "#0b3d77"
+    },
+    {
+      "type": "range",
+      "id": "item_border_width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Border Width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "item_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Border Radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "FAQ Question Styling"
+    },
+    {
+      "type": "text",
+      "id": "q_font_family",
+      "label": "Font Family Override",
+      "info": "e.g., 'Outfit', sans-serif. Leave blank to use inherit."
+    },
+    {
+      "type": "range",
+      "id": "q_font_size_desktop",
+      "min": 12,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size (Desktop)",
+      "default": 17
+    },
+    {
+      "type": "range",
+      "id": "q_font_size_mobile",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size (Mobile)",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "q_font_weight",
+      "label": "Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-Bold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "q_color",
+      "label": "Text Color",
+      "default": "#1f2937"
+    },
+    {
+      "type": "color",
+      "id": "q_bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "q_active_color",
+      "label": "Active Text Color",
+      "default": "#0b3d77"
+    },
+    {
+      "type": "color",
+      "id": "q_active_bg_color",
+      "label": "Active Background Color",
+      "default": "#f9fafb"
+    },
+    {
+      "type": "color",
+      "id": "q_icon_color",
+      "label": "Icon Color",
+      "default": "#9ca3af"
+    },
+    {
+      "type": "color",
+      "id": "q_active_icon_color",
+      "label": "Active Icon Color",
+      "default": "#0b3d77"
+    },
+    {
+      "type": "paragraph",
+      "content": "Question Padding (Individual Control)"
+    },
+    {
+      "type": "range",
+      "id": "q_padding_top",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "q_padding_bottom",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "q_padding_left",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Left",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "q_padding_right",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Right",
+      "default": 25
+    },
+    {
+      "type": "paragraph",
+      "content": "Question Padding (Mobile Overrides)"
+    },
+    {
+      "type": "range",
+      "id": "q_padding_top_mobile",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "q_padding_bottom_mobile",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "q_padding_left_mobile",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Left (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "q_padding_right_mobile",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Right (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "FAQ Answer Styling"
+    },
+    {
+      "type": "text",
+      "id": "a_font_family",
+      "label": "Font Family Override",
+      "info": "e.g., 'Inter', sans-serif. Leave blank to use inherit."
+    },
+    {
+      "type": "range",
+      "id": "a_font_size_desktop",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size (Desktop)",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "a_font_size_mobile",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size (Mobile)",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "a_color",
+      "label": "Text Color",
+      "default": "#4b5563"
+    },
+    {
+      "type": "color",
+      "id": "a_bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "a_line_height",
+      "label": "Line Height",
+      "default": "1.6"
+    },
+    {
+      "type": "paragraph",
+      "content": "Answer Padding (Individual Control)"
+    },
+    {
+      "type": "range",
+      "id": "a_padding_top",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "a_padding_bottom",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "a_padding_left",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Left",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "a_padding_right",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Right",
+      "default": 25
+    },
+    {
+      "type": "paragraph",
+      "content": "Answer Padding (Mobile Overrides)"
+    },
+    {
+      "type": "range",
+      "id": "a_padding_top_mobile",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "a_padding_bottom_mobile",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "a_padding_left_mobile",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Left (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "a_padding_right_mobile",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Right (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Footer Call To Action"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_footer_cta",
+      "label": "Show Footer Call To Action",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "footer_cta_text",
+      "label": "Text",
+      "default": "<p><strong>Can’t find the answer you’re looking for?</strong></p><p>Reach out to us at <a href=\"mailto:support@gulfcoastoutfitters.com\">support@gulfcoastoutfitters.com</a> — we’re happy to help.</p>"
+    },
+    {
+      "type": "range",
+      "id": "cta_margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "cta_margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category_heading",
+      "name": "Category Heading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading Text",
+          "default": "ORDERS & PURCHASING"
+        }
+      ]
+    },
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How do I place an order?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Ordering is simple. Browse our shop at gulfcoastoutfitters.com, add items to your cart, and proceed to checkout. You’ll receive an Order Confirmation email shortly after completing your purchase.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom FAQ",
+      "blocks": [
+        {
+          "type": "category_heading",
+          "settings": {
+            "title": "ORDERS & PURCHASING"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How do I place an order?",
+            "answer": "<p>Ordering is simple. Browse our shop at gulfcoastoutfitters.com, add items to your cart, and proceed to checkout. You’ll receive an Order Confirmation email shortly after completing your purchase.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I modify or cancel my order after placing it?",
+            "answer": "<p>We begin processing orders quickly through our fulfillment partner. If you need to modify or cancel, please contact us at support@gulfcoastoutfitters.com as soon as possible. We cannot guarantee changes once an order has been submitted for fulfillment, but we’ll do our best to assist you.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do I need an account to place an order?",
+            "answer": "<p>No account is required – you can check out as a guest. However, creating a free account lets you track orders, view purchase history, and enjoy a faster checkout experience on future orders.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What payment methods do you accept?",
+            "answer": "<p>We accept all major payment methods as displayed at checkout, including major credit and debit cards. All transactions are secured with SSL encryption for your safety.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Will I receive an order confirmation?",
+            "answer": "<p>Yes. A confirmation email will be sent to the address provided at checkout as soon as your order is placed. If you don’t see it within a few minutes, please check your spam or junk folder.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Are the prices on your site in U.S. dollars?",
+            "answer": "<p>Yes. All prices displayed on Gulf Coast Outfitters are in U.S. Dollars (USD). Applicable taxes are calculated at checkout based on your shipping address.</p>"
+          }
+        },
+        {
+          "type": "category_heading",
+          "settings": {
+            "title": "SHIPPING"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do you offer free shipping?",
+            "answer": "<p>Yes! We offer FREE standard shipping on all orders of $150 or more. For orders below $150, shipping rates are calculated at checkout based on your location and the items in your cart.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Once your order is processed (1–2 business days), standard ground delivery typically takes:<br><strong>Standard Ground:</strong> 5–10 business days<br><strong>Expedited options</strong> (where available): 2–5 business days<br>Heavy or oversized items may require additional transit time</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where do you ship?",
+            "answer": "<p>We ship to all addresses within the contiguous United States (lower 48 states). Shipping to Alaska, Hawaii, Puerto Rico, and other U.S. territories may be available at additional cost — please contact us before placing your order. International shipping is not currently available.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How will I know when my order has shipped?",
+            "answer": "<p>You’ll receive an automated shipping confirmation email with your tracking number once your order has been dispatched. You can use this number to track your package directly on the carrier’s website or through your Gulf Coast Outfitters account.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Which carriers do you use?",
+            "answer": "<p>We ship via trusted national carriers including UPS, FedEx, and USPS. The carrier is selected by our fulfillment partner based on your location and order size.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "My tracking hasn’t updated in a few days — what should I do?",
+            "answer": "<p>Tracking updates can sometimes lag, especially over weekends or holidays. If your tracking has not updated for more than 3 business days, please contact us at <a href=\"mailto:support@gulfcoastoutfitters.com\">support@gulfcoastoutfitters.com</a> and we’ll investigate with the carrier on your behalf.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I change my shipping address after placing an order?",
+            "answer": "<p>Address change requests must be submitted before the order is forwarded to our fulfillment partner. Please contact us immediately at support@gulfcoastoutfitters.com with your order number. We cannot guarantee address changes once processing has begun.</p>"
+          }
+        },
+        {
+          "type": "category_heading",
+          "settings": {
+            "title": "RETURNS & REFUNDS"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>We accept returns within 30 days of delivery, provided the item is unused, uninstalled, and in its original manufacturer packaging with all accessories included. Please see our full Return & Refund Policy for complete details.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How do I start a return?",
+            "answer": "<p>To initiate a return:<br>Email support@gulfcoastoutfitters.com with your order number and the reason for return<br>Wait to receive a Return Merchandise Authorization (RMA) number from us<br>Pack the item securely with the RMA number on the outside of the package<br>Ship to the return address provided in your RMA email</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do I have to pay for return shipping?",
+            "answer": "<p>It depends on the reason for the return. If we sent a defective or incorrect item, we’ll provide a prepaid return label at no cost to you. If you are returning an item due to a change of mind or ordering error, return shipping is the customer’s responsibility.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "When will I receive my refund?",
+            "answer": "<p>Once we receive and inspect your return, we’ll notify you within 3–5 business days. Approved refunds are processed back to your original payment method within 5–10 business days. Your bank or card issuer may take additional time to reflect the credit.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I exchange an item?",
+            "answer": "<p>We do not offer direct exchanges. If you’d like a different product, please return the original item (subject to our return policy) and place a new order for the item you want.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Are there any items that can not be returned?",
+            "answer": "<p>Yes. The following items are non-returnable:<br>Electrical components that have been installed or connected<br>Special-order or custom items<br>Items marked “Final Sale” on the product page<br>Items returned after 30 days from delivery<br>Items missing original packaging, parts, or accessories<br>Gift cards</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "My item arrived damaged — what do I do?",
+            "answer": "<p>Please contact us within 48 hours of delivery at support@gulfcoastoutfitters.com. Include your order number, photos of the damaged item, and photos of the packaging. We’ll arrange a replacement or full refund at no cost to you.</p>"
+          }
+        },
+        {
+          "type": "category_heading",
+          "settings": {
+            "title": "PRODUCTS & AVAILABILITY"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What brands do you carry?",
+            "answer": "<p>Gulf Coast Outfitters carries products from over 300 top marine brands, including Garmin, Humminbird, Lowrance, Simrad, Minn Kota, Raymarine, Furuno, Blue Sea Systems, JL Audio, FLIR, Power-Pole, Lumitec, and many more. Browse our full brand catalog at gulfcoastoutfitters.com/brands.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I request a product that’s not listed on your site?",
+            "answer": "<p>We’re always looking to expand our catalog. If you’re looking for a specific marine product or brand that you don’t see listed, contact us at sales@gulfcoastoutfitters.com and we’ll check availability for you.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Are your product descriptions and images accurate?",
+            "answer": "<p>We work hard to ensure all product information is accurate and up to date. However, manufacturers may make specification changes without notice. If you have questions about a specific product before purchasing, please contact us and we’ll verify the details.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do you sell installation services?",
+            "answer": "<p>Gulf Coast Outfitters is an online retail store and does not offer installation services. We recommend consulting a certified marine technician for the installation of complex electrical, navigation, or mechanical components.</p>"
+          }
+        },
+        {
+          "type": "category_heading",
+          "settings": {
+            "title": "ACCOUNT & WEBSITE"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How do I create an account?",
+            "answer": "<p>Click “Login / Register” in the top menu and follow the prompts to set up your free account. You’ll need a valid email address and password. Once registered, you can track orders, manage your profile, and check out faster.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "I forgot my password. How do I reset it?",
+            "answer": "<p>On the Login page, click “Forgot Password” and enter your registered email address. You’ll receive a password reset link within a few minutes. If you don’t receive it, check your spam folder or contact us for assistance.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How do I track my order?",
+            "answer": "<p>You can track your order in two ways: (1) Use the tracking number provided in your shipping confirmation email directly on the carrier’s website, or (2) Log in to your Gulf Coast Outfitters account and view your order history for live status updates.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is my personal information secure?",
+            "answer": "<p>Absolutely. Our website uses SSL encryption to protect your data during transmission. We do not store full payment card information on our servers. Please review our Privacy Policy at gulfcoastoutfitters.com for full details on how we handle your data.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How do I unsubscribe from marketing emails?",
+            "answer": "<p>Every marketing email from Gulf Coast Outfitters includes an unsubscribe link at the bottom. Click it to opt out of future promotional emails. Note that transactional emails (order confirmations, shipping updates) are not affected by this preference.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
