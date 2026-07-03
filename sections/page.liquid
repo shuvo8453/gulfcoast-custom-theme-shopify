@@ -7,20 +7,8 @@
 
 {%- style -%}
   .page-container-{{ section.id }} {
-    padding-top: 80px;
-    padding-bottom: 80px;
-  }
-  @media screen and (max-width: 991px) {
-    .page-container-{{ section.id }} {
-      padding-top: 50px;
-      padding-bottom: 50px;
-    }
-  }
-  @media screen and (max-width: 575px) {
-    .page-container-{{ section.id }} {
-      padding-top: 30px;
-      padding-bottom: 30px;
-    }
+    padding-top: 40px;
+    padding-bottom: 40px;
   }
 
   /* Scoped Page Content Styles */
@@ -31,18 +19,77 @@
   .page-container-{{ section.id }} h4,
   .page-container-{{ section.id }} h5,
   .page-container-{{ section.id }} h6 {
-    margin-top: 15px !important;
-    margin-bottom: 25px !important;
-    padding-top: 5px !important;
-    padding-bottom: 5px !important;
+    margin-top: 15px;
+    margin-bottom: 25px;
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
   .page-container-{{ section.id }} h2 {
-    font-size: 28px !important;
-    font-weight: 600 !important;
-    line-height: 1.4 !important;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.4;
   }
   .page-container-{{ section.id }} a {
-    color: #0d6efd !important;
+    color: #0d6efd;
+  }
+
+  /* Scoped Table Styles */
+  .page-container-{{ section.id }} table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 32px 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    display: table;
+  }
+  .page-container-{{ section.id }} tbody,
+  .page-container-{{ section.id }} td,
+  .page-container-{{ section.id }} tfoot,
+  .page-container-{{ section.id }} th,
+  .page-container-{{ section.id }} thead,
+  .page-container-{{ section.id }} tr {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+  }
+  .page-container-{{ section.id }} thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+  }
+  .page-container-{{ section.id }} thead th {
+    background-color: #0b3d77;
+    color: #ffffff;
+    padding: 18px 25px;
+    font-weight: 700;
+    text-align: left;
+    font-size: 16px;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .page-container-{{ section.id }} tbody td {
+    padding: 16px 25px;
+    border-bottom: 1px solid #f3f4f6;
+    color: #4b5563;
+    font-size: 15px;
+    line-height: 1.6;
+    background: #ffffff;
+  }
+  .page-container-{{ section.id }} tbody tr:last-child td {
+    border-bottom: none;
+  }
+  @media (max-width: 767px) {
+    .page-container-{{ section.id }} table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      margin: 0;
+    }
   }
 {%- endstyle -%}
 
