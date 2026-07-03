@@ -5,9 +5,53 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/page
 {% endcomment %}
 
-<h1>{{ page.title }}</h1>
+{%- style -%}
+  .page-container-{{ section.id }} {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+  @media screen and (max-width: 991px) {
+    .page-container-{{ section.id }} {
+      padding-top: 50px;
+      padding-bottom: 50px;
+    }
+  }
+  @media screen and (max-width: 575px) {
+    .page-container-{{ section.id }} {
+      padding-top: 30px;
+      padding-bottom: 30px;
+    }
+  }
 
-{{ page.content }}
+  /* Scoped Page Content Styles */
+  .page-container-{{ section.id }} p,
+  .page-container-{{ section.id }} h1,
+  .page-container-{{ section.id }} h2,
+  .page-container-{{ section.id }} h3,
+  .page-container-{{ section.id }} h4,
+  .page-container-{{ section.id }} h5,
+  .page-container-{{ section.id }} h6 {
+    margin-top: 15px !important;
+    margin-bottom: 25px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+  .page-container-{{ section.id }} h2 {
+    font-size: 28px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+  }
+  .page-container-{{ section.id }} a {
+    color: #0d6efd !important;
+  }
+{%- endstyle -%}
+
+<div class="container page-container-{{ section.id }}">
+  {% comment %} <h1 class="mb-4">{{ page.title }}</h1> {% endcomment %}
+  <div class="page-content">
+    {{ page.content }}
+  </div>
+</div>
 
 {% schema %}
 {
