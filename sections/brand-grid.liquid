@@ -15,20 +15,35 @@
     <div class="brand-grid-layout">
       {%- for vendor in shop.vendors -%}
         {%- assign matched_logo = blank -%}
+        {%- assign vendor_handle = vendor | handleize -%}
 
-        {%- comment -%}
-          Search through blocks to find a matching vendor name
-        {%- endcomment -%}
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'brand_logo' -%}
-            {%- assign block_vendor_normalized = block.settings.vendor_name | strip | downcase -%}
-            {%- assign current_vendor_normalized = vendor | strip | downcase -%}
-            {%- if block_vendor_normalized == current_vendor_normalized -%}
-              {%- assign matched_logo = block.settings.brand_logo -%}
-              {%- break -%}
+        {%- for brand in shop.metaobjects.brand.values -%}
+          {%- assign brand_name_normalized = brand.name | strip | downcase -%}
+          {%- assign current_vendor_normalized = vendor | strip | downcase -%}
+          {%- if brand_name_normalized == current_vendor_normalized -%}
+            {%- if brand.logo != blank -%}
+              {%- assign matched_logo = brand.logo -%}
             {%- endif -%}
+            {%- break -%}
           {%- endif -%}
         {%- endfor -%}
+
+        {%- if matched_logo == blank -%}
+          {%- assign svg_name = vendor_handle | append: '.svg' -%}
+          {%- assign png_name = vendor_handle | append: '.png' -%}
+          {%- assign jpg_name = vendor_handle | append: '.jpg' -%}
+          {%- assign jpeg_name = vendor_handle | append: '.jpeg' -%}
+
+          {%- if images[svg_name] != blank -%}
+            {%- assign matched_logo = images[svg_name] -%}
+          {%- elsif images[png_name] != blank -%}
+            {%- assign matched_logo = images[png_name] -%}
+          {%- elsif images[jpg_name] != blank -%}
+            {%- assign matched_logo = images[jpg_name] -%}
+          {%- elsif images[jpeg_name] != blank -%}
+            {%- assign matched_logo = images[jpeg_name] -%}
+          {%- endif -%}
+        {%- endif -%}
 
         <a href="{{ vendor | url_for_vendor }}" class="brand-grid-card" title="{{ vendor | escape }}">
           <div class="brand-grid-card-logo-wrapper">
@@ -288,29 +303,9 @@
       "default": 2
     }
   ],
-  "blocks": [
-    {
-      "type": "brand_logo",
-      "name": "Brand Logo Mapping",
-      "settings": [
-        {
-          "type": "text",
-          "id": "vendor_name",
-          "label": "Vendor Name",
-          "info": "Must match the product vendor name exactly (case insensitive)."
-        },
-        {
-          "type": "image_picker",
-          "id": "brand_logo",
-          "label": "Brand Logo"
-        }
-      ]
-    }
-  ],
   "presets": [
     {
-      "name": "Brand Grid",
-      "blocks": []
+      "name": "Brand Grid"
     }
   ]
 }

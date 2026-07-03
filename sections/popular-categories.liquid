@@ -175,9 +175,13 @@
     </div>
 
     <!-- Slider -->
-    {%- assign pc_collections = section.settings.collections -%}
+    {%- if section.settings.display_type == 'brand' -%}
+      {%- assign pc_items_count = shop.vendors.size -%}
+    {%- else -%}
+      {%- assign pc_items_count = section.settings.collections.size -%}
+    {%- endif -%}
 
-    {% if pc_collections.size > 0 %}
+    {% if pc_items_count > 0 %}
       <div class="pc-slider-wrapper">
         <!-- Prev Button -->
         <button
@@ -192,34 +196,93 @@
         <!-- Track -->
         <div class="pc-track-outer" id="PcOuter-{{ section.id }}">
           <div class="pc-track" id="PcTrack-{{ section.id }}">
-            {% for col in pc_collections limit: section.settings.items_limit %}
-              <div class="pc-slide">
-                <a href="{{ col.url }}" class="pc-card">
-                  <div class="pc-img-wrap">
-                    {%- if col.image -%}
-                      <img
-                        src="{{ col.image | image_url: width: 400 }}"
-                        alt="{{ col.title | escape }}"
-                        loading="lazy"
-                        width="200"
-                        height="200"
-                      >
-                    {%- elsif col.products.first != blank and col.products.first.featured_image -%}
-                      <img
-                        src="{{ col.products.first.featured_image | image_url: width: 400 }}"
-                        alt="{{ col.title | escape }}"
-                        loading="lazy"
-                        width="200"
-                        height="200"
-                      >
-                    {%- else -%}
-                      {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- if section.settings.display_type == 'brand' -%}
+              {% for vendor in shop.vendors limit: section.settings.items_limit %}
+                {%- assign matched_logo = blank -%}
+                {%- assign vendor_handle = vendor | handleize -%}
+
+                {%- for brand in shop.metaobjects.brand.values -%}
+                  {%- assign brand_name_normalized = brand.name | strip | downcase -%}
+                  {%- assign current_vendor_normalized = vendor | strip | downcase -%}
+                  {%- if brand_name_normalized == current_vendor_normalized -%}
+                    {%- if brand.logo != blank -%}
+                      {%- assign matched_logo = brand.logo -%}
                     {%- endif -%}
-                  </div>
-                  <span class="pc-card-title">{{ col.title }}</span>
-                </a>
-              </div>
-            {% endfor %}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+
+                {%- if matched_logo == blank -%}
+                  {%- assign svg_name = vendor_handle | append: '.svg' -%}
+                  {%- assign png_name = vendor_handle | append: '.png' -%}
+                  {%- assign jpg_name = vendor_handle | append: '.jpg' -%}
+                  {%- assign jpeg_name = vendor_handle | append: '.jpeg' -%}
+
+                  {%- if images[svg_name] != blank -%}
+                    {%- assign matched_logo = images[svg_name] -%}
+                  {%- elsif images[png_name] != blank -%}
+                    {%- assign matched_logo = images[png_name] -%}
+                  {%- elsif images[jpg_name] != blank -%}
+                    {%- assign matched_logo = images[jpg_name] -%}
+                  {%- elsif images[jpeg_name] != blank -%}
+                    {%- assign matched_logo = images[jpeg_name] -%}
+                  {%- endif -%}
+                {%- endif -%}
+
+                <div class="pc-slide">
+                  <a href="{{ vendor | url_for_vendor }}" class="pc-card">
+                    <div class="pc-img-wrap">
+                      {%- if matched_logo != blank -%}
+                        <img
+                          src="{{ matched_logo | image_url: width: 400 }}"
+                          alt="{{ vendor | escape }} Logo"
+                          loading="lazy"
+                          width="200"
+                          height="200"
+                          style="object-fit: contain;"
+                        >
+                      {%- else -%}
+                        <div class="brand-grid-card-placeholder" style="width: 80px; height: 80px; border-radius: 50%; background-color: #f0f4fc; display: flex; align-items: center; justify-content: center; color: #4a77ce; border: 1px solid #e2e8f0; margin: 0 auto;">
+                          <span class="brand-grid-card-placeholder-letter" style="font-size: 32px; font-weight: 700;">
+                            {{ vendor | slice: 0 | upcase }}
+                          </span>
+                        </div>
+                      {%- endif -%}
+                    </div>
+                    <span class="pc-card-title">{{ vendor }}</span>
+                  </a>
+                </div>
+              {% endfor %}
+            {%- else -%}
+              {% for col in section.settings.collections limit: section.settings.items_limit %}
+                <div class="pc-slide">
+                  <a href="{{ col.url }}" class="pc-card">
+                    <div class="pc-img-wrap">
+                      {%- if col.image -%}
+                        <img
+                          src="{{ col.image | image_url: width: 400 }}"
+                          alt="{{ col.title | escape }}"
+                          loading="lazy"
+                          width="200"
+                          height="200"
+                        >
+                      {%- elsif col.products.first != blank and col.products.first.featured_image -%}
+                        <img
+                          src="{{ col.products.first.featured_image | image_url: width: 400 }}"
+                          alt="{{ col.title | escape }}"
+                          loading="lazy"
+                          width="200"
+                          height="200"
+                        >
+                      {%- else -%}
+                        {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      {%- endif -%}
+                    </div>
+                    <span class="pc-card-title">{{ col.title }}</span>
+                  </a>
+                </div>
+              {% endfor %}
+            {%- endif -%}
           </div>
         </div>
 
@@ -384,9 +447,25 @@
       "default": "What Are You Shopping For?"
     },
     {
+      "type": "select",
+      "id": "display_type",
+      "label": "Display Type",
+      "options": [
+        {
+          "value": "cat",
+          "label": "Cat Collections"
+        },
+        {
+          "value": "brand",
+          "label": "Brand Collections"
+        }
+      ],
+      "default": "cat"
+    },
+    {
       "type": "collection_list",
       "id": "collections",
-      "label": "Collections",
+      "label": "Cat Collections",
       "limit": 24
     },
     {
