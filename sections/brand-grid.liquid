@@ -12,6 +12,26 @@
       <h2 class="brand-grid-heading">{{ section.settings.heading | escape }}</h2>
     {%- endif -%}
 
+    <!-- Brand Grid Search Bar -->
+    <div class="brand-grid-search-wrapper">
+      <i class="fa-solid fa-magnifying-glass brand-grid-search-icon"></i>
+      <input 
+        type="text" 
+        id="BrandSearchInput-{{ section.id }}" 
+        class="brand-grid-search-input" 
+        placeholder="{{ section.settings.search_placeholder | escape }}" 
+        aria-label="Search brands"
+      >
+      <button 
+        type="button" 
+        id="BrandSearchClear-{{ section.id }}" 
+        class="brand-grid-search-clear" 
+        aria-label="Clear search"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
     <div class="brand-grid-layout">
       {%- for vendor in shop.vendors -%}
         {%- assign matched_logo = blank -%}
@@ -45,7 +65,7 @@
           {%- endif -%}
         {%- endif -%}
 
-        <a href="{{ vendor | url_for_vendor }}" class="brand-grid-card" title="{{ vendor | escape }}">
+        <a href="{{ vendor | url_for_vendor }}" class="brand-grid-card" title="{{ vendor | escape }}" data-brand-name="{{ vendor | escape }}">
           <div class="brand-grid-card-logo-wrapper">
             {%- if matched_logo != blank -%}
               <img
@@ -69,8 +89,61 @@
         </a>
       {%- endfor -%}
     </div>
+
+    <!-- No Results Message -->
+    <div id="BrandNoResults-{{ section.id }}" class="brand-grid-no-results" style="display: none;">
+      No brands found matching your search.
+    </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var searchInput = document.getElementById('BrandSearchInput-{{ section.id }}');
+    var clearBtn = document.getElementById('BrandSearchClear-{{ section.id }}');
+    var cards = document.querySelectorAll('.brand-grid-section-{{ section.id }} .brand-grid-card');
+    var noResults = document.getElementById('BrandNoResults-{{ section.id }}');
+    
+    if (searchInput && cards.length > 0) {
+      searchInput.addEventListener('input', function() {
+        var query = searchInput.value.toLowerCase().trim();
+        
+        if (query.length > 0) {
+          clearBtn.classList.add('is-active');
+        } else {
+          clearBtn.classList.remove('is-active');
+        }
+        
+        var hasVisible = false;
+        cards.forEach(function(card) {
+          var brandName = card.getAttribute('data-brand-name').toLowerCase();
+          if (brandName.indexOf(query) !== -1) {
+            card.style.display = 'flex';
+            hasVisible = true;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+        
+        if (noResults) {
+          noResults.style.display = hasVisible ? 'none' : 'block';
+        }
+      });
+      
+      clearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        clearBtn.classList.remove('is-active');
+        cards.forEach(function(card) {
+          card.style.display = 'flex';
+        });
+        if (noResults) {
+          noResults.style.display = 'none';
+        }
+        searchInput.focus();
+      });
+    }
+  });
+</script>
 
 <style>
   .brand-grid-section-{{ section.id }} {
@@ -97,7 +170,77 @@
     font-weight: {{ section.settings.heading_weight }};
     color: {{ section.settings.heading_color }};
     margin-top: 0;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+  }
+  /* Search Bar Styles */
+  .brand-grid-section-{{ section.id }} .brand-grid-search-wrapper {
+    position: relative;
+    max-width: {{ section.settings.search_max_width }}px;
+    margin: 0 auto 40px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border-radius: {{ section.settings.search_border_radius }}px;
+    transition: box-shadow 0.3s ease;
+  }
+  .brand-grid-section-{{ section.id }} .brand-grid-search-wrapper:focus-within {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  .brand-grid-section-{{ section.id }} .brand-grid-search-icon {
+    position: absolute;
+    left: 20px;
+    color: {{ section.settings.search_focus_color }};
+    font-size: 18px;
+    pointer-events: none;
+  }
+  .brand-grid-section-{{ section.id }} .brand-grid-search-input {
+    width: 100%;
+    padding: 14px 50px;
+    border: 1px solid {{ section.settings.search_border_color }};
+    border-radius: {{ section.settings.search_border_radius }}px;
+    font-size: 16px;
+    color: {{ section.settings.search_text_color }};
+    background-color: {{ section.settings.search_bg_color }};
+    outline: none;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+  }
+  .brand-grid-section-{{ section.id }} .brand-grid-search-input:focus {
+    border-color: {{ section.settings.search_focus_color }};
+  }
+  .brand-grid-section-{{ section.id }} .brand-grid-search-clear {
+    position: absolute;
+    right: 20px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s, color 0.2s;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .brand-grid-section-{{ section.id }} .brand-grid-search-clear.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+  .brand-grid-section-{{ section.id }} .brand-grid-search-clear:hover {
+    color: {{ section.settings.search_focus_color }};
+  }
+  .brand-grid-section-{{ section.id }} .brand-grid-no-results {
+    padding: 60px 20px;
+    color: #64748b;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    border: 1px dashed #cbd5e1;
+    border-radius: 16px;
+    background-color: rgba(248, 250, 252, 0.5);
+    margin-top: 20px;
   }
   .brand-grid-section-{{ section.id }} .brand-grid-layout {
     display: grid;
@@ -301,6 +444,58 @@
       "max": 3,
       "step": 1,
       "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Search Bar Styling"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search Placeholder Text",
+      "default": "Search brands..."
+    },
+    {
+      "type": "range",
+      "id": "search_max_width",
+      "label": "Search Bar Max Width (px)",
+      "min": 250,
+      "max": 800,
+      "step": 10,
+      "default": 450
+    },
+    {
+      "type": "color",
+      "id": "search_border_color",
+      "label": "Search Border Color",
+      "default": "#cbd5e1"
+    },
+    {
+      "type": "color",
+      "id": "search_focus_color",
+      "label": "Search Focus/Icon Color",
+      "default": "#4a77ce"
+    },
+    {
+      "type": "color",
+      "id": "search_text_color",
+      "label": "Search Input Text Color",
+      "default": "#1e293b"
+    },
+    {
+      "type": "color",
+      "id": "search_bg_color",
+      "label": "Search Input Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "search_border_radius",
+      "label": "Search Border Radius (px)",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "default": 50
     }
   ],
   "presets": [
