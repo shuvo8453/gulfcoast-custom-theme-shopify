@@ -10,12 +10,12 @@
     color: {{ section.settings.cat_color }};
     font-weight: {{ section.settings.cat_font_weight }};
     text-align: {{ section.settings.cat_alignment }};
-    
+
     margin-top: {{ section.settings.cat_margin_top }}px;
     margin-bottom: {{ section.settings.cat_margin_bottom }}px;
     margin-left: {{ section.settings.cat_margin_left }}px;
     margin-right: {{ section.settings.cat_margin_right }}px;
-    
+
     padding-top: {{ section.settings.cat_padding_top }}px;
     padding-bottom: {{ section.settings.cat_padding_bottom }}px;
     padding-left: {{ section.settings.cat_padding_left }}px;
@@ -29,21 +29,21 @@
 
   /* FAQ Item Container Styling */
   #FaqSection-{{ section.id }} .faq-item {
-    border: {{ section.settings.item_border_width }}px solid {{ section.settings.item_border_color }} !important;
-    border-radius: {{ section.settings.item_border_radius }}px !important;
-    margin-bottom: {{ section.settings.item_margin_bottom }}px !important;
-    overflow: hidden !important;
-    background: {{ section.settings.item_bg_color }} !important;
-    transition: all 0.3s ease !important;
+    border: {{ section.settings.item_border_width }}px solid {{ section.settings.item_border_color }};
+    border-radius: {{ section.settings.item_border_radius }}px;
+    margin-bottom: {{ section.settings.item_margin_bottom }}px;
+    overflow: hidden;
+    background: {{ section.settings.item_bg_color }};
+    transition: all 0.3s ease;
   }
 
   #FaqSection-{{ section.id }} .faq-item.is-active {
-    border-color: {{ section.settings.item_active_border_color }} !important;
+    border-color: {{ section.settings.item_active_border_color }};
   }
 
   #FaqSection-{{ section.id }} .faq-item:hover {
-    border-color: {{ section.settings.item_active_border_color }} !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    border-color: {{ section.settings.item_active_border_color }};
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
   /* Question Styling */
@@ -56,16 +56,16 @@
     align-items: center;
     justify-content: space-between;
     text-align: left;
-    
-    background: {{ section.settings.q_bg_color }} !important;
-    color: {{ section.settings.q_color }} !important;
-    font-size: {{ section.settings.q_font_size_desktop }}px !important;
-    font-weight: {{ section.settings.q_font_weight }} !important;
-    
-    padding-top: {{ section.settings.q_padding_top }}px !important;
-    padding-bottom: {{ section.settings.q_padding_bottom }}px !important;
-    padding-left: {{ section.settings.q_padding_left }}px !important;
-    padding-right: {{ section.settings.q_padding_right }}px !important;
+
+    background: {{ section.settings.q_bg_color }};
+    color: {{ section.settings.q_color }};
+    font-size: {{ section.settings.q_font_size_desktop }}px;
+    font-weight: {{ section.settings.q_font_weight }};
+
+    padding-top: {{ section.settings.q_padding_top }}px;
+    padding-bottom: {{ section.settings.q_padding_bottom }}px;
+    padding-left: {{ section.settings.q_padding_left }}px;
+    padding-right: {{ section.settings.q_padding_right }}px;
 
     {%- if section.settings.q_font_family != blank -%}
       font-family: {{ section.settings.q_font_family }};
@@ -75,8 +75,8 @@
 
   /* Active Question State */
   #FaqSection-{{ section.id }} .faq-item.is-active .faq-question-btn {
-    background: {{ section.settings.q_active_bg_color }} !important;
-    color: {{ section.settings.q_active_color }} !important;
+    background: {{ section.settings.q_active_bg_color }};
+    color: {{ section.settings.q_active_color }};
   }
 
   /* Chevron Icon Styling */
@@ -97,15 +97,15 @@
 
   /* Answer Styling */
   #FaqSection-{{ section.id }} .faq-answer {
-    color: {{ section.settings.a_color }} !important;
-    background: {{ section.settings.a_bg_color }} !important;
-    font-size: {{ section.settings.a_font_size_desktop }}px !important;
-    line-height: {{ section.settings.a_line_height }} !important;
-    
-    padding-top: {{ section.settings.a_padding_top }}px !important;
-    padding-bottom: {{ section.settings.a_padding_bottom }}px !important;
-    padding-left: {{ section.settings.a_padding_left }}px !important;
-    padding-right: {{ section.settings.a_padding_right }}px !important;
+    color: {{ section.settings.a_color }};
+    background: {{ section.settings.a_bg_color }};
+    font-size: {{ section.settings.a_font_size_desktop }}px;
+    line-height: {{ section.settings.a_line_height }};
+
+    padding-top: {{ section.settings.a_padding_top }}px;
+    padding-bottom: {{ section.settings.a_padding_bottom }}px;
+    padding-left: {{ section.settings.a_padding_left }}px;
+    padding-right: {{ section.settings.a_padding_right }}px;
 
     {%- if section.settings.a_font_family != blank -%}
       font-family: {{ section.settings.a_font_family }};
@@ -133,18 +133,18 @@
       font-size: {{ section.settings.cat_font_size_mobile }}px;
     }
     #FaqSection-{{ section.id }} .faq-question-btn {
-      font-size: {{ section.settings.q_font_size_mobile }}px !important;
-      padding-top: {{ section.settings.q_padding_top_mobile | default: section.settings.q_padding_top }}px !important;
-      padding-bottom: {{ section.settings.q_padding_bottom_mobile | default: section.settings.q_padding_bottom }}px !important;
-      padding-left: {{ section.settings.q_padding_left_mobile | default: section.settings.q_padding_left }}px !important;
-      padding-right: {{ section.settings.q_padding_right_mobile | default: section.settings.q_padding_right }}px !important;
+      font-size: {{ section.settings.q_font_size_mobile }}px;
+      padding-top: {{ section.settings.q_padding_top_mobile | default: section.settings.q_padding_top }}px;
+      padding-bottom: {{ section.settings.q_padding_bottom_mobile | default: section.settings.q_padding_bottom }}px;
+      padding-left: {{ section.settings.q_padding_left_mobile | default: section.settings.q_padding_left }}px;
+      padding-right: {{ section.settings.q_padding_right_mobile | default: section.settings.q_padding_right }}px;
     }
     #FaqSection-{{ section.id }} .faq-answer {
-      font-size: {{ section.settings.a_font_size_mobile }}px !important;
-      padding-top: {{ section.settings.a_padding_top_mobile | default: section.settings.a_padding_top }}px !important;
-      padding-bottom: {{ section.settings.a_padding_bottom_mobile | default: section.settings.a_padding_bottom }}px !important;
-      padding-left: {{ section.settings.a_padding_left_mobile | default: section.settings.a_padding_left }}px !important;
-      padding-right: {{ section.settings.a_padding_right_mobile | default: section.settings.a_padding_right }}px !important;
+      font-size: {{ section.settings.a_font_size_mobile }}px;
+      padding-top: {{ section.settings.a_padding_top_mobile | default: section.settings.a_padding_top }}px;
+      padding-bottom: {{ section.settings.a_padding_bottom_mobile | default: section.settings.a_padding_bottom }}px;
+      padding-left: {{ section.settings.a_padding_left_mobile | default: section.settings.a_padding_left }}px;
+      padding-right: {{ section.settings.a_padding_right_mobile | default: section.settings.a_padding_right }}px;
     }
   }
 {%- endstyle -%}
@@ -167,12 +167,25 @@
                 <button class="faq-question-btn" type="button" aria-expanded="false">
                   <span class="faq-question-text">{{ block.settings.question | escape }}</span>
                   <span class="faq-icon">
-                    <svg class="chevron-down" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg
+                      class="chevron-down"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
                       <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                   </span>
                 </button>
-                <div class="faq-answer-wrapper" style="max-height: 0px; overflow: hidden; transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                <div
+                  class="faq-answer-wrapper"
+                  style="max-height: 0px; overflow: hidden; transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+                >
                   <div class="faq-answer">
                     {{ block.settings.answer }}
                   </div>
@@ -239,7 +252,7 @@
       if (selectedBlock && selectedBlock.classList.contains('faq-item')) {
         const btn = selectedBlock.querySelector('.faq-question-btn');
         const wrapper = selectedBlock.querySelector('.faq-answer-wrapper');
-        
+
         btn.setAttribute('aria-expanded', 'true');
         selectedBlock.classList.add('is-active');
         wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
@@ -252,7 +265,7 @@
       if (selectedBlock && selectedBlock.classList.contains('faq-item')) {
         const btn = selectedBlock.querySelector('.faq-question-btn');
         const wrapper = selectedBlock.querySelector('.faq-answer-wrapper');
-        
+
         btn.setAttribute('aria-expanded', 'false');
         selectedBlock.classList.remove('is-active');
         wrapper.style.maxHeight = '0px';
