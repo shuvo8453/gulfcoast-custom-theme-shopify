@@ -1,0 +1,872 @@
+{%- style -%}
+  #OrderTracking-{{ section.id }} {
+    background-color: {{ section.settings.section_bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  #OrderTracking-{{ section.id }} .tracking-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+
+  #OrderTracking-{{ section.id }} .search-card {
+    background: {{ section.settings.card_bg_color }};
+    border-radius: 16px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    padding: 40px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+  }
+
+  #OrderTracking-{{ section.id }} .tracking-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    background-color: #f0f4ff;
+    color: #2b59c3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    margin: 0 auto 24px;
+    font-size: 28px;
+  }
+
+  #OrderTracking-{{ section.id }} .tracking-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+    text-align: center;
+    font-size: 28px;
+  }
+
+  #OrderTracking-{{ section.id }} .tracking-subtitle {
+    color: #64748b;
+    text-align: center;
+    margin-bottom: 32px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  #OrderTracking-{{ section.id }} .form-label {
+    font-weight: 600;
+    color: #475569;
+    font-size: 13px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  #OrderTracking-{{ section.id }} .input-group-custom {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  #OrderTracking-{{ section.id }} .input-icon {
+    position: absolute;
+    left: 16px;
+    color: #94a3b8;
+    font-size: 16px;
+    pointer-events: none;
+  }
+
+  #OrderTracking-{{ section.id }} .form-control-custom {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1e293b;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+    height: 48px;
+  }
+
+  #OrderTracking-{{ section.id }} .form-control-custom:focus {
+    outline: none;
+    border-color: {{ section.settings.button_bg_color }};
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(59, 82, 196, 0.15);
+  }
+
+  #OrderTracking-{{ section.id }} .btn-track {
+    background-color: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 32px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  #OrderTracking-{{ section.id }} .btn-track:hover {
+    background-color: {{ section.settings.button_hover_bg_color }};
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 82, 196, 0.25);
+  }
+
+  #OrderTracking-{{ section.id }} .btn-track:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  #OrderTracking-{{ section.id }} .status-spinner {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(59, 82, 196, 0.3);
+    border-radius: 50%;
+    border-top-color: {{ section.settings.button_bg_color }};
+    animation: spin-anim 1s linear infinite;
+  }
+
+  @keyframes spin-anim {
+    to { transform: rotate(360deg); }
+  }
+
+  #OrderTracking-{{ section.id }} .status-searching {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: #475569;
+    font-weight: 500;
+    padding: 40px 0;
+  }
+
+  #OrderTracking-{{ section.id }} .alert-danger-custom {
+    background-color: #fef2f2;
+    border: 1px solid #fee2e2;
+    color: #991b1b;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  /* Result styling matching WordPress style */
+  #OrderTracking-{{ section.id }} .order-status-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    padding: 30px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  #OrderTracking-{{ section.id }} .status-icon-box {
+    width: 54px;
+    height: 54px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  /* Color themes for status box */
+  #OrderTracking-{{ section.id }} .status-box-completed { background-color: #f0fdf4; color: #166534; }
+  #OrderTracking-{{ section.id }} .status-box-failed { background-color: #fef2f2; color: #991b1b; }
+  #OrderTracking-{{ section.id }} .status-box-shipped { background-color: #eff6ff; color: #1e40af; }
+  #OrderTracking-{{ section.id }} .status-box-refunded { background-color: #f8fafc; color: #475569; }
+  #OrderTracking-{{ section.id }} .status-box-processing { background-color: #fffbeb; color: #854d0e; }
+
+  #OrderTracking-{{ section.id }} .status-header-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 6px 0;
+  }
+
+  #OrderTracking-{{ section.id }} .status-header-text {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  #OrderTracking-{{ section.id }} .status-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 4px;
+  }
+
+  #OrderTracking-{{ section.id }} .badge-completed { background-color: #dcfce7; color: #15803d; }
+  #OrderTracking-{{ section.id }} .badge-failed { background-color: #fee2e2; color: #b91c1c; }
+  #OrderTracking-{{ section.id }} .badge-shipped { background-color: #dbeafe; color: #1d4ed8; }
+  #OrderTracking-{{ section.id }} .badge-refunded { background-color: #f1f5f9; color: #475569; }
+  #OrderTracking-{{ section.id }} .badge-processing { background-color: #fef3c7; color: #b45309; }
+
+  #OrderTracking-{{ section.id }} .order-details-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    padding: 40px;
+    margin-bottom: 24px;
+  }
+
+  #OrderTracking-{{ section.id }} .details-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  #OrderTracking-{{ section.id }} .details-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 24px 0;
+  }
+
+  #OrderTracking-{{ section.id }} .order-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  #OrderTracking-{{ section.id }} .order-table th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+  }
+
+  #OrderTracking-{{ section.id }} .order-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  #OrderTracking-{{ section.id }} .order-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  #OrderTracking-{{ section.id }} .order-table .item-name {
+    font-weight: 600;
+    color: #1e3a8a;
+  }
+
+  #OrderTracking-{{ section.id }} .order-table .total-column {
+    text-align: right;
+    font-weight: 600;
+  }
+
+  #OrderTracking-{{ section.id }} .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #3b52c4;
+    color: #fff;
+    text-decoration: none !important;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  #OrderTracking-{{ section.id }} .action-btn:hover {
+    background-color: #2b3eb1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(59, 82, 196, 0.25);
+  }
+
+  #OrderTracking-{{ section.id }} .action-btn-secondary {
+    background-color: #f1f5f9;
+    color: #334155;
+  }
+
+  #OrderTracking-{{ section.id }} .action-btn-secondary:hover {
+    background-color: #e2e8f0;
+    transform: translateY(-1px);
+    box-shadow: none;
+  }
+
+  #OrderTracking-{{ section.id }} .tracking-info-section {
+    margin-top: 35px;
+  }
+
+  #OrderTracking-{{ section.id }} .tracking-info-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 20px 0;
+  }
+
+  @media (max-width: 768px) {
+    #OrderTracking-{{ section.id }} .order-status-card {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 24px;
+    }
+    #OrderTracking-{{ section.id }} .order-details-card {
+      padding: 24px 16px;
+    }
+    #OrderTracking-{{ section.id }} .order-table th,
+    #OrderTracking-{{ section.id }} .order-table td {
+      padding: 12px 14px;
+    }
+  }
+{%- endstyle -%}
+
+<div id="OrderTracking-{{ section.id }}">
+  <div class="tracking-container">
+    <!-- Tracking Input Section -->
+    <div class="search-card" id="searchCard-{{ section.id }}">
+      <div class="tracking-icon-wrapper">
+        <i class="fa-solid fa-box-open"></i>
+      </div>
+      <h1 class="tracking-title">{{ section.settings.heading | escape }}</h1>
+      <p class="tracking-subtitle">{{ section.settings.subtitle | escape }}</p>
+
+      <form id="trackingForm-{{ section.id }}" novalidate>
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="orderNum-{{ section.id }}">
+              {{- section.settings.order_id_label | escape -}}
+            </label>
+            <div class="input-group-custom">
+              <span class="input-icon">#</span>
+              <input
+                type="text"
+                id="orderNum-{{ section.id }}"
+                placeholder="{{ section.settings.order_id_placeholder | escape }}"
+                class="form-control-custom"
+                required
+              >
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="customerEmail-{{ section.id }}">
+              {{- section.settings.email_label | escape -}}
+            </label>
+            <div class="input-group-custom">
+              <i class="fa-regular fa-envelope input-icon"></i>
+              <input
+                type="email"
+                id="customerEmail-{{ section.id }}"
+                placeholder="{{ section.settings.email_placeholder | escape }}"
+                class="form-control-custom"
+                required
+              >
+            </div>
+          </div>
+          <div class="col-12 mt-4">
+            <button type="submit" class="btn-track" id="btnTrack-{{ section.id }}">
+              <span>{{ section.settings.button_label | escape }}</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results Rendering Container -->
+    <div id="trackingResults-{{ section.id }}"></div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('trackingForm-{{ section.id }}');
+    const orderInput = document.getElementById('orderNum-{{ section.id }}');
+    const emailInput = document.getElementById('customerEmail-{{ section.id }}');
+    const resultsDiv = document.getElementById('trackingResults-{{ section.id }}');
+    const btnTrack = document.getElementById('btnTrack-{{ section.id }}');
+
+    // Format currency helper
+    function formatMoney(amount, currencyCode = 'USD') {
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currencyCode,
+      });
+      return formatter.format(amount);
+    }
+
+    // Format date helper
+    function formatDate(isoString) {
+      const dateObj = new Date(isoString);
+      return dateObj.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      let orderName = orderInput.value.trim();
+      const email = emailInput.value.trim();
+
+      if (!orderName || !email) {
+        return;
+      }
+
+      if (!orderName.startsWith('#')) {
+        orderName = '#' + orderName;
+      }
+
+      resultsDiv.innerHTML = `
+      <div class="status-searching">
+        <span class="status-spinner"></span>
+        <span>Searching for order ${orderName}...</span>
+      </div>
+    `;
+      btnTrack.disabled = true;
+
+      try {
+        const response = await fetch('https://shopify-order.shaheenmediusware.workers.dev', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderName, email }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          let errorMsg = data.error || 'Something went wrong. Please check your inputs.';
+          if (data.details && Array.isArray(data.details)) {
+            const detailMsgs = data.details.map((d) => d.message).join('<br>');
+            errorMsg += `<br><span style="font-size:12px; opacity:0.8;">${detailMsgs}</span>`;
+          }
+          resultsDiv.innerHTML = `
+          <div class="alert-danger-custom">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span><strong>Error:</strong> ${errorMsg}</span>
+          </div>
+        `;
+          return;
+        }
+
+        const order = data.order;
+        if (!order) {
+          resultsDiv.innerHTML = `
+          <div class="alert-danger-custom">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>Order details are missing.</span>
+          </div>
+        `;
+          return;
+        }
+
+        // Determine Display Status
+        let displayStatus = 'PROCESSING';
+        let statusBoxClass = 'status-box-processing';
+        let badgeClass = 'badge-processing';
+        let statusIcon = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+
+        if (order.financialStatus === 'REFUNDED') {
+          displayStatus = 'REFUNDED';
+          statusBoxClass = 'status-box-refunded';
+          badgeClass = 'badge-refunded';
+          statusIcon = '<i class="fa-solid fa-arrow-rotate-left"></i>';
+        } else if (order.cancelReason || order.financialStatus === 'VOIDED') {
+          displayStatus = 'FAILED';
+          statusBoxClass = 'status-box-failed';
+          badgeClass = 'badge-failed';
+          statusIcon = '<i class="fa-solid fa-circle-exclamation"></i>';
+        } else if (order.fulfillmentStatus === 'FULFILLED') {
+          displayStatus = 'SHIPPED';
+          statusBoxClass = 'status-box-shipped';
+          badgeClass = 'badge-shipped';
+          statusIcon = '<i class="fa-solid fa-circle-info"></i>';
+        } else if (order.financialStatus === 'PAID') {
+          displayStatus = 'COMPLETED';
+          statusBoxClass = 'status-box-completed';
+          badgeClass = 'badge-completed';
+          statusIcon = '<i class="fa-solid fa-circle-check"></i>';
+        }
+
+        // Format currency
+        const currency = order.totalPriceSet?.shopMoney?.currencyCode || 'USD';
+        const subtotalVal = order.subtotalPriceSet?.shopMoney?.amount
+          ? formatMoney(order.subtotalPriceSet.shopMoney.amount, currency)
+          : '-';
+        const totalVal = order.totalPriceSet?.shopMoney?.amount
+          ? formatMoney(order.totalPriceSet.shopMoney.amount, currency)
+          : '-';
+        const shippingVal = order.totalShippingPriceSet?.shopMoney?.amount
+          ? parseFloat(order.totalShippingPriceSet.shopMoney.amount)
+          : 0;
+        const shippingTitle = order.shippingLines?.[0] || 'Shipping';
+        const formattedShipping = shippingVal === 0 ? 'Free Shipping' : formatMoney(shippingVal, currency);
+        const refundVal = order.totalRefundedSet?.shopMoney?.amount
+          ? parseFloat(order.totalRefundedSet.shopMoney.amount)
+          : 0;
+
+        // Extract Payment Method
+        let paymentMethod = 'Credit / Debit Card';
+        if (order.paymentGatewayNames && order.paymentGatewayNames.length > 0) {
+          paymentMethod = order.paymentGatewayNames.join(', ');
+        }
+
+        // Generate HTML
+        let html = `
+        <!-- Order Status Header Card -->
+        <div class="order-status-card">
+          <div class="status-icon-box ${statusBoxClass}">
+            ${statusIcon}
+          </div>
+          <div>
+            <h2 class="status-header-title">Order Status</h2>
+            <p class="status-header-text">
+              Order <strong>${order.name}</strong> was placed on <strong>${formatDate(
+          order.createdAt
+        )}</strong> and is currently 
+              <span class="status-badge ${badgeClass}">${displayStatus}</span>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Order Details Card -->
+        <div class="order-details-card">
+          <div class="details-header">
+            <i class="fa-solid fa-list-check"></i>
+            <span>Order Details</span>
+          </div>
+          <h2 class="details-title">Order details</h2>
+
+          <table class="order-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th style="text-align: right;">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+
+        // Loop Line Items
+        if (order.lineItems && order.lineItems.length > 0) {
+          order.lineItems.forEach((item) => {
+            const unitPrice = item.originalUnitPrice?.shopMoney?.amount
+              ? parseFloat(item.originalUnitPrice.shopMoney.amount)
+              : 0;
+            const itemTotal = formatMoney(unitPrice * item.quantity, currency);
+            html += `
+            <tr>
+              <td>
+                <span class="item-name">${item.title}</span> <strong class="text-muted">× ${item.quantity}</strong>
+              </td>
+              <td class="total-column">${itemTotal}</td>
+            </tr>
+          `;
+          });
+        }
+
+        // Subtotal
+        html += `
+        <tr>
+          <td><strong>Subtotal:</strong></td>
+          <td class="total-column">${subtotalVal}</td>
+        </tr>
+      `;
+
+        // Shipping
+        html += `
+        <tr>
+          <td><strong>Shipping:</strong></td>
+          <td class="total-column">${formattedShipping} (${shippingTitle})</td>
+        </tr>
+      `;
+
+        // Payment
+        html += `
+        <tr>
+          <td><strong>Payment method:</strong></td>
+          <td class="total-column">${paymentMethod}</td>
+        </tr>
+      `;
+
+        // Refunded amount
+        if (refundVal > 0) {
+          html += `
+          <tr>
+            <td><strong>Refund:</strong></td>
+            <td class="total-column text-danger">-${formatMoney(refundVal, currency)}</td>
+          </tr>
+        `;
+        }
+
+        // Total
+        if (refundVal > 0) {
+          html += `
+          <tr>
+            <td><strong>Total:</strong></td>
+            <td class="total-column">
+              <span class="text-decoration-line-through text-muted" style="font-size: 13px;">${totalVal}</span>
+              <span class="text-success ms-1">${formatMoney(
+                parseFloat(order.totalPriceSet.shopMoney.amount) - refundVal,
+                currency
+              )}</span>
+            </td>
+          </tr>
+        `;
+        } else {
+          html += `
+          <tr>
+            <td><strong>Total:</strong></td>
+            <td class="total-column">${totalVal}</td>
+          </tr>
+        `;
+        }
+
+        // Check for actions block
+        let actionsHTML = '';
+        if (displayStatus === 'FAILED') {
+          actionsHTML = `
+          <tr>
+            <td><strong>Actions:</strong></td>
+            <td class="total-column">
+              <div class="d-flex justify-content-end gap-2">
+                <a href="/cart" class="action-btn" style="padding: 6px 18px; font-size: 13px;">Pay</a>
+                <a href="/" class="action-btn action-btn-secondary" style="padding: 6px 18px; font-size: 13px;">Cancel</a>
+              </div>
+            </td>
+          </tr>
+        `;
+        }
+
+        html += `
+            ${actionsHTML}
+            </tbody>
+          </table>
+      `;
+
+        if (displayStatus === 'COMPLETED' || displayStatus === 'SHIPPED') {
+          html += `
+          <div class="mt-3">
+            <a href="/collections/all" class="action-btn">Order Again</a>
+          </div>
+        `;
+        }
+
+        // Tracking Information (Fulfillments)
+        if (order.fulfillments && order.fulfillments.length > 0) {
+          let hasTracking = false;
+          let trackingRows = '';
+
+          order.fulfillments.forEach((fulfillment) => {
+            if (fulfillment.trackingInfo && fulfillment.trackingInfo.length > 0) {
+              fulfillment.trackingInfo.forEach((info) => {
+                hasTracking = true;
+                const dateStr = fulfillment.createdAt ? formatDate(fulfillment.createdAt) : formatDate(order.createdAt);
+                trackingRows += `
+                <tr>
+                  <td><strong>${info.company}</strong></td>
+                  <td>${info.number}</td>
+                  <td>${dateStr}</td>
+                  <td style="text-align: right;">
+                    <a href="${info.url}" target="_blank" class="action-btn" style="padding: 6px 18px; font-size: 13px;">Track</a>
+                  </td>
+                </tr>
+              `;
+              });
+            }
+          });
+
+          if (hasTracking) {
+            html += `
+            <div class="tracking-info-section">
+              <h3 class="tracking-info-title">Tracking Information</h3>
+              <table class="order-table">
+                <thead>
+                  <tr>
+                    <th>Provider</th>
+                    <th>Tracking Number</th>
+                    <th>Date</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${trackingRows}
+                </tbody>
+              </table>
+            </div>
+          `;
+          }
+        }
+
+        html += `</div>`; // Close details card
+        resultsDiv.innerHTML = html;
+      } catch (error) {
+        console.error(error);
+        resultsDiv.innerHTML = `
+        <div class="alert-danger-custom">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Failed to fetch tracking data. Please try again later.</span>
+        </div>
+      `;
+      } finally {
+        btnTrack.disabled = false;
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Order Tracking",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "color",
+      "id": "section_bg_color",
+      "label": "Section Background Color",
+      "default": "#f8fafc"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Content Settings"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Track Your Order"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Enter your details below to see the current status of your shipment."
+    },
+    {
+      "type": "text",
+      "id": "order_id_label",
+      "label": "Order ID Label",
+      "default": "Order ID"
+    },
+    {
+      "type": "text",
+      "id": "order_id_placeholder",
+      "label": "Order ID Placeholder",
+      "default": "Found in your confirmation email"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email Label",
+      "default": "Billing email"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email Placeholder",
+      "default": "Email used during checkout"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Track Order"
+    },
+    {
+      "type": "header",
+      "content": "Button Colors"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#3b52c4"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Button Hover Background Color",
+      "default": "#2b3eb1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Order Tracking"
+    }
+  ]
+}
+{% endschema %}
