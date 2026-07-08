@@ -254,13 +254,20 @@
     margin: 0 0 24px 0;
   }
 
+  #OrderTracking-{{ section.id }} .table-responsive-custom {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    margin-bottom: 24px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+  }
+
   #OrderTracking-{{ section.id }} .order-table {
     width: 100%;
     border-collapse: collapse;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 24px;
+    margin-bottom: 0;
+    min-width: 600px;
   }
 
   #OrderTracking-{{ section.id }} .order-table th {
@@ -456,6 +463,10 @@
         orderName = '#' + orderName;
       }
 
+      // Clear input fields value
+      orderInput.value = '';
+      emailInput.value = '';
+
       resultsDiv.innerHTML = `
       <div class="status-searching">
         <span class="status-spinner"></span>
@@ -576,15 +587,16 @@
           </div>
           <h2 class="details-title">Order details</h2>
 
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th style="text-align: right;">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-      `;
+          <div class="table-responsive-custom">
+            <table class="order-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th style="text-align: right;">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
 
         // Loop Line Items
         if (order.lineItems && order.lineItems.length > 0) {
@@ -678,10 +690,11 @@
         }
 
         html += `
-            ${actionsHTML}
-            </tbody>
-          </table>
-      `;
+              ${actionsHTML}
+              </tbody>
+            </table>
+          </div>
+        `;
 
         if (displayStatus === 'COMPLETED' || displayStatus === 'SHIPPED') {
           html += `
@@ -719,19 +732,21 @@
             html += `
             <div class="tracking-info-section">
               <h3 class="tracking-info-title">Tracking Information</h3>
-              <table class="order-table">
-                <thead>
-                  <tr>
-                    <th>Provider</th>
-                    <th>Tracking Number</th>
-                    <th>Date</th>
-                    <th style="text-align: right;">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${trackingRows}
-                </tbody>
-              </table>
+              <div class="table-responsive-custom">
+                <table class="order-table">
+                  <thead>
+                    <tr>
+                      <th>Provider</th>
+                      <th>Tracking Number</th>
+                      <th>Date</th>
+                      <th style="text-align: right;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${trackingRows}
+                  </tbody>
+                </table>
+              </div>
             </div>
           `;
           }
