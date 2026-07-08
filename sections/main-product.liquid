@@ -620,327 +620,343 @@
             {{ product.title }}
           </h1>
 
-        <!-- Arrives by Widget -->
-        <div class="d-flex align-items-center gap-2 mb-3 py-1">
-          <i class="fa-solid fa-truck text-primary"></i>
-          <span class="small text-muted fw-semibold"> Arrives by <span id="dynamic-arrival-date"></span> </span>
-          <i
-            class="fa-solid fa-circle-info text-muted small"
-            style="cursor: pointer;"
-            title="Estimated delivery date"
-          ></i>
-        </div>
-
-        <hr class="text-muted my-3">
-
-        <!-- Price Display -->
-        <div class="product-price-container d-flex align-items-center gap-3 mb-3">
-          <span class="fs-2 fw-bold text-primary">{{ product.price | money }}</span>
-          {% if product.compare_at_price > product.price %}
-            <span class="fs-5 text-muted text-decoration-line-through">{{ product.compare_at_price | money }}</span>
-            <span class="badge bg-danger rounded-pill px-3"
-              >Save {{ product.compare_at_price | minus: product.price | money -}}
-            </span>
-          {% endif %}
-        </div>
-
-        <!-- Only X left! Badge (shown if product inventory is less than or equal to 10) -->
-        {% assign current_variant = product.selected_or_first_available_variant %}
-        {% if current_variant.available %}
-          {% if current_variant.inventory_management != blank
-            and current_variant.inventory_quantity > 0
-            and current_variant.inventory_quantity <= 10
-          %}
-            <div class="mb-3">
-              <span
-                class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2"
-                style="background-color: #e8f5e9; color: #2e7d32; font-size: 13px;"
-              >
-                <i class="fa-solid fa-bolt-lightning"></i> Only {{ current_variant.inventory_quantity }} left!
-              </span>
-            </div>
-          {% endif %}
-        {% endif %}
-
-        <!-- Add to Cart Form -->
-        {% form 'product', product, id: 'AddToCartForm', class: 'purchase-form' %}
-          <!-- Hidden Input for selected variant -->
-          <input
-            type="hidden"
-            name="id"
-            id="SelectedVariantId"
-            value="{{ product.selected_or_first_available_variant.id }}"
-          >
-
-          <!-- Variant Selector Dropdowns (Standard Option loop) -->
-          {% unless product.has_only_default_variant %}
-            <div class="product-option-selectors d-flex flex-column gap-3 mb-3">
-              {% for option in product.options_with_values %}
-                <div class="option-row">
-                  <label class="form-label fw-semibold text-dark small mb-1" for="Option-{{ forloop.index0 }}">
-                    {{ option.name }}
-                  </label>
-                  <select
-                    id="Option-{{ forloop.index0 }}"
-                    class="form-select variant-select-input rounded-pill px-3 py-2"
-                    onchange="onVariantOptionChange()"
-                  >
-                    {% for value in option.values %}
-                      <option
-                        value="{{ value | escape }}"
-                        {% if option.selected_value == value %}
-                          selected
-                        {% endif %}
-                      >
-                        {{ value }}
-                      </option>
-                    {% endfor %}
-                  </select>
-                </div>
-              {% endfor %}
-            </div>
-          {% endunless %}
-
-          <!-- Quantity & ATC Action Buttons -->
-          <div class="d-flex align-items-center gap-2 mt-3 mb-3">
-            <!-- Quantity Control widget -->
-            <div
-              class="quantity-controls d-flex align-items-center border rounded-pill overflow-hidden bg-white"
-              style="width: 120px; height: 48px; flex-shrink: 0; border-color: #dee2e6 !important;"
-            >
-              <button
-                type="button"
-                class="qty-btn qty-minus bg-transparent border-0 h-100"
-                style="font-size: 16px; width: 40px; border-right: 1px solid #dee2e6 !important;"
-              >
-                <i class="fa-solid fa-minus text-muted"></i>
-              </button>
-              <input
-                type="text"
-                name="quantity"
-                class="qty-input bg-transparent border-0 text-center h-100"
-                min="1"
-                value="1"
-                style="font-weight: 600; width: 40px;"
-              >
-              <button
-                type="button"
-                class="qty-btn qty-plus bg-transparent border-0 h-100"
-                style="font-size: 16px; width: 40px; border-left: 1px solid #dee2e6 !important;"
-              >
-                <i class="fa-solid fa-plus text-muted"></i>
-              </button>
-            </div>
-
-            <!-- ATC Submit Button -->
-            <button
-              type="submit"
-              name="add"
-              id="AddToCartButton"
-              class="btn btn-primary flex-grow-1 rounded-pill py-3 d-flex align-items-center justify-content-center"
-              style="height: 48px; background-color: #3b52c4; border: 0; font-weight: 600;"
-              {% unless product.available %}
-                disabled
-              {% endunless %}
-            >
-              {% if product.available %}
-                <span>Add To Cart</span>
-              {% else %}
-                <span>Sold Out</span>
-              {% endif %}
-            </button>
+          <!-- Arrives by Widget -->
+          <div class="d-flex align-items-center gap-2 mb-3 py-1">
+            <i class="fa-solid fa-truck text-primary"></i>
+            <span class="small text-muted fw-semibold"> Arrives by <span id="dynamic-arrival-date"></span> </span>
+            <i
+              class="fa-solid fa-circle-info text-muted small"
+              style="cursor: pointer;"
+              title="Estimated delivery date"
+            ></i>
           </div>
-        {% endform %}
 
-        <!-- Wishlist / Compare links row -->
-        <div class="d-flex align-items-center justify-content-start gap-4 py-2 my-2 border-top border-bottom">
-          <a
-            href="#"
-            class="wishlist-btn-toggle text-dark text-decoration-none small d-flex align-items-center gap-1 hover:text-primary"
-            data-handle="{{ product.handle }}"
-          >
-            <i class="fa-regular fa-heart"></i> Add to wishlist
-          </a>
-          <a
-            href="#"
-            class="compare-btn-toggle text-dark text-decoration-none small d-flex align-items-center gap-1 hover:text-primary"
-            data-handle="{{ product.handle }}"
-          >
-            <i class="fa-solid fa-arrow-right-arrow-left"></i> Compare
-          </a>
-        </div>
-
-        <!-- Product Meta Information List -->
-        <div class="product-metadata-list d-flex flex-column gap-2 py-2 small">
-          {% assign current_variant = product.selected_or_first_available_variant %}
-          {% if current_variant.sku != blank %}
-            <div class="d-flex align-items-center justify-content-between">
-              <span class="text-dark fw-medium">SKU:</span>
-              <span class="text-muted">{{ current_variant.sku }}</span>
-            </div>
-          {% endif %}
-          {% if product.collections.size > 0 %}
-            <div class="d-flex align-items-center justify-content-between">
-              <span class="text-dark fw-medium">Categories:</span>
-              <span class="text-muted text-end">
-                {% for col in product.collections %}
-                  <a href="{{ col.url }}" class="text-decoration-none text-muted hover:text-primary">{{ col.title }}</a>
-                  {%- unless forloop.last %}, {% endunless %}
-                {% endfor %}
-              </span>
-            </div>
-          {% endif %}
-          <div class="d-flex align-items-center justify-content-between">
-            <span class="text-dark fw-medium">Brand:</span>
-            <span class="text-muted">
-              <a
-                href="{{ product.vendor | url_for_vendor }}"
-                class="text-decoration-none text-muted hover:text-primary"
-              >
-                {{- product.vendor -}}
-              </a>
-            </span>
-          </div>
-          <div class="d-flex align-items-center justify-content-between">
-            <span class="text-dark fw-medium">Share:</span>
-            <div class="d-flex gap-2">
-              <a
-                href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url | append: product.url }}"
-                target="_blank"
-                class="text-muted hover:text-primary"
-                ><i class="fa-brands fa-facebook-f"></i
-              ></a>
-              <a
-                href="https://twitter.com/intent/tweet?text={{ product.title | escape }}&url={{ shop.url | append: product.url }}"
-                target="_blank"
-                class="text-muted hover:text-primary"
-                ><i class="fa-brands fa-twitter"></i
-              ></a>
-              <a
-                href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: product.url }}&media={{ product.featured_image | image_url: width: 800 }}&description={{ product.title | escape }}"
-                target="_blank"
-                class="text-muted hover:text-primary"
-                ><i class="fa-brands fa-pinterest-p"></i
-              ></a>
-              <a
-                href="https://www.linkedin.com/shareArticle?mini=true&url={{ shop.url | append: product.url }}&title={{ product.title | escape }}"
-                target="_blank"
-                class="text-muted hover:text-primary"
-                ><i class="fa-brands fa-linkedin-in"></i
-              ></a>
-              <a
-                href="https://t.me/share/url?url={{ shop.url | append: product.url }}&text={{ product.title | escape }}"
-                target="_blank"
-                class="text-muted hover:text-primary"
-                ><i class="fa-brands fa-telegram"></i
-              ></a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Free 30 Day Returns box -->
-        <div
-          class="p-3 border rounded-3 d-flex align-items-center justify-content-between my-2"
-          style="background-color: #f8fafc; border-color: #e2e8f0 !important;"
-        >
-          <span class="text-dark fw-semibold small">Free 30 Day Returns</span>
-          <a
-            href="/refund-returns/"
-            class="small text-decoration-underline text-primary fw-medium"
-            style="font-style: italic;"
-            >More details</a
-          >
-        </div>
-
-        <!-- Trust Badges (Payment Methods) -->
-        <div class="d-flex align-items-center justify-content-between py-2 border-top flex-nowrap gap-1">
-          <span class="text-muted fw-semibold text-nowrap" style="font-size: 12px; color: #062e67; flex-shrink: 0; margin-right: 4px;">
-            Payment Methods:
-          </span>
-          <div class="d-flex gap-1 align-items-center flex-nowrap">
-            <img
-              src="{{ 'paypal' | payment_type_img_url }}"
-              class="border rounded-1 bg-white px-1"
-              style="height: 14px; width: auto; flex-shrink: 0;"
-              alt="PayPal"
-              height=""
-              width=""
-            >
-            <img
-              src="{{ 'master' | payment_type_img_url }}"
-              class="border rounded-1 bg-white px-1"
-              style="height: 14px; width: auto; flex-shrink: 0;"
-              alt="Mastercard"
-              height=""
-              width=""
-            >
-            <img
-              src="{{ 'visa' | payment_type_img_url }}"
-              class="border rounded-1 bg-white px-1"
-              style="height: 14px; width: auto; flex-shrink: 0;"
-              alt="Visa"
-              height=""
-              width=""
-            >
-            <img
-              src="{{ 'american_express' | payment_type_img_url }}"
-              class="border rounded-1 bg-white px-1"
-              style="height: 14px; width: auto; flex-shrink: 0;"
-              alt="Amex"
-              height=""
-              width=""
-            >
-            <img
-              src="{{ 'discover' | payment_type_img_url }}"
-              class="border rounded-1 bg-white px-1"
-              style="height: 14px; width: auto; flex-shrink: 0;"
-              alt="Discover"
-              height=""
-              width=""
-            >
-            <img
-              src="{{ 'google_pay' | payment_type_img_url }}"
-              class="border rounded-1 bg-white px-1"
-              style="height: 14px; width: auto; flex-shrink: 0;"
-              alt="Google Pay"
-              height=""
-              width=""
-            >
-            <img
-              src="{{ 'apple_pay' | payment_type_img_url }}"
-              class="border rounded-1 bg-white px-1"
-              style="height: 14px; width: auto; flex-shrink: 0;"
-              alt="Apple Pay"
-              height=""
-              width=""
-            >
-          </div>
-        </div>
-
-        <!-- Need Assistance? box -->
-        <div class="assistance-panel p-4 border rounded-4 bg-white shadow-sm mt-3">
-          <h5 class="fw-bold text-dark mb-2" style="font-family: 'Outfit', sans-serif; font-size: 18px;">
-            Need assistance?
-          </h5>
-          <p class="text-muted small mb-3">Get expert advice on product selection and custom requirements.</p>
           <hr class="text-muted my-3">
-          <div class="d-flex align-items-center justify-content-between">
-            <a
-              href="https://wa.me/19856621036"
-              target="_blank"
-              class="text-primary text-decoration-none small fw-semibold d-flex align-items-center gap-2"
+
+          <!-- Price Display -->
+          <div class="product-price-container d-flex align-items-center gap-3 mb-3">
+            <span class="fs-2 fw-bold text-primary">{{ product.price | money }}</span>
+            {% if product.compare_at_price > product.price %}
+              <span class="fs-5 text-muted text-decoration-line-through">{{ product.compare_at_price | money }}</span>
+              <span class="badge bg-danger rounded-pill px-3"
+                >Save {{ product.compare_at_price | minus: product.price | money -}}
+              </span>
+            {% endif %}
+          </div>
+
+          <!-- Only X left! Badge (shown if product inventory is less than or equal to 10) -->
+          <div id="variant-stock-status-container" class="mb-3">
+            {% assign current_variant = product.selected_or_first_available_variant %}
+            {% if current_variant.available %}
+              {% if current_variant.inventory_management != blank
+                and current_variant.inventory_quantity > 0
+                and current_variant.inventory_quantity <= 10
+              %}
+                {% if current_variant.inventory_quantity <= 5 %}
+                  <span
+                    class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2"
+                    style="background-color: #fee2e2; color: #dc2626; font-size: 13px;"
+                  >
+                    <i class="fa-solid fa-triangle-exclamation"></i> Only {{ current_variant.inventory_quantity }} left – order soon!
+                  </span>
+                {% else %}
+                  <span
+                    class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2"
+                    style="background-color: #ffedd5; color: #ea580c; font-size: 13px;"
+                  >
+                    <i class="fa-solid fa-bolt-lightning"></i> Low stock – selling fast
+                  </span>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          </div>
+
+          <!-- Add to Cart Form -->
+          {% form 'product', product, id: 'AddToCartForm', class: 'purchase-form' %}
+            <!-- Hidden Input for selected variant -->
+            <input
+              type="hidden"
+              name="id"
+              id="SelectedVariantId"
+              value="{{ product.selected_or_first_available_variant.id }}"
             >
-              <i class="fa-solid fa-phone"></i> WhatsApp Me
+
+            <!-- Variant Selector Dropdowns (Standard Option loop) -->
+            {% unless product.has_only_default_variant %}
+              <div class="product-option-selectors d-flex flex-column gap-3 mb-3">
+                {% for option in product.options_with_values %}
+                  <div class="option-row">
+                    <label class="form-label fw-semibold text-dark small mb-1" for="Option-{{ forloop.index0 }}">
+                      {{ option.name }}
+                    </label>
+                    <select
+                      id="Option-{{ forloop.index0 }}"
+                      class="form-select variant-select-input rounded-pill px-3 py-2"
+                      onchange="onVariantOptionChange()"
+                    >
+                      {% for value in option.values %}
+                        <option
+                          value="{{ value | escape }}"
+                          {% if option.selected_value == value %}
+                            selected
+                          {% endif %}
+                        >
+                          {{ value }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endunless %}
+
+            <!-- Quantity & ATC Action Buttons -->
+            <div class="d-flex align-items-center gap-2 mt-3 mb-3">
+              <!-- Quantity Control widget -->
+              <div
+                class="quantity-controls d-flex align-items-center border rounded-pill overflow-hidden bg-white"
+                style="width: 120px; height: 48px; flex-shrink: 0; border-color: #dee2e6 !important;"
+              >
+                <button
+                  type="button"
+                  class="qty-btn qty-minus bg-transparent border-0 h-100"
+                  style="font-size: 16px; width: 40px; border-right: 1px solid #dee2e6 !important;"
+                >
+                  <i class="fa-solid fa-minus text-muted"></i>
+                </button>
+                <input
+                  type="text"
+                  name="quantity"
+                  class="qty-input bg-transparent border-0 text-center h-100"
+                  min="1"
+                  value="1"
+                  style="font-weight: 600; width: 40px;"
+                >
+                <button
+                  type="button"
+                  class="qty-btn qty-plus bg-transparent border-0 h-100"
+                  style="font-size: 16px; width: 40px; border-left: 1px solid #dee2e6 !important;"
+                >
+                  <i class="fa-solid fa-plus text-muted"></i>
+                </button>
+              </div>
+
+              <!-- ATC Submit Button -->
+              <button
+                type="submit"
+                name="add"
+                id="AddToCartButton"
+                class="btn btn-primary flex-grow-1 rounded-pill py-3 d-flex align-items-center justify-content-center"
+                style="height: 48px; background-color: #3b52c4; border: 0; font-weight: 600;"
+                {% unless product.available %}
+                  disabled
+                {% endunless %}
+              >
+                {% if product.available %}
+                  <span>Add To Cart</span>
+                {% else %}
+                  <span>Sold Out</span>
+                {% endif %}
+              </button>
+            </div>
+          {% endform %}
+
+          <!-- Wishlist / Compare links row -->
+          <div class="d-flex align-items-center justify-content-start gap-4 py-2 my-2 border-top border-bottom">
+            <a
+              href="#"
+              class="wishlist-btn-toggle text-dark text-decoration-none small d-flex align-items-center gap-1 hover:text-primary"
+              data-handle="{{ product.handle }}"
+            >
+              <i class="fa-regular fa-heart"></i> Add to wishlist
             </a>
             <a
-              href="mailto:sales@gulfcoastoutfitters.com"
-              class="text-primary text-decoration-none small fw-semibold d-flex align-items-center gap-2"
+              href="#"
+              class="compare-btn-toggle text-dark text-decoration-none small d-flex align-items-center gap-1 hover:text-primary"
+              data-handle="{{ product.handle }}"
             >
-              <i class="fa-solid fa-envelope"></i> sales@gulfcoastoutfitters.com
+              <i class="fa-solid fa-arrow-right-arrow-left"></i> Compare
             </a>
           </div>
+
+          <!-- Product Meta Information List -->
+          <div class="product-metadata-list d-flex flex-column gap-2 py-2 small">
+            {% assign current_variant = product.selected_or_first_available_variant %}
+            {% if current_variant.sku != blank %}
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="text-dark fw-medium">SKU:</span>
+                <span class="text-muted">{{ current_variant.sku }}</span>
+              </div>
+            {% endif %}
+            {% if product.collections.size > 0 %}
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="text-dark fw-medium">Categories:</span>
+                <span class="text-muted text-end">
+                  {% for col in product.collections %}
+                    <a href="{{ col.url }}" class="text-decoration-none text-muted hover:text-primary">
+                      {{- col.title -}}
+                    </a>
+                    {%- unless forloop.last %}, {% endunless %}
+                  {% endfor %}
+                </span>
+              </div>
+            {% endif %}
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="text-dark fw-medium">Brand:</span>
+              <span class="text-muted">
+                <a
+                  href="{{ product.vendor | url_for_vendor }}"
+                  class="text-decoration-none text-muted hover:text-primary"
+                >
+                  {{- product.vendor -}}
+                </a>
+              </span>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="text-dark fw-medium">Share:</span>
+              <div class="d-flex gap-2">
+                <a
+                  href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url | append: product.url }}"
+                  target="_blank"
+                  class="text-muted hover:text-primary"
+                  ><i class="fa-brands fa-facebook-f"></i
+                ></a>
+                <a
+                  href="https://twitter.com/intent/tweet?text={{ product.title | escape }}&url={{ shop.url | append: product.url }}"
+                  target="_blank"
+                  class="text-muted hover:text-primary"
+                  ><i class="fa-brands fa-twitter"></i
+                ></a>
+                <a
+                  href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: product.url }}&media={{ product.featured_image | image_url: width: 800 }}&description={{ product.title | escape }}"
+                  target="_blank"
+                  class="text-muted hover:text-primary"
+                  ><i class="fa-brands fa-pinterest-p"></i
+                ></a>
+                <a
+                  href="https://www.linkedin.com/shareArticle?mini=true&url={{ shop.url | append: product.url }}&title={{ product.title | escape }}"
+                  target="_blank"
+                  class="text-muted hover:text-primary"
+                  ><i class="fa-brands fa-linkedin-in"></i
+                ></a>
+                <a
+                  href="https://t.me/share/url?url={{ shop.url | append: product.url }}&text={{ product.title | escape }}"
+                  target="_blank"
+                  class="text-muted hover:text-primary"
+                  ><i class="fa-brands fa-telegram"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Free 30 Day Returns box -->
+          <div
+            class="p-3 border rounded-3 d-flex align-items-center justify-content-between my-2"
+            style="background-color: #f8fafc; border-color: #e2e8f0 !important;"
+          >
+            <span class="text-dark fw-semibold small">Free 30 Day Returns</span>
+            <a
+              href="/refund-returns/"
+              class="small text-decoration-underline text-primary fw-medium"
+              style="font-style: italic;"
+              >More details</a
+            >
+          </div>
+
+          <!-- Trust Badges (Payment Methods) -->
+          <div class="d-flex align-items-center justify-content-between py-2 border-top flex-nowrap gap-1">
+            <span
+              class="text-muted fw-semibold text-nowrap"
+              style="font-size: 12px; color: #062e67; flex-shrink: 0; margin-right: 4px;"
+            >
+              Payment Methods:
+            </span>
+            <div class="d-flex gap-1 align-items-center flex-nowrap">
+              <img
+                src="{{ 'paypal' | payment_type_img_url }}"
+                class="border rounded-1 bg-white px-1"
+                style="height: 14px; width: auto; flex-shrink: 0;"
+                alt="PayPal"
+                height=""
+                width=""
+              >
+              <img
+                src="{{ 'master' | payment_type_img_url }}"
+                class="border rounded-1 bg-white px-1"
+                style="height: 14px; width: auto; flex-shrink: 0;"
+                alt="Mastercard"
+                height=""
+                width=""
+              >
+              <img
+                src="{{ 'visa' | payment_type_img_url }}"
+                class="border rounded-1 bg-white px-1"
+                style="height: 14px; width: auto; flex-shrink: 0;"
+                alt="Visa"
+                height=""
+                width=""
+              >
+              <img
+                src="{{ 'american_express' | payment_type_img_url }}"
+                class="border rounded-1 bg-white px-1"
+                style="height: 14px; width: auto; flex-shrink: 0;"
+                alt="Amex"
+                height=""
+                width=""
+              >
+              <img
+                src="{{ 'discover' | payment_type_img_url }}"
+                class="border rounded-1 bg-white px-1"
+                style="height: 14px; width: auto; flex-shrink: 0;"
+                alt="Discover"
+                height=""
+                width=""
+              >
+              <img
+                src="{{ 'google_pay' | payment_type_img_url }}"
+                class="border rounded-1 bg-white px-1"
+                style="height: 14px; width: auto; flex-shrink: 0;"
+                alt="Google Pay"
+                height=""
+                width=""
+              >
+              <img
+                src="{{ 'apple_pay' | payment_type_img_url }}"
+                class="border rounded-1 bg-white px-1"
+                style="height: 14px; width: auto; flex-shrink: 0;"
+                alt="Apple Pay"
+                height=""
+                width=""
+              >
+            </div>
+          </div>
+
+          <!-- Need Assistance? box -->
+          <div class="assistance-panel p-4 border rounded-4 bg-white shadow-sm mt-3">
+            <h5 class="fw-bold text-dark mb-2" style="font-family: 'Outfit', sans-serif; font-size: 18px;">
+              Need assistance?
+            </h5>
+            <p class="text-muted small mb-3">Get expert advice on product selection and custom requirements.</p>
+            <hr class="text-muted my-3">
+            <div class="d-flex align-items-center justify-content-between">
+              <a
+                href="https://wa.me/19856621036"
+                target="_blank"
+                class="text-primary text-decoration-none small fw-semibold d-flex align-items-center gap-2"
+                style="font-size: 12px;"
+              >
+                <i class="fa-solid fa-phone"></i> WhatsApp Me
+              </a>
+              <a
+                href="mailto:sales@gulfcoastoutfitters.com"
+                class="text-primary text-decoration-none small fw-semibold d-flex align-items-center gap-2"
+                style="font-size: 12px;"
+              >
+                <i class="fa-solid fa-envelope"></i> sales@gulfcoastoutfitters.com
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
       </div>
     </div>
 
@@ -1083,7 +1099,9 @@
         alt="{{ product.title | escape }}"
       >
       <div class="overflow-hidden">
-        <h6 class="mb-0 text-dark fw-bold text-truncate" style="font-size: 14px; font-family: 'Outfit', sans-serif;">{{ product.title }}</h6>
+        <h6 class="mb-0 text-dark fw-bold text-truncate" style="font-size: 14px; font-family: 'Outfit', sans-serif;">
+          {{ product.title }}
+        </h6>
         <span class="fw-bold text-primary" style="font-size: 15px;">{{ product.price | money }}</span>
       </div>
     </div>
@@ -1162,6 +1180,28 @@
         const mainImg = document.getElementById('ProductMainImage');
         if (mainImg) {
           mainImg.src = matchedVariant.featured_image.src;
+        }
+      }
+
+      // Update stock status badge dynamically
+      const stockContainer = document.getElementById('variant-stock-status-container');
+      if (stockContainer) {
+        if (matchedVariant.available && matchedVariant.inventory_management && matchedVariant.inventory_quantity > 0 && matchedVariant.inventory_quantity <= 10) {
+          if (matchedVariant.inventory_quantity <= 5) {
+            stockContainer.innerHTML = `
+              <span class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2" style="background-color: #fee2e2; color: #dc2626; font-size: 13px;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Only ${matchedVariant.inventory_quantity} left – order soon!
+              </span>
+            `;
+          } else {
+            stockContainer.innerHTML = `
+              <span class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2" style="background-color: #ffedd5; color: #ea580c; font-size: 13px;">
+                <i class="fa-solid fa-bolt-lightning"></i> Low stock – selling fast
+              </span>
+            `;
+          }
+        } else {
+          stockContainer.innerHTML = '';
         }
       }
     }

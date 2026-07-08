@@ -300,6 +300,8 @@ document.addEventListener('click', (e) => {
   const googleCategory = qvBtn.dataset.googleCategory;
   const categories = qvBtn.dataset.categories;
   const variantId = qvBtn.dataset.variantId;
+  const inventoryQuantity = parseInt(qvBtn.dataset.inventoryQuantity);
+  const inventoryManagement = qvBtn.dataset.inventoryManagement;
 
   // Populate Modal Fields
   const modal = document.getElementById('quickViewModal');
@@ -322,11 +324,33 @@ document.addEventListener('click', (e) => {
   const stockEl = modal.querySelector('#qv-product-stock');
   const addForm = modal.querySelector('#qv-add-to-cart-form');
   if (available) {
-    stockEl.className = 'stock-status-pill stock-in';
-    stockEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> In stock';
+    if (inventoryManagement && inventoryQuantity > 0 && inventoryQuantity <= 10) {
+      if (inventoryQuantity <= 5) {
+        stockEl.className = 'stock-status-pill';
+        stockEl.style.backgroundColor = '#fee2e2';
+        stockEl.style.color = '#dc2626';
+        stockEl.style.borderColor = '#fee2e2';
+        stockEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Only ${inventoryQuantity} left – order soon!`;
+      } else {
+        stockEl.className = 'stock-status-pill';
+        stockEl.style.backgroundColor = '#ffedd5';
+        stockEl.style.color = '#ea580c';
+        stockEl.style.borderColor = '#ffedd5';
+        stockEl.innerHTML = `<i class="fa-solid fa-bolt-lightning"></i> Low stock – selling fast`;
+      }
+    } else {
+      stockEl.className = 'stock-status-pill stock-in';
+      stockEl.style.backgroundColor = '';
+      stockEl.style.color = '';
+      stockEl.style.borderColor = '';
+      stockEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> In stock';
+    }
     if (addForm) addForm.classList.remove('d-none');
   } else {
     stockEl.className = 'stock-status-pill stock-out';
+    stockEl.style.backgroundColor = '';
+    stockEl.style.color = '';
+    stockEl.style.borderColor = '';
     stockEl.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Out of stock';
     if (addForm) addForm.classList.add('d-none');
   }

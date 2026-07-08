@@ -70,9 +70,28 @@ document.addEventListener('DOMContentLoaded', () => {
       const handle = compareBtn.dataset.handle;
       if (!handle) return;
       
-      const result = CompareManager.toggle(handle);
-      if (result !== false && typeof window.showGcfToast === 'function') {
-        window.showGcfToast(result ? 'Added to Compare!' : 'Removed from Compare!', 'success');
+      if (compareBtn.classList.contains('loading')) return;
+
+      const icon = compareBtn.querySelector('i');
+      if (icon) {
+        const originalClass = icon.className;
+        icon.className = 'fa-solid fa-spinner fa-spin';
+        compareBtn.classList.add('loading');
+        
+        setTimeout(() => {
+          compareBtn.classList.remove('loading');
+          icon.className = originalClass;
+          
+          const result = CompareManager.toggle(handle);
+          if (result !== false && typeof window.showGcfToast === 'function') {
+            window.showGcfToast(result ? 'Added to Compare!' : 'Removed from Compare!', 'success');
+          }
+        }, 500);
+      } else {
+        const result = CompareManager.toggle(handle);
+        if (result !== false && typeof window.showGcfToast === 'function') {
+          window.showGcfToast(result ? 'Added to Compare!' : 'Removed from Compare!', 'success');
+        }
       }
     }
   });

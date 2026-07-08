@@ -64,6 +64,8 @@
       data-google-category="{{ product.metafields.custom.google_merchant_category | default: '-' }}"
       data-categories="{% for col in product.collections %}{{ col.title }}{% unless forloop.last %}, {% endunless %}{% endfor %}"
       data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+      data-inventory-quantity="{{ product.selected_or_first_available_variant.inventory_quantity }}"
+      data-inventory-management="{{ product.selected_or_first_available_variant.inventory_management }}"
     >
       <i class="fa-regular fa-eye me-1"></i> Quick View
     </button>
@@ -86,7 +88,20 @@
     <!-- Stock Status Pill (Green for In Stock, Red for Out of Stock) -->
     <div class="product-card-stock mb-2">
       {% if product.available %}
-        <span class="stock-status-pill stock-in"> <i class="fa-solid fa-circle-check"></i> In stock </span>
+        {% assign card_variant = product.selected_or_first_available_variant %}
+        {% if card_variant.inventory_management != blank and card_variant.inventory_quantity > 0 and card_variant.inventory_quantity <= 10 %}
+          {% if card_variant.inventory_quantity <= 5 %}
+            <span class="stock-status-pill" style="background-color: #fee2e2 !important; color: #dc2626 !important; border: 1px solid #fee2e2 !important; border-radius: 60px; padding: 4px 12px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-triangle-exclamation"></i> Only {{ card_variant.inventory_quantity }} left – order soon!
+            </span>
+          {% else %}
+            <span class="stock-status-pill" style="background-color: #ffedd5 !important; color: #ea580c !important; border: 1px solid #ffedd5 !important; border-radius: 60px; padding: 4px 12px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-bolt-lightning"></i> Low stock – selling fast
+            </span>
+          {% endif %}
+        {% else %}
+          <span class="stock-status-pill stock-in"> <i class="fa-solid fa-circle-check"></i> In stock </span>
+        {% endif %}
       {% else %}
         <span class="stock-status-pill stock-out"> <i class="fa-solid fa-circle-xmark"></i> Out of stock </span>
       {% endif %}

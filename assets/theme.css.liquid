@@ -696,8 +696,8 @@ a:hover {
   letter-spacing: 0.5px;
   position: relative;
   padding-bottom: 8px;
-  margin-bottom: 15px;
-  text-transform: uppercase;
+  margin-bottom: 20px !important;
+  text-transform: uppercase !important;
 }
 
 .sidebar-heading::after {
@@ -730,6 +730,7 @@ a:hover {
 /* Featured Products in Sidebar */
 .sidebar-product-item {
   transition: transform 0.2s ease;
+  margin-bottom: 25px;
 }
 
 .sidebar-product-item:hover {
@@ -835,5 +836,21 @@ a:hover {
 .quick-view-specs-scroll table td {
   padding: 8px 4px;
 }
+
+/* Compare Button & Link States */
+.card-action-btn.compare-btn-toggle.is-active {
+  background-color: var(--color-primary) !important;
+  color: #ffffff !important;
+  border-color: var(--color-primary) !important;
+}
+
+a.compare-btn-toggle.is-active {
+  color: var(--color-primary) !important;
+}
+
+.compare-btn-toggle {
+  transition: all 0.2s ease;
+}
+
 
 
