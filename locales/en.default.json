@@ -75,5 +75,12 @@
   },
   "newsletter": {
     "success": "Thank you for subscribing!"
+  },
+  "search": {
+    "title": "Search Results",
+    "placeholder": "Search our store...",
+    "submit": "Search",
+    "no_results_html": "No results found for \"{{ terms }}\".",
+    "results_for_html": "{{ count }} results found for \"{{ terms }}\""
   }
 }
