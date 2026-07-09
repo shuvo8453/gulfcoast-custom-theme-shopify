@@ -644,6 +644,25 @@
             {% endif %}
           </div>
 
+          {% assign admin_email = settings.admin_email | default: 'tfl8453@gmail.com' %}
+          {% if customer and customer.email == admin_email %}
+            {% if product.metafields.custom.purchase_price.value != blank or product.metafields.custom.purchase_price != blank %}
+              <div class="purchase-price-admin mb-3 p-3 bg-light border border-warning rounded-4 shadow-sm" style="border-style: dashed !important;">
+                <div class="d-flex align-items-center gap-2 text-warning-emphasis fw-bold mb-1" style="font-size: 13px;">
+                  <i class="fa-solid fa-user-shield"></i>
+                  <span>Purchase Price (Admin Only)</span>
+                </div>
+                <div class="fs-4 fw-bold text-dark">
+                  {% if product.metafields.custom.purchase_price.value != blank %}
+                    {{ product.metafields.custom.purchase_price.value | times: 100 | money }}
+                  {% else %}
+                    {{ product.metafields.custom.purchase_price | times: 100 | money }}
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          {% endif %}
+
           <!-- Only X left! Badge (shown if product inventory is less than or equal to 10) -->
           <div id="variant-stock-status-container" class="mb-3">
             {% assign current_variant = product.selected_or_first_available_variant %}

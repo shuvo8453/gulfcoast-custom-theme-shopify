@@ -108,10 +108,28 @@
     </div>
 
     <!-- Pricing -->
-    <div class="product-card-price mt-auto pt-2 border-top border-light-subtle d-flex align-items-center gap-2 mb-3">
-      <span class="fw-bold text-primary">{{ product.price | money }}</span>
-      {% if product.compare_at_price > product.price %}
-        <span class="text-muted text-decoration-line-through small">{{ product.compare_at_price | money }}</span>
+    <div class="product-card-price mt-auto pt-2 border-top border-light-subtle d-flex flex-column gap-1 mb-3">
+      <div class="d-flex align-items-center gap-2">
+        <span class="fw-bold text-primary">{{ product.price | money }}</span>
+        {% if product.compare_at_price > product.price %}
+          <span class="text-muted text-decoration-line-through small">{{ product.compare_at_price | money }}</span>
+        {% endif %}
+      </div>
+      
+      {% assign admin_email = settings.admin_email | default: 'tfl8453@gmail.com' %}
+      {% if customer and customer.email == admin_email %}
+        {% if product.metafields.custom.purchase_price.value != blank or product.metafields.custom.purchase_price != blank %}
+          <div class="purchase-price-admin-card text-warning-emphasis d-flex align-items-center gap-1" style="font-size: 11px; font-weight: 600; border: 1px dashed #ffc107; padding: 2px 6px; border-radius: 4px; background-color: #fffdf5; width: fit-content;">
+            <i class="fa-solid fa-user-shield" style="font-size: 10px;"></i>
+            <span>P. Price: 
+              {% if product.metafields.custom.purchase_price.value != blank %}
+                {{ product.metafields.custom.purchase_price.value | times: 100 | money }}
+              {% else %}
+                {{ product.metafields.custom.purchase_price | times: 100 | money }}
+              {% endif %}
+            </span>
+          </div>
+        {% endif %}
       {% endif %}
     </div>
 

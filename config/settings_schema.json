@@ -176,5 +176,17 @@
         "default": 4
       }
     ]
+  },
+  {
+    "name": "Purcahse Price Settings",
+    "settings": [
+      {
+        "type": "text",
+        "id": "admin_email",
+        "label": "Admin Email for Purchase Price",
+        "default": "tfl8453@gmail.com",
+        "info": "The email address of the customer allowed to see the purchase price metafield."
+      }
+    ]
   }
 ]
