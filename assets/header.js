@@ -174,5 +174,110 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
+
+  // Mobile Drawer Search Box & Predictive Search logic
+  const searchInputDrawer = document.querySelector('.search-input-drawer');
+  const searchDropdownDrawer = document.querySelector('[data-gcf-live-search-results-drawer="true"]');
+  const searchResultsInnerDrawer = document.querySelector('[data-gcf-live-search-results-inner-drawer="true"]');
+
+  if (searchInputDrawer && searchDropdownDrawer && searchResultsInnerDrawer) {
+    let debounceTimeoutDrawer;
+
+    searchInputDrawer.addEventListener('input', () => {
+      clearTimeout(debounceTimeoutDrawer);
+      const query = searchInputDrawer.value.trim();
+
+      if (query.length < 2) {
+        searchDropdownDrawer.classList.add('d-none');
+        searchResultsInnerDrawer.innerHTML = '';
+        return;
+      }
+
+      debounceTimeoutDrawer = setTimeout(() => {
+        performLiveSearchDrawer(query);
+      }, 250);
+    });
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+      if (!searchInputDrawer.contains(e.target) && !searchDropdownDrawer.contains(e.target)) {
+        searchDropdownDrawer.classList.add('d-none');
+      }
+    });
+
+    // Show dropdown again when input is focused (if it has query)
+    searchInputDrawer.addEventListener('focus', () => {
+      const query = searchInputDrawer.value.trim();
+      if (query.length >= 2 && searchResultsInnerDrawer.children.length > 0) {
+        searchDropdownDrawer.classList.remove('d-none');
+      }
+    });
+
+    async function performLiveSearchDrawer(query) {
+      let searchUrl = `/search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=5`;
+
+      try {
+        searchResultsInnerDrawer.innerHTML = `
+          <div class="p-3 text-center text-muted" style="font-size: 13px;">
+            <i class="fa-solid fa-circle-notch fa-spin me-2"></i> Searching...
+          </div>
+        `;
+        searchDropdownDrawer.classList.remove('d-none');
+
+        const response = await fetch(searchUrl);
+        const data = await response.json();
+        const products = data.resources?.results?.products || [];
+
+        if (products.length === 0) {
+          searchResultsInnerDrawer.innerHTML = `
+            <div class="p-3 text-center text-muted" style="font-size: 13px;">
+              No products found for "${query}"
+            </div>
+          `;
+          return;
+        }
+
+        let html = '<div class="predictive-search-results-list d-flex flex-column">';
+        products.forEach(product => {
+          const price = parseFloat(product.price).toFixed(2);
+          const formattedPrice = `$${price}`;
+
+          html += `
+            <a href="${product.url}" class="predictive-search-item">
+              <div class="predictive-search-image-wrapper">
+                <img src="${product.image || 'https://via.placeholder.com/50'}" alt="${product.title}">
+              </div>
+              <div class="predictive-search-info">
+                <h4 class="predictive-search-title">${product.title}</h4>
+                <p class="predictive-search-vendor">${product.vendor || ''}</p>
+              </div>
+              <div class="predictive-search-price">
+                ${formattedPrice}
+              </div>
+            </a>
+          `;
+        });
+        html += '</div>';
+
+        html += `
+          <div class="border-top mt-2 pt-2 text-center">
+            <a href="/search?type=product&q=${encodeURIComponent(query)}" class="btn btn-sm btn-link text-decoration-none fw-bold" style="font-size: 13px; color: #3b52c4;">
+              View all results <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+          </div>
+        `;
+
+        searchResultsInnerDrawer.innerHTML = html;
+
+      } catch (error) {
+        console.error(error);
+        searchResultsInnerDrawer.innerHTML = `
+          <div class="p-3 text-center text-danger small">
+            Failed to load search results.
+          </div>
+        `;
+      }
+    }
+  }
 });
 
