@@ -360,9 +360,15 @@
                         <a class="page-link rounded-circle px-3 py-2 me-2" href="{{ part.url }}">{{ part.title }}</a>
                       </li>
                     {% else %}
-                      <li class="page-item active">
-                        <span class="page-link rounded-circle px-3 py-2 me-2">{{ part.title }}</span>
-                      </li>
+                      {% if part.title == paginate.current_page %}
+                        <li class="page-item active">
+                          <span class="page-link rounded-circle px-3 py-2 me-2">{{ part.title }}</span>
+                        </li>
+                      {% else %}
+                        <li class="page-item disabled">
+                          <span class="page-link rounded-circle px-3 py-2 me-2">{{ part.title }}</span>
+                        </li>
+                      {% endif %}
                     {% endif %}
                   {% endfor %}
 
