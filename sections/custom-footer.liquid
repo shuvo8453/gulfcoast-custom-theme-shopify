@@ -41,17 +41,18 @@
     padding: {{ section.settings.benefit_padding_desktop }}px 0;
   }
   .benefits-grid-{{ section.id }} {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: {{ section.settings.benefit_gap_desktop }}px;
-    justify-content: center;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    gap: {{ section.settings.benefit_gap_desktop }}px;
+    flex-wrap: wrap;
   }
   .benefit-item-{{ section.id }} {
     display: flex;
     align-items: center;
     gap: 15px;
-    justify-content: center;
+    justify-content: flex-start;
+    flex: 0 1 auto;
   }
   .benefit-img-{{ section.id }} {
     display: block;
@@ -186,9 +187,19 @@
   .system-block-{{ section.id }} {
     display: flex;
     flex-direction: column;
+    flex: 0 1 auto;
+  }
+  .systems-grid-{{ section.id }} .system-block-{{ section.id }}:first-child {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .systems-grid-{{ section.id }} .system-block-{{ section.id }}:nth-child(2) {
     align-items: center;
     text-align: center;
-    flex: 1 1 30%;
+  }
+  .systems-grid-{{ section.id }} .system-block-{{ section.id }}:last-child {
+    align-items: flex-end;
+    text-align: right;
   }
   .system-block-{{ section.id }} h4 {
     font-family: var(--font-heading);
@@ -205,6 +216,9 @@
     justify-content: center;
     align-items: center;
   }
+  .systems-grid-{{ section.id }} .system-block-{{ section.id }}:first-child .system-images-{{ section.id }} {
+    justify-content: flex-start;
+  }
   .system-img-{{ section.id }} {
     display: block;
     object-fit: contain;
@@ -214,6 +228,9 @@
     gap: 12px;
     justify-content: center;
     align-items: center;
+  }
+  .systems-grid-{{ section.id }} .system-block-{{ section.id }}:last-child .social-links-{{ section.id }} {
+    justify-content: flex-end;
   }
   .social-icon-btn-{{ section.id }} {
     width: 36px;
