@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDrawers();
   initCollectionFiltersMobileDrawer();
   initNotifyModal();
+  initAjaxAddToCart();
 });
 
 // Toast Notification System
@@ -404,4 +405,63 @@ document.addEventListener('click', (e) => {
     bootstrapModal.show();
   }
 });
+
+// Ajax Add To Cart handler
+function initAjaxAddToCart() {
+  document.addEventListener('submit', (e) => {
+    const form = e.target.closest('form');
+    if (!form) return;
+    const action = form.getAttribute('action') || '';
+    if (!action.includes('/cart/add')) return;
+
+    e.preventDefault();
+
+    const submitBtn = form.querySelector('[type="submit"]');
+    if (!submitBtn) return;
+
+    const originalContent = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+
+    // Show spinner loader state on button
+    submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Adding...`;
+
+    const formData = new FormData(form);
+    const rootPath = window.Shopify && window.Shopify.routes && window.Shopify.routes.root ? window.Shopify.routes.root : '/';
+
+    fetch(rootPath + 'cart/add.js', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('HTTP error ' + response.status);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (typeof window.showGcfToast === 'function') {
+        window.showGcfToast(`${data.title || 'Product'} added to your cart!`, 'success');
+      }
+
+      // Update cart count badge
+      fetch(rootPath + 'cart.js')
+      .then(res => res.json())
+      .then(cart => {
+        document.querySelectorAll('.header-cart-count').forEach(el => {
+          el.textContent = cart.item_count;
+        });
+      });
+    })
+    .catch(error => {
+      console.error('Error adding to cart:', error);
+      if (typeof window.showGcfToast === 'function') {
+        window.showGcfToast('Failed to add product to cart.', 'error');
+      }
+    })
+    .finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalContent;
+    });
+  });
+}
 
