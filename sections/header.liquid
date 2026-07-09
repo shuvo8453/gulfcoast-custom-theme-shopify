@@ -537,6 +537,143 @@
       </ul>
     </div>
   </nav>
+
+  <!-- 3b. Dedicated Sticky-Only Header (Desktop Only) -->
+  <div class="sticky-header-bar py-2 d-none d-lg-block">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center gap-4">
+        <!-- Logo (Left) -->
+        <div class="header-logo-wrapper">
+          <a href="{{ routes.root_url }}" class="logo-link">
+            {% if section.settings.logo != blank %}
+              <img
+                src="{{ section.settings.logo | image_url: width: 400 }}"
+                alt="{{ shop.name | escape }}"
+                style="max-width: {{ section.settings.logo_max_width | times: 0.85 | round }}px; height: auto;"
+                class="header-logo-img"
+                loading="lazy"
+                width="auto"
+                height="auto"
+              >
+            {% else %}
+              <span class="h3 text-white fw-bold mb-0">{{ shop.name }}</span>
+            {% endif %}
+          </a>
+        </div>
+
+        <!-- Navigation Links (Center) -->
+        <ul class="main-nav-linkslist d-flex align-items-center gap-4 mb-0 list-unstyled text-white">
+          {% for link in linklists[section.settings.menu].links %}
+            <li class="nav-linkslist-item {% if link.links != blank %}has-dropdown{% endif %}">
+              <a
+                href="{{ link.url }}"
+                class="nav-linkslist-link text-uppercase text-white {% if link.active %}active{% endif %}"
+              >
+                {{ link.title }}
+              </a>
+              {% if link.links != blank %}
+                <ul class="nav-submenu shadow rounded border list-unstyled">
+                  {% for child in link.links %}
+                    <li>
+                      <a href="{{ child.url }}" class="nav-submenu-link {% if child.active %}active{% endif %}">
+                        {{ child.title }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+
+        <!-- Action Items (Right) -->
+        <div class="header-actions-desktop d-flex align-items-center gap-4 text-white">
+          <!-- Account / Login -->
+          {% if shop.customer_accounts_enabled %}
+            <a
+              href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+              class="action-item d-flex align-items-center gap-2 text-white text-decoration-none text-uppercase fw-semibold small"
+            >
+              <i class="fa-regular fa-user"></i>
+              <span>{% if customer %}My Account{% else %}Login / Register{% endif %}</span>
+            </a>
+          {% endif %}
+
+          <!-- Wishlist -->
+          <a
+            href="{{ section.settings.wishlist_page.url | default: '#' }}"
+            data-gcf-wishlist-drawer-toggle="true"
+            class="action-item wishlist-btn position-relative text-white"
+            aria-label="Wishlist"
+          >
+            {% if section.settings.wishlist_icon != blank %}
+              <img
+                src="{{ section.settings.wishlist_icon | image_url: width: 100 }}"
+                alt="Wishlist"
+                width="{{ section.settings.wishlist_icon_size }}"
+                height="{{ section.settings.wishlist_icon_size }}"
+                loading="lazy"
+              >
+            {% else %}
+              <i class="far fa-heart"></i>
+            {% endif %}
+            <span class="badge position-absolute top-0 start-100 translate-middle badge-count header-wishlist-count"
+              >0</span
+            >
+          </a>
+
+          <!-- Compare -->
+          <a
+            href="{{ section.settings.compare_page.url | default: '#' }}"
+            data-gcf-compare-drawer-toggle="true"
+            class="action-item compare-btn position-relative text-white"
+            aria-label="Compare"
+          >
+            {% if section.settings.compare_icon != blank %}
+              <img
+                src="{{ section.settings.compare_icon | image_url: width: 100 }}"
+                alt="Compare"
+                width="{{ section.settings.compare_icon_size }}"
+                height="{{ section.settings.compare_icon_size }}"
+                loading="lazy"
+              >
+            {% else %}
+              <i class="fa-solid fas fa-exchange-alt"></i>
+            {% endif %}
+            <span class="badge position-absolute top-0 start-100 translate-middle badge-count header-compare-count"
+              >0</span
+            >
+          </a>
+
+          <!-- Cart -->
+          <a
+            href="{{ routes.cart_url }}"
+            data-gcf-mini-cart-toggle="true"
+            class="action-item cart-btn d-flex align-items-center gap-2 text-white text-decoration-none"
+            aria-label="Cart"
+          >
+            <div class="position-relative">
+              {% if section.settings.cart_icon != blank %}
+                <img
+                  src="{{ section.settings.cart_icon | image_url: width: 100 }}"
+                  alt="Cart"
+                  width="{{ section.settings.cart_icon_size }}"
+                  height="{{ section.settings.cart_icon_size }}"
+                  loading="lazy"
+                >
+              {% else %}
+                <i class="fa-solid fa-bag-shopping"></i>
+              {% endif %}
+              <span class="badge position-absolute top-0 start-100 translate-middle badge-count header-cart-count">
+                {{- cart.item_count -}}
+              </span>
+            </div>
+            <span class="cart-total-price fw-bold">{{ cart.total_price | money }}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </header>
 
 <!-- 4. Mobile Drawer Navigation Menu (Matches Mobile Screenshot Drawer Layout) -->

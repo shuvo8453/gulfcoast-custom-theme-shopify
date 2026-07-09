@@ -279,5 +279,37 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
+
+  // Smart Sticky Header (Reveal on Scroll Up)
+  const header = document.querySelector('.site-header');
+  if (header) {
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+
+      // 1. Near the top of the page: reset header to inline state
+      if (currentScrollY <= 180) {
+        header.classList.remove('header-sticky', 'header-hidden');
+        lastScrollY = currentScrollY;
+        return;
+      }
+
+      // 2. Scrolling Down: Hide the header (only if past 300px to hide layout shift off-screen)
+      if (currentScrollY > lastScrollY) {
+        if (currentScrollY > 300) {
+          header.classList.add('header-sticky');
+          header.classList.add('header-hidden');
+        }
+      } 
+      // 3. Scrolling Up: Reveal the sticky header
+      else if (currentScrollY < lastScrollY && currentScrollY > 300) {
+        header.classList.add('header-sticky');
+        header.classList.remove('header-hidden');
+      }
+
+      lastScrollY = currentScrollY;
+    });
+  }
 });
 

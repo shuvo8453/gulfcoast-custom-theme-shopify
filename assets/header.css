@@ -649,3 +649,55 @@
   flex-shrink: 0;
 }
 
+/* Smart Sticky Header (Reveal on Scroll Up) */
+.site-header {
+  position: relative;
+  z-index: 1020;
+  width: 100%;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.site-header.header-sticky {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1020;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background-color: var(--header-bg-main, #ffffff) !important;
+  transform: translateY(0);
+}
+
+.site-header.header-sticky .top-header-bar {
+  display: none !important;
+}
+
+.site-header.header-hidden {
+  transform: translateY(-100%);
+}
+
+/* Desktop-specific sticky overrides (compact layout) */
+@media (min-width: 992px) {
+  .sticky-header-bar {
+    display: none !important;
+  }
+  .site-header.header-sticky .sticky-header-bar {
+    display: block !important;
+  }
+  .site-header.header-sticky .main-header-bar,
+  .site-header.header-sticky .navigation-bar-desktop {
+    display: none !important;
+  }
+  .sticky-header-bar .header-logo-img {
+    width: 130px !important;
+    height: 48px !important;
+    object-fit: contain;
+  }
+  .sticky-header-bar .nav-linkslist-link {
+    color: #ffffff !important;
+  }
+  .sticky-header-bar .nav-linkslist-link:hover {
+    color: var(--header-accent-hover-color, #f8fafc) !important;
+  }
+}
+
