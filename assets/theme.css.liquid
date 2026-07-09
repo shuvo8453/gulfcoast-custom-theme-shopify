@@ -556,6 +556,12 @@ a:hover {
   }
 }
 
+@media (min-width: 992px) {
+  .collection-filters-sidebar .filter-form {
+    padding-top: 12px;
+  }
+}
+
 .collection-filters-sidebar {
   padding: 0;
   background: transparent;
@@ -690,20 +696,21 @@ a:hover {
 
 /* Sidebar Headings with Accent Underline */
 .sidebar-heading {
-  font-size: 13px !important;
-  font-weight: 800 !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
   color: var(--color-heading);
   letter-spacing: 0.5px;
   position: relative;
-  padding-bottom: 8px;
-  margin-bottom: 20px !important;
+  padding-bottom: 12px;
+  margin-bottom: 24px !important;
   text-transform: uppercase !important;
+  border-bottom: 1px solid #e2e8f0; /* Full-width light grey border */
 }
 
 .sidebar-heading::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: -1px; /* Align with the border-bottom */
   left: 0;
   width: 40px;
   height: 2px;
@@ -713,7 +720,7 @@ a:hover {
 /* Sidebar Custom Form Selects */
 .filter-group select.form-select {
   border-radius: 60px;
-  padding: 10px 20px;
+  padding: 14px 24px;
   font-size: 13px;
   border: 1px solid #cbd5e1;
   color: #4b5563;
@@ -725,6 +732,19 @@ a:hover {
 .filter-group select.form-select:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(6, 46, 103, 0.15);
+}
+
+/* Filter Group Dividers */
+.collection-filters-sidebar .filter-group {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 40px;
+  margin-bottom: 40px !important;
+}
+
+.collection-filters-sidebar .filter-group:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
 /* Featured Products in Sidebar */

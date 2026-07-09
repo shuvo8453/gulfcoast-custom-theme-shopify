@@ -14,12 +14,11 @@
       <!-- Left: Sidebar Filters -->
       <div class="col-12 col-lg-3 collection-sidebar-column" id="collection-filters-drawer">
         <div class="collection-filters-sidebar">
-          <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-            <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-filter me-2 text-primary"></i>Filters</h5>
+          <div class="d-flex justify-content-end align-items-center mb-4 d-lg-none">
             <!-- Close Button for Mobile/Tablet Drawer -->
             <button
               type="button"
-              class="btn-close d-lg-none text-dark"
+              class="btn-close text-dark"
               id="mobile-filter-close"
               aria-label="Close filters"
             ></button>
@@ -30,7 +29,7 @@
             <div class="filter-group mb-4">
               <h6 class="fw-bold text-dark mb-2 text-uppercase sidebar-heading">Filter by Category</h6>
               <select
-                class="form-select rounded-pill px-3 py-2 border-light-subtle text-muted small"
+                class="form-select border-light-subtle text-muted small"
                 onchange="if(this.value) window.location.href=this.value;"
               >
                 <option value="/collections/all">Select a category</option>
@@ -64,7 +63,7 @@
               <h6 class="fw-bold text-dark mb-2 text-uppercase sidebar-heading">Filter by Brand</h6>
               {%- if brand_filter != null -%}
                 <select
-                  class="form-select rounded-pill px-3 py-2 border-light-subtle text-muted small"
+                  class="form-select border-light-subtle text-muted small"
                   onchange="if(this.value) window.location.href=this.value;"
                 >
                   <option value="{{ clear_brand_url }}">Select a brand</option>
@@ -90,7 +89,7 @@
                 </select>
               {%- else -%}
                 <select
-                  class="form-select rounded-pill px-3 py-2 border-light-subtle text-muted small"
+                  class="form-select border-light-subtle text-muted small"
                   onchange="if(this.value) window.location.href=this.value;"
                 >
                   <option value="{{ clear_brand_url }}">Select a brand</option>
@@ -259,7 +258,7 @@
             {%- endfor -%}
 
             <!-- PRODUCTS Sidebar List -->
-            <div class="filter-group mb-4 border-top pt-4">
+            <div class="filter-group mb-4 pt-4">
               <h6 class="fw-bold text-dark mb-3 text-uppercase sidebar-heading">Products</h6>
               <div class="sidebar-products-list d-flex flex-column gap-3">
                 {%- for sidebar_product in collections.all.products limit: 5 -%}
@@ -301,7 +300,7 @@
         {% paginate collection.products by section.settings.products_per_page %}
           {% if collection.products.size > 0 %}
             <!-- Top Bar Sorting & Results Count -->
-            <div class="collection-top-bar d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom flex-column flex-sm-row gap-3">
+            <div class="collection-top-bar d-flex justify-content-between align-items-center mb-4 pb-3 flex-column flex-sm-row gap-3">
               <div class="text-muted small">
                 {%- assign current_offset_plus_1 = paginate.current_offset | plus: 1 -%}
                 {%- assign current_products_shown = paginate.current_offset | plus: collection.products.size -%}
