@@ -54,4 +54,125 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Integrated Search Box & Predictive Search logic
+  const searchForm = document.querySelector('.search-bar-form');
+  const searchInput = document.querySelector('.search-input');
+  const searchDropdown = document.querySelector('[data-gcf-live-search-results="true"]');
+  const searchResultsInner = document.querySelector('[data-gcf-live-search-results-inner="true"]');
+  const categorySelect = document.querySelector('.category-select');
+
+  if (searchForm && searchInput && searchDropdown && searchResultsInner) {
+    let debounceTimeout;
+
+    searchInput.addEventListener('input', () => {
+      clearTimeout(debounceTimeout);
+      const query = searchInput.value.trim();
+
+      if (query.length < 2) {
+        searchDropdown.classList.add('d-none');
+        searchResultsInner.innerHTML = '';
+        return;
+      }
+
+      debounceTimeout = setTimeout(() => {
+        performLiveSearch(query);
+      }, 250);
+    });
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+      if (!searchForm.contains(e.target) && !searchDropdown.contains(e.target)) {
+        searchDropdown.classList.add('d-none');
+      }
+    });
+
+    // Show dropdown again when input is focused (if it has query)
+    searchInput.addEventListener('focus', () => {
+      const query = searchInput.value.trim();
+      if (query.length >= 2 && searchResultsInner.children.length > 0) {
+        searchDropdown.classList.remove('d-none');
+      }
+    });
+
+    async function performLiveSearch(query) {
+      // Build API request URL
+      let searchUrl = `/search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=6`;
+      
+      // If collection is selected, filter inside that collection
+      if (categorySelect && categorySelect.value !== 'last') {
+        const collectionHandle = categorySelect.value;
+        searchUrl = `/search/suggest.json?q=collection:${collectionHandle}+${encodeURIComponent(query)}&resources[type]=product&resources[limit]=6`;
+      }
+
+      try {
+        searchResultsInner.innerHTML = `
+          <div class="p-3 text-center text-muted" style="font-size: 13px;">
+            <i class="fa-solid fa-circle-notch fa-spin me-2"></i> Searching...
+          </div>
+        `;
+        searchDropdown.classList.remove('d-none');
+
+        const response = await fetch(searchUrl);
+        const data = await response.json();
+        const products = data.resources?.results?.products || [];
+
+        if (products.length === 0) {
+          searchResultsInner.innerHTML = `
+            <div class="p-3 text-center text-muted" style="font-size: 13px;">
+              No products found for "${query}"
+            </div>
+          `;
+          return;
+        }
+
+        let html = '<div class="predictive-search-results-list d-flex flex-column">';
+        products.forEach(product => {
+          // Format price
+          const price = parseFloat(product.price).toFixed(2);
+          const formattedPrice = `$${price}`;
+
+          html += `
+            <a href="${product.url}" class="predictive-search-item">
+              <div class="predictive-search-image-wrapper">
+                <img src="${product.image || 'https://via.placeholder.com/50'}" alt="${product.title}">
+              </div>
+              <div class="predictive-search-info">
+                <h4 class="predictive-search-title">${product.title}</h4>
+                <p class="predictive-search-vendor">${product.vendor || ''}</p>
+              </div>
+              <div class="predictive-search-price">
+                ${formattedPrice}
+              </div>
+            </a>
+          `;
+        });
+        html += '</div>';
+
+        // Add view all link
+        const viewAllUrl = categorySelect && categorySelect.value !== 'last' 
+          ? `/collections/${categorySelect.value}?q=${encodeURIComponent(query)}`
+          : `/search?type=product&q=${encodeURIComponent(query)}`;
+        
+        html += `
+          <div class="border-top mt-2 pt-2 text-center">
+            <a href="${viewAllUrl}" class="btn btn-sm btn-link text-decoration-none fw-bold" style="font-size: 13px; color: #3b52c4;">
+              View all results <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+          </div>
+        `;
+
+        searchResultsInner.innerHTML = html;
+
+      } catch (error) {
+        console.error(error);
+        searchResultsInner.innerHTML = `
+          <div class="p-3 text-center text-danger small">
+            Failed to load search results.
+          </div>
+        `;
+      }
+    }
+  }
 });
+
