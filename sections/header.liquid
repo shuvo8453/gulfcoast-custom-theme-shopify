@@ -247,7 +247,9 @@
               class="action-item d-flex align-items-center gap-2 text-white text-decoration-none text-uppercase fw-semibold small"
             >
               <i class="fa-regular fa-user"></i>
-              <span>{% if customer %}My Account{% else %}Login / Register{% endif %}</span>
+              <span>
+                {%- if customer %}My Account{% else %}Login / Register{% endif -%}
+              </span>
             </a>
           {% endif %}
 
@@ -301,6 +303,8 @@
           <a
             href="{{ routes.cart_url }}"
             data-gcf-mini-cart-toggle="true"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#cartDrawer"
             class="action-item cart-btn d-flex align-items-center gap-2 text-white text-decoration-none"
             aria-label="Cart"
           >
@@ -385,6 +389,8 @@
           <a
             href="{{ routes.cart_url }}"
             data-gcf-mini-cart-toggle="true"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#cartDrawer"
             class="action-item action-item-mobile cart-btn position-relative text-white"
             aria-label="Cart"
           >
@@ -595,7 +601,9 @@
               class="action-item d-flex align-items-center gap-2 text-white text-decoration-none text-uppercase fw-semibold small"
             >
               <i class="fa-regular fa-user"></i>
-              <span>{% if customer %}My Account{% else %}Login / Register{% endif %}</span>
+              <span>
+                {%- if customer %}My Account{% else %}Login / Register{% endif -%}
+              </span>
             </a>
           {% endif %}
 
@@ -649,6 +657,8 @@
           <a
             href="{{ routes.cart_url }}"
             data-gcf-mini-cart-toggle="true"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#cartDrawer"
             class="action-item cart-btn d-flex align-items-center gap-2 text-white text-decoration-none"
             aria-label="Cart"
           >
@@ -753,7 +763,9 @@
                 class="drawer-menu-link text-uppercase d-flex align-items-center gap-2 py-2 text-decoration-none"
               >
                 <i class="fa-regular fa-user mt-0"></i>
-                <span>{% if customer %}My Account{% else %}Login / Register{% endif %}</span>
+                <span>
+                  {%- if customer %}My Account{% else %}Login / Register{% endif -%}
+                </span>
               </a>
             </li>
           {% endif %}
@@ -842,99 +854,99 @@
 
 <!-- 5. Mobile Bottom Sticky Navigation Bar -->
 <div class="mobile-bottom-nav">
-    <!-- Home tab -->
-    <a
-      href="{{ section.settings.mobile_bottom_nav_home_link | default: '#' }}"
-      class="mobile-bottom-nav-item {% if request.path == '/' or request.path == routes.root_url %}active{% endif %}"
-    >
-      <div class="mobile-bottom-nav-icon">
-        {% if section.settings.mobile_bottom_nav_home_icon != blank %}
-          <img
-            src="{{ section.settings.mobile_bottom_nav_home_icon | image_url: width: 80 }}"
-            alt="{{ section.settings.mobile_bottom_nav_home_label | escape }}"
-            loading="lazy"
-            class="img-fluid"
-            width="auto"
-            height="auto"
-          >
-        {% else %}
-          <i class="fa-solid fa-house"></i>
-        {% endif %}
-      </div>
-      <span>{{ section.settings.mobile_bottom_nav_home_label | default: 'Home' }}</span>
-    </a>
-
-    <!-- Shop tab -->
-    <a
-      href="{{ section.settings.mobile_bottom_nav_shop_link | default: '#' }}"
-      class="mobile-bottom-nav-item {% if request.path contains '/collections/' %}active{% endif %}"
-    >
-      <div class="mobile-bottom-nav-icon">
-        {% if section.settings.mobile_bottom_nav_shop_icon != blank %}
-          <img
-            src="{{ section.settings.mobile_bottom_nav_shop_icon | image_url: width: 80 }}"
-            alt="{{ section.settings.mobile_bottom_nav_shop_label | escape }}"
-            loading="lazy"
-            class="img-fluid"
-            width="auto"
-            height="auto"
-          >
-        {% else %}
-          <i class="fa-solid fa-bag-shopping"></i>
-        {% endif %}
-      </div>
-      <span>{{ section.settings.mobile_bottom_nav_shop_label | default: 'Shop' }}</span>
-    </a>
-
-    <!-- Cart tab -->
-    <a
-      href="{{ section.settings.mobile_bottom_nav_cart_link | default: '#' }}"
-      class="mobile-bottom-nav-item {% if request.path == routes.cart_url %}active{% endif %}"
-    >
-      <div class="mobile-bottom-nav-icon">
-        {% if section.settings.mobile_bottom_nav_cart_icon != blank %}
-          <img
-            src="{{ section.settings.mobile_bottom_nav_cart_icon | image_url: width: 80 }}"
-            alt="{{ section.settings.mobile_bottom_nav_cart_label | escape }}"
-            loading="lazy"
-            class="img-fluid"
-            width="auto"
-            height="auto"
-          >
-        {% else %}
-          <i class="fa-solid fa-basket-shopping"></i>
-        {% endif %}
-        <span
-          class="badge badge-count position-absolute translate-middle-y header-cart-count"
-          style="top: 8px; right: 15%;"
+  <!-- Home tab -->
+  <a
+    href="{{ section.settings.mobile_bottom_nav_home_link | default: '#' }}"
+    class="mobile-bottom-nav-item {% if request.path == '/' or request.path == routes.root_url %}active{% endif %}"
+  >
+    <div class="mobile-bottom-nav-icon">
+      {% if section.settings.mobile_bottom_nav_home_icon != blank %}
+        <img
+          src="{{ section.settings.mobile_bottom_nav_home_icon | image_url: width: 80 }}"
+          alt="{{ section.settings.mobile_bottom_nav_home_label | escape }}"
+          loading="lazy"
+          class="img-fluid"
+          width="auto"
+          height="auto"
         >
-          {{- cart.item_count -}}
-        </span>
-      </div>
-      <span>{{ section.settings.mobile_bottom_nav_cart_label | default: 'Cart' }}</span>
-    </a>
+      {% else %}
+        <i class="fa-solid fa-house"></i>
+      {% endif %}
+    </div>
+    <span>{{ section.settings.mobile_bottom_nav_home_label | default: 'Home' }}</span>
+  </a>
 
-    <!-- My Account tab -->
-    <a
-      href="{{ section.settings.mobile_bottom_nav_account_link | default: '#' }}"
-      class="mobile-bottom-nav-item {% if request.path contains '/account' %}active{% endif %}"
-    >
-      <div class="mobile-bottom-nav-icon">
-        {% if section.settings.mobile_bottom_nav_account_icon != blank %}
-          <img
-            src="{{ section.settings.mobile_bottom_nav_account_icon | image_url: width: 80 }}"
-            alt="{{ section.settings.mobile_bottom_nav_account_label | escape }}"
-            loading="lazy"
-            class="img-fluid"
-            width="auto"
-            height="auto"
-          >
-        {% else %}
-          <i class="fa-solid fa-user"></i>
-        {% endif %}
-      </div>
-      <span>{{ section.settings.mobile_bottom_nav_account_label | default: 'My account' }}</span>
-    </a>
+  <!-- Shop tab -->
+  <a
+    href="{{ section.settings.mobile_bottom_nav_shop_link | default: '#' }}"
+    class="mobile-bottom-nav-item {% if request.path contains '/collections/' %}active{% endif %}"
+  >
+    <div class="mobile-bottom-nav-icon">
+      {% if section.settings.mobile_bottom_nav_shop_icon != blank %}
+        <img
+          src="{{ section.settings.mobile_bottom_nav_shop_icon | image_url: width: 80 }}"
+          alt="{{ section.settings.mobile_bottom_nav_shop_label | escape }}"
+          loading="lazy"
+          class="img-fluid"
+          width="auto"
+          height="auto"
+        >
+      {% else %}
+        <i class="fa-solid fa-bag-shopping"></i>
+      {% endif %}
+    </div>
+    <span>{{ section.settings.mobile_bottom_nav_shop_label | default: 'Shop' }}</span>
+  </a>
+
+  <!-- Cart tab -->
+  <a
+    href="/cart"
+    class="mobile-bottom-nav-item {% if request.path == routes.cart_url %}active{% endif %}"
+  >
+    <div class="mobile-bottom-nav-icon">
+      {% if section.settings.mobile_bottom_nav_cart_icon != blank %}
+        <img
+          src="{{ section.settings.mobile_bottom_nav_cart_icon | image_url: width: 80 }}"
+          alt="{{ section.settings.mobile_bottom_nav_cart_label | escape }}"
+          loading="lazy"
+          class="img-fluid"
+          width="auto"
+          height="auto"
+        >
+      {% else %}
+        <i class="fa-solid fa-basket-shopping"></i>
+      {% endif %}
+      <span
+        class="badge badge-count position-absolute translate-middle-y header-cart-count"
+        style="top: 8px; right: 15%;"
+      >
+        {{- cart.item_count -}}
+      </span>
+    </div>
+    <span>{{ section.settings.mobile_bottom_nav_cart_label | default: 'Cart' }}</span>
+  </a>
+
+  <!-- My Account tab -->
+  <a
+    href="{{ section.settings.mobile_bottom_nav_account_link | default: '#' }}"
+    class="mobile-bottom-nav-item {% if request.path contains '/account' %}active{% endif %}"
+  >
+    <div class="mobile-bottom-nav-icon">
+      {% if section.settings.mobile_bottom_nav_account_icon != blank %}
+        <img
+          src="{{ section.settings.mobile_bottom_nav_account_icon | image_url: width: 80 }}"
+          alt="{{ section.settings.mobile_bottom_nav_account_label | escape }}"
+          loading="lazy"
+          class="img-fluid"
+          width="auto"
+          height="auto"
+        >
+      {% else %}
+        <i class="fa-solid fa-user"></i>
+      {% endif %}
+    </div>
+    <span>{{ section.settings.mobile_bottom_nav_account_label | default: 'My account' }}</span>
+  </a>
 </div>
 
 <script src="{{ 'header.js' | asset_url }}" defer="defer"></script>

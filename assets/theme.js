@@ -137,7 +137,6 @@ function initDrawers() {
   document.body.appendChild(overlay);
   
   const drawerTriggers = [
-    { toggle: '[data-gcf-mini-cart-toggle="true"]', drawer: '[data-gcf-mini-cart="true"]', bodyClass: 'has-mini-cart-open' },
     { toggle: '[data-gcf-wishlist-drawer-toggle="true"]', drawer: '[data-gcf-wishlist-drawer="true"]', bodyClass: 'has-wishlist-open' },
     { toggle: '[data-gcf-compare-drawer-toggle="true"]', drawer: '[data-gcf-compare-drawer="true"]', bodyClass: 'has-compare-open' }
   ];
@@ -455,14 +454,18 @@ function initAjaxAddToCart() {
         if (floatingBadge) {
           floatingBadge.textContent = cart.item_count;
         }
+        document.querySelectorAll('[data-gcf-mini-cart-toggle="true"] .badge').forEach(el => {
+          el.textContent = cart.item_count;
+        });
         
         // Render updated items
         renderFloatingCartItems(cart);
         
-        // Open/Show the popover on desktop
-        const popover = document.getElementById('floating-cart-popover');
-        if (popover) {
-          popover.classList.remove('d-none');
+        // Open the Bootstrap Offcanvas drawer
+        const cartDrawerEl = document.getElementById('cartDrawer');
+        if (cartDrawerEl && typeof bootstrap !== 'undefined' && bootstrap.Offcanvas) {
+          const offcanvas = bootstrap.Offcanvas.getInstance(cartDrawerEl) || new bootstrap.Offcanvas(cartDrawerEl);
+          if (offcanvas) offcanvas.show();
         }
       });
     })
@@ -479,40 +482,48 @@ function initAjaxAddToCart() {
   });
 }
 
-// Floating Cart behavior
+// Floating Popover Cart & Offcanvas Drawer behavior
 function initFloatingCart() {
   const trigger = document.getElementById('floating-cart-trigger');
   const popover = document.getElementById('floating-cart-popover');
   const closeBtn = document.getElementById('floating-cart-close');
+  const drawer = document.getElementById('cartDrawer');
   
-  if (!trigger || !popover) return;
-  
-  // Toggle popover
-  trigger.addEventListener('click', (e) => {
-    e.stopPropagation();
-    popover.classList.toggle('d-none');
-    if (!popover.classList.contains('d-none')) {
-      updateFloatingCartContent();
-    }
-  });
-  
-  // Close popover
-  if (closeBtn) {
-    closeBtn.addEventListener('click', (e) => {
+  // Toggle Popover
+  if (trigger && popover) {
+    trigger.addEventListener('click', (e) => {
       e.stopPropagation();
-      popover.classList.add('d-none');
+      popover.classList.toggle('d-none');
+      if (!popover.classList.contains('d-none')) {
+        updateFloatingCartContent();
+      }
+    });
+
+    // Close Popover
+    if (closeBtn) {
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        popover.classList.add('d-none');
+      });
+    }
+
+    // Click outside to close Popover
+    document.addEventListener('click', (e) => {
+      if (!popover.contains(e.target) && e.target !== trigger && !trigger.contains(e.target)) {
+        popover.classList.add('d-none');
+      }
     });
   }
-  
-  // Click outside to close
-  document.addEventListener('click', (e) => {
-    if (!popover.contains(e.target) && e.target !== trigger && !trigger.contains(e.target)) {
-      popover.classList.add('d-none');
-    }
-  });
-  
-  // Remove item handler inside floating cart
-  popover.addEventListener('click', (e) => {
+
+  // Update cart contents when the offcanvas drawer starts to show
+  if (drawer) {
+    drawer.addEventListener('show.bs.offcanvas', () => {
+      updateFloatingCartContent();
+    });
+  }
+
+  // Common Remove Item Handler
+  const handleRemoveItem = (e) => {
     const removeBtn = e.target.closest('.btn-remove-item');
     if (!removeBtn) return;
     
@@ -540,6 +551,10 @@ function initFloatingCart() {
       if (floatingBadge) {
         floatingBadge.textContent = cart.item_count;
       }
+      document.querySelectorAll('[data-gcf-mini-cart-toggle="true"] .badge').forEach(badge => {
+        badge.textContent = cart.item_count;
+      });
+      
       // Re-render contents
       renderFloatingCartItems(cart);
     })
@@ -548,7 +563,11 @@ function initFloatingCart() {
       removeBtn.disabled = false;
       removeBtn.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
     });
-  });
+  };
+
+  // Bind remove handlers to both containers if they exist
+  if (popover) popover.addEventListener('click', handleRemoveItem);
+  if (drawer) drawer.addEventListener('click', handleRemoveItem);
 }
 
 // Function to fetch and update floating cart content
@@ -561,23 +580,31 @@ function updateFloatingCartContent() {
   });
 }
 
-// Function to render items inside the floating cart
+// Function to render items inside both the popover and the drawer
 function renderFloatingCartItems(cart) {
-  const container = document.getElementById('floating-cart-items-container');
-  if (!container) return;
+  const formatString = window.theme ? window.theme.moneyFormat : "$ {{amount}}";
   
+  // Update subtotal (drawer only)
+  const subtotalContainer = document.getElementById('cart-drawer-subtotal');
+  if (subtotalContainer) {
+    const formattedTotal = formatString.replace(/\{\{\s*(\w+)\s*\}\}/, (cart.total_price / 100.0).toFixed(2));
+    subtotalContainer.textContent = formattedTotal;
+  }
+  
+  let html = '';
   if (cart.items && cart.items.length > 0) {
-    let html = '';
-    const formatString = window.theme ? window.theme.moneyFormat : "$ {{amount}}";
-    
     cart.items.forEach((item, index) => {
       const formattedPrice = formatString.replace(/\{\{\s*(\w+)\s*\}\}/, (item.final_line_price / 100.0).toFixed(2));
       const imageUrl = item.image ? item.image : '';
       
       html += `
         <div class="cart-item-row d-flex align-items-center gap-3 p-3 bg-light rounded-4 mb-3 position-relative" data-line="${index + 1}">
-          <img src="${imageUrl}" alt="${item.product_title}" class="rounded-3 border" style="width: 60px; height: 60px; object-fit: cover;" width="60" height="60">
-          <div class="flex-grow-1 overflow-hidden" style="padding-right: 30px;">
+          ${imageUrl ? `<img src="${imageUrl}" alt="${item.product_title}" class="rounded-3 border" style="width: 60px; height: 60px; object-fit: cover;" width="60" height="60">` : `
+            <div class="rounded-3 border overflow-hidden" style="width: 60px; height: 60px; flex-shrink: 0;">
+              <svg class="placeholder-svg w-100 h-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><rect width="100%" height="100%" fill="#f8f9fa"></rect></svg>
+            </div>
+          `}
+          <div class="flex-grow-1 overflow-hidden" style="padding-right: 35px;">
             <h6 class="mb-1 text-truncate fw-medium text-dark" style="font-size: 14px;">${item.product_title}</h6>
             <div class="text-primary fw-medium" style="font-size: 13px;">${formattedPrice}</div>
           </div>
@@ -587,14 +614,19 @@ function renderFloatingCartItems(cart) {
         </div>
       `;
     });
-    container.innerHTML = html;
   } else {
-    container.innerHTML = `
-      <div class="text-center py-4 text-muted">
-        <i class="fa-solid fa-basket-shopping fa-2x mb-2 text-secondary"></i>
+    html = `
+      <div class="text-center py-5 text-muted">
+        <i class="fa-solid fa-basket-shopping fa-3x mb-3 text-secondary"></i>
         <p class="mb-0">Your cart is empty</p>
       </div>
     `;
   }
-}
 
+  // Render HTML in both containers
+  const popoverContainer = document.getElementById('floating-cart-items-container');
+  if (popoverContainer) popoverContainer.innerHTML = html;
+
+  const drawerContainer = document.getElementById('cart-drawer-items-container');
+  if (drawerContainer) drawerContainer.innerHTML = html;
+}

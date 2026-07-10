@@ -400,6 +400,14 @@
           background: #a0aec0;
         }
       }
+      
+      /* Ensure Offcanvas sits above the mobile bottom nav (which is z-index: 10000) */
+      .offcanvas {
+        z-index: 10050 !important;
+      }
+      .offcanvas-backdrop {
+        z-index: 10040 !important;
+      }
     </style>
 
     <div id="desktop-floating-cart-container" class="d-none d-lg-block">
@@ -408,6 +416,7 @@
         id="floating-cart-trigger"
         class="floating-cart-btn position-fixed shadow d-flex align-items-center justify-content-center"
         aria-label="Open Floating Cart"
+        style="z-index: 1050;"
       >
         <i class="fa-solid fa-bag-shopping"></i>
         <span class="badge rounded-pill bg-primary position-absolute floating-cart-count">
@@ -460,7 +469,7 @@
                       {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg w-100 h-100' }}
                     </div>
                   {% endif %}
-                  <div class="flex-grow-1 overflow-hidden" style="padding-right: 30px;">
+                  <div class="flex-grow-1 overflow-hidden" style="padding-right: 35px;">
                     <h6 class="mb-1 text-truncate fw-medium text-dark" style="font-size: 14px;">
                       {{ item.product.title }}
                     </h6>
@@ -478,8 +487,8 @@
                 </div>
               {% endfor %}
             {% else %}
-              <div class="text-center py-4 text-muted">
-                <i class="fa-solid fa-basket-shopping fa-2x mb-2 text-secondary"></i>
+              <div class="text-center py-5 text-muted">
+                <i class="fa-solid fa-basket-shopping fa-3x mb-3 text-secondary"></i>
                 <p class="mb-0">Your cart is empty</p>
               </div>
             {% endif %}
@@ -492,14 +501,116 @@
             href="/cart"
             class="btn btn-outline-secondary w-50 rounded-3 py-2 fw-semibold text-decoration-none text-center"
             style="border-color: #dee2e6; color: #4b5563; font-size: 14px;"
-            >View Cart</a
           >
+            VIEW CART
+          </a>
           <a
             href="/checkout"
             class="btn btn-primary w-50 rounded-3 py-2 fw-semibold text-decoration-none text-center text-white border-0"
             style="background-color: #3b52c4; font-size: 14px;"
-            >Checkout</a
           >
+            Checkout
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap 5 Offcanvas Sidebar Cart Drawer -->
+    <div
+      class="offcanvas offcanvas-end border-0"
+      tabindex="-1"
+      id="cartDrawer"
+      aria-labelledby="cartDrawerLabel"
+      style="width: 420px; max-width: 100%; z-index: 1065;"
+    >
+      <!-- Drawer Header -->
+      <div class="offcanvas-header border-bottom p-3 d-flex align-items-center justify-content-between">
+        <h5
+          class="offcanvas-title fw-bold text-dark mb-0"
+          id="cartDrawerLabel"
+          style="font-family: 'Outfit', sans-serif;"
+        >
+          Shopping cart
+        </h5>
+        <button
+          type="button"
+          class="btn-close-custom border-0 bg-transparent text-muted animate-rotate d-flex align-items-center gap-1"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+          style="font-size: 14px; font-weight: 600;"
+        >
+          <i class="fa-solid fa-xmark" style="font-size: 18px;"></i> Close
+        </button>
+      </div>
+
+      <!-- Drawer Body (Items List) -->
+      <div class="offcanvas-body p-3" id="cart-drawer-items-container" style="overflow-y: auto;">
+        {% if cart.item_count > 0 %}
+          {% for item in cart.items %}
+            <div
+              class="cart-item-row d-flex align-items-center gap-3 p-3 bg-light rounded-4 mb-3 position-relative"
+              data-line="{{ forloop.index }}"
+            >
+              {% if item.image != blank %}
+                <img
+                  src="{{ item.image | image_url: width: 120 }}"
+                  alt="{{ item.product.title | escape }}"
+                  class="rounded-3 border"
+                  style="width: 60px; height: 60px; object-fit: cover;"
+                  width="60"
+                  height="60"
+                >
+              {% else %}
+                <div class="rounded-3 border overflow-hidden" style="width: 60px; height: 60px; flex-shrink: 0;">
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg w-100 h-100' }}
+                </div>
+              {% endif %}
+              <div class="flex-grow-1 overflow-hidden" style="padding-right: 30px;">
+                <h6 class="mb-1 text-truncate fw-medium text-dark" style="font-size: 14px;">
+                  {{ item.product.title }}
+                </h6>
+                <div class="text-primary fw-medium" style="font-size: 13px;">{{ item.final_line_price | money }}</div>
+              </div>
+              <button
+                class="btn-remove-item border-0 bg-transparent text-danger position-absolute end-0 top-50 translate-middle-y me-3"
+                data-variant-id="{{ item.variant_id }}"
+                aria-label="Remove item"
+              >
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-5 text-muted">
+            <i class="fa-solid fa-basket-shopping fa-3x mb-3 text-secondary"></i>
+            <p class="mb-0">Your cart is empty</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="offcanvas-footer p-3 border-top bg-white">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted fw-semibold" style="font-size: 14px;">Subtotal:</span>
+          <span class="fs-5 fw-bold text-primary" id="cart-drawer-subtotal">
+            {{- cart.total_price | money -}}
+          </span>
+        </div>
+        <div class="d-flex gap-2">
+          <a
+            href="/cart"
+            class="btn btn-outline-secondary w-50 rounded-3 py-2 fw-semibold text-decoration-none text-center"
+            style="border-color: #dee2e6; color: #4b5563; font-size: 14px;"
+          >
+            VIEW CART
+          </a>
+          <a
+            href="/checkout"
+            class="btn btn-primary w-50 rounded-3 py-2 fw-semibold text-decoration-none text-center text-white border-0"
+            style="background-color: #3b52c4; font-size: 14px;"
+          >
+            Checkout
+          </a>
         </div>
       </div>
     </div>
