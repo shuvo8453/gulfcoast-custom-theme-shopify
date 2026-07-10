@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCollectionFiltersMobileDrawer();
   initNotifyModal();
   initAjaxAddToCart();
+  initFloatingCart();
 });
 
 // Toast Notification System
@@ -443,13 +444,26 @@ function initAjaxAddToCart() {
         window.showGcfToast(`${data.title || 'Product'} added to your cart!`, 'success');
       }
 
-      // Update cart count badge
+      // Update cart count badges and floating cart contents
       fetch(rootPath + 'cart.js')
       .then(res => res.json())
       .then(cart => {
         document.querySelectorAll('.header-cart-count').forEach(el => {
           el.textContent = cart.item_count;
         });
+        const floatingBadge = document.querySelector('.floating-cart-count');
+        if (floatingBadge) {
+          floatingBadge.textContent = cart.item_count;
+        }
+        
+        // Render updated items
+        renderFloatingCartItems(cart);
+        
+        // Open/Show the popover on desktop
+        const popover = document.getElementById('floating-cart-popover');
+        if (popover) {
+          popover.classList.remove('d-none');
+        }
       });
     })
     .catch(error => {
@@ -463,5 +477,124 @@ function initAjaxAddToCart() {
       submitBtn.innerHTML = originalContent;
     });
   });
+}
+
+// Floating Cart behavior
+function initFloatingCart() {
+  const trigger = document.getElementById('floating-cart-trigger');
+  const popover = document.getElementById('floating-cart-popover');
+  const closeBtn = document.getElementById('floating-cart-close');
+  
+  if (!trigger || !popover) return;
+  
+  // Toggle popover
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    popover.classList.toggle('d-none');
+    if (!popover.classList.contains('d-none')) {
+      updateFloatingCartContent();
+    }
+  });
+  
+  // Close popover
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      popover.classList.add('d-none');
+    });
+  }
+  
+  // Click outside to close
+  document.addEventListener('click', (e) => {
+    if (!popover.contains(e.target) && e.target !== trigger && !trigger.contains(e.target)) {
+      popover.classList.add('d-none');
+    }
+  });
+  
+  // Remove item handler inside floating cart
+  popover.addEventListener('click', (e) => {
+    const removeBtn = e.target.closest('.btn-remove-item');
+    if (!removeBtn) return;
+    
+    e.preventDefault();
+    const variantId = removeBtn.dataset.variantId;
+    if (!variantId) return;
+    
+    removeBtn.disabled = true;
+    removeBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`;
+    
+    const rootPath = window.Shopify && window.Shopify.routes && window.Shopify.routes.root ? window.Shopify.routes.root : '/';
+    
+    fetch(rootPath + 'cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity: 0 })
+    })
+    .then(res => res.json())
+    .then(cart => {
+      // Update counts
+      document.querySelectorAll('.header-cart-count').forEach(el => {
+        el.textContent = cart.item_count;
+      });
+      const floatingBadge = document.querySelector('.floating-cart-count');
+      if (floatingBadge) {
+        floatingBadge.textContent = cart.item_count;
+      }
+      // Re-render contents
+      renderFloatingCartItems(cart);
+    })
+    .catch(err => {
+      console.error('Failed to remove item:', err);
+      removeBtn.disabled = false;
+      removeBtn.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
+    });
+  });
+}
+
+// Function to fetch and update floating cart content
+function updateFloatingCartContent() {
+  const rootPath = window.Shopify && window.Shopify.routes && window.Shopify.routes.root ? window.Shopify.routes.root : '/';
+  fetch(rootPath + 'cart.js')
+  .then(res => res.json())
+  .then(cart => {
+    renderFloatingCartItems(cart);
+  });
+}
+
+// Function to render items inside the floating cart
+function renderFloatingCartItems(cart) {
+  const container = document.getElementById('floating-cart-items-container');
+  if (!container) return;
+  
+  if (cart.items && cart.items.length > 0) {
+    let html = '';
+    const formatString = window.theme ? window.theme.moneyFormat : "$ {{amount}}";
+    
+    cart.items.forEach((item, index) => {
+      const formattedPrice = formatString.replace(/\{\{\s*(\w+)\s*\}\}/, (item.final_line_price / 100.0).toFixed(2));
+      const imageUrl = item.image ? item.image : '';
+      
+      html += `
+        <div class="cart-item-row d-flex align-items-center gap-3 p-3 bg-light rounded-4 mb-3 position-relative" data-line="${index + 1}">
+          <img src="${imageUrl}" alt="${item.product_title}" class="rounded-3 border" style="width: 60px; height: 60px; object-fit: cover;" width="60" height="60">
+          <div class="flex-grow-1 overflow-hidden" style="padding-right: 30px;">
+            <h6 class="mb-1 text-truncate fw-medium text-dark" style="font-size: 14px;">${item.product_title}</h6>
+            <div class="text-primary fw-medium" style="font-size: 13px;">${formattedPrice}</div>
+          </div>
+          <button class="btn-remove-item border-0 bg-transparent text-danger position-absolute end-0 top-50 translate-middle-y me-3" data-variant-id="${item.variant_id}" aria-label="Remove item">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  } else {
+    container.innerHTML = `
+      <div class="text-center py-4 text-muted">
+        <i class="fa-solid fa-basket-shopping fa-2x mb-2 text-secondary"></i>
+        <p class="mb-0">Your cart is empty</p>
+      </div>
+    `;
+  }
 }
 

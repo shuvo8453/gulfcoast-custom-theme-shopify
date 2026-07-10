@@ -272,7 +272,10 @@
 
                   <!-- Separator and Metadata -->
                   <hr class="text-muted my-4" style="opacity: 0.15;">
-                  <div class="quick-view-metadata small d-flex flex-column gap-3" style="font-size: 13px; line-height: 1.6;">
+                  <div
+                    class="quick-view-metadata small d-flex flex-column gap-3"
+                    style="font-size: 13px; line-height: 1.6;"
+                  >
                     <div class="d-flex justify-content-between">
                       <span class="text-dark fw-medium">SKU:</span>
                       <span class="text-muted qv-meta-sku">-</span>
@@ -296,6 +299,207 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Mini-Cart Button and Popover (Desktop only) -->
+    <style>
+      /* Floating Cart Styling (Desktop only) */
+      @media (min-width: 992px) {
+        .floating-cart-btn {
+          position: fixed;
+          right: 30px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 64px;
+          height: 64px;
+          background-color: #ffffff;
+          border: 1px solid #e2e8f0;
+          border-radius: 16px;
+          z-index: 1050;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .floating-cart-btn:hover {
+          transform: translateY(-50%) scale(1.05);
+          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+        }
+        .floating-cart-btn i {
+          font-size: 26px;
+          color: #1a202c;
+        }
+        .floating-cart-count {
+          top: 10px;
+          right: 10px;
+          font-size: 11px;
+          font-weight: 700;
+          padding: 4px 6px;
+          border: 2px solid #ffffff;
+          background-color: #3b82f6 !important;
+        }
+        .floating-cart-popover-panel {
+          position: fixed;
+          right: 110px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 380px;
+          background-color: #ffffff;
+          border: 1px solid #e2e8f0;
+          z-index: 1060;
+          transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        /* Arrow pointing to the trigger */
+        .floating-cart-popover-panel::after {
+          content: '';
+          position: absolute;
+          right: -8px;
+          top: 50%;
+          transform: translateY(-50%) rotate(45deg);
+          width: 16px;
+          height: 16px;
+          background-color: #ffffff;
+          border-top: 1px solid #e2e8f0;
+          border-right: 1px solid #e2e8f0;
+        }
+        .btn-close-custom {
+          color: #a0aec0;
+          font-size: 18px;
+          transition: color 0.2s;
+        }
+        .btn-close-custom:hover {
+          color: #4a5568;
+        }
+        .cart-item-row {
+          background-color: #f7fafc !important;
+          transition: background-color 0.2s;
+        }
+        .cart-item-row:hover {
+          background-color: #edf2f7 !important;
+        }
+        .btn-remove-item {
+          font-size: 16px;
+          color: #3849b7 !important;
+          transition: color 0.2s;
+        }
+        .btn-remove-item:hover {
+          color: #54595f !important;
+        }
+        .popover-body-custom::-webkit-scrollbar {
+          width: 4px;
+        }
+        .popover-body-custom::-webkit-scrollbar-track {
+          background: #edf2f7;
+          border-radius: 4px;
+        }
+        .popover-body-custom::-webkit-scrollbar-thumb {
+          background: #cbd5e0;
+          border-radius: 4px;
+        }
+        .popover-body-custom::-webkit-scrollbar-thumb:hover {
+          background: #a0aec0;
+        }
+      }
+    </style>
+
+    <div id="desktop-floating-cart-container" class="d-none d-lg-block">
+      <!-- Floating Button -->
+      <button
+        id="floating-cart-trigger"
+        class="floating-cart-btn position-fixed shadow d-flex align-items-center justify-content-center"
+        aria-label="Open Floating Cart"
+      >
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="badge rounded-pill bg-primary position-absolute floating-cart-count">
+          {{- cart.item_count -}}
+        </span>
+      </button>
+
+      <!-- Popover Panel -->
+      <div id="floating-cart-popover" class="floating-cart-popover-panel shadow rounded-4 d-none">
+        <!-- Popover Header -->
+        <div class="popover-header-custom d-flex align-items-center justify-content-between p-3 border-bottom">
+          <div class="d-flex align-items-center gap-2 fw-bold text-dark">
+            <div
+              class="icon-cart-wrapper d-flex align-items-center justify-content-center bg-light rounded-3"
+              style="width: 32px; height: 32px;"
+            >
+              <i class="fa-solid fa-cart-shopping text-primary"></i>
+            </div>
+            <span>Your items are waiting</span>
+          </div>
+          <button
+            id="floating-cart-close"
+            class="btn-close-custom border-0 bg-transparent animate-rotate"
+            aria-label="Close"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Popover Content (Items List) -->
+        <div class="popover-body-custom p-3 overflow-auto" style="max-height: 300px;">
+          <div id="floating-cart-items-container">
+            {% if cart.item_count > 0 %}
+              {% for item in cart.items %}
+                <div
+                  class="cart-item-row d-flex align-items-center gap-3 p-3 bg-light rounded-4 mb-3 position-relative"
+                  data-line="{{ forloop.index }}"
+                >
+                  {% if item.image != blank %}
+                    <img
+                      src="{{ item.image | image_url: width: 120 }}"
+                      alt="{{ item.product.title | escape }}"
+                      class="rounded-3 border"
+                      style="width: 60px; height: 60px; object-fit: cover;"
+                      width="60"
+                      height="60"
+                    >
+                  {% else %}
+                    <div class="rounded-3 border overflow-hidden" style="width: 60px; height: 60px; flex-shrink: 0;">
+                      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg w-100 h-100' }}
+                    </div>
+                  {% endif %}
+                  <div class="flex-grow-1 overflow-hidden" style="padding-right: 30px;">
+                    <h6 class="mb-1 text-truncate fw-medium text-dark" style="font-size: 14px;">
+                      {{ item.product.title }}
+                    </h6>
+                    <div class="text-primary fw-medium" style="font-size: 13px;">
+                      {{ item.final_line_price | money }}
+                    </div>
+                  </div>
+                  <button
+                    class="btn-remove-item border-0 bg-transparent text-danger position-absolute end-0 top-50 translate-middle-y me-3"
+                    data-variant-id="{{ item.variant_id }}"
+                    aria-label="Remove item"
+                  >
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="text-center py-4 text-muted">
+                <i class="fa-solid fa-basket-shopping fa-2x mb-2 text-secondary"></i>
+                <p class="mb-0">Your cart is empty</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Popover Footer -->
+        <div class="popover-footer-custom p-3 border-top d-flex gap-2">
+          <a
+            href="/cart"
+            class="btn btn-outline-secondary w-50 rounded-3 py-2 fw-semibold text-decoration-none text-center"
+            style="border-color: #dee2e6; color: #4b5563; font-size: 14px;"
+            >View Cart</a
+          >
+          <a
+            href="/checkout"
+            class="btn btn-primary w-50 rounded-3 py-2 fw-semibold text-decoration-none text-center text-white border-0"
+            style="background-color: #3b52c4; font-size: 14px;"
+            >Checkout</a
+          >
         </div>
       </div>
     </div>
