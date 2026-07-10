@@ -900,8 +900,11 @@
 
   <!-- Cart tab -->
   <a
-    href="/cart"
-    class="mobile-bottom-nav-item {% if request.path == routes.cart_url %}active{% endif %}"
+    href="#"
+    data-gcf-mini-cart-toggle="true"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#cartDrawer"
+    class="mobile-bottom-nav-item"
   >
     <div class="mobile-bottom-nav-icon">
       {% if section.settings.mobile_bottom_nav_cart_icon != blank %}
@@ -928,7 +931,7 @@
 
   <!-- My Account tab -->
   <a
-    href="{{ section.settings.mobile_bottom_nav_account_link | default: '#' }}"
+    href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
     class="mobile-bottom-nav-item {% if request.path contains '/account' %}active{% endif %}"
   >
     <div class="mobile-bottom-nav-icon">
@@ -1692,11 +1695,6 @@
       "default": "Cart"
     },
     {
-      "type": "url",
-      "id": "mobile_bottom_nav_cart_link",
-      "label": "Cart Link"
-    },
-    {
       "type": "image_picker",
       "id": "mobile_bottom_nav_cart_icon",
       "label": "Cart Icon Image (Optional)"
@@ -1710,11 +1708,6 @@
       "id": "mobile_bottom_nav_account_label",
       "label": "Account Label",
       "default": "My account"
-    },
-    {
-      "type": "url",
-      "id": "mobile_bottom_nav_account_link",
-      "label": "Account Link"
     },
     {
       "type": "image_picker",
