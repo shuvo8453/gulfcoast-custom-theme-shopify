@@ -31,16 +31,37 @@
 
       --blog-badge-bg: {{ section.settings.badge_bg_color }};
       --blog-badge-text: {{ section.settings.badge_text_color }};
+      --blog-badge-size: {{ section.settings.badge_font_size | default: 12 }}px;
+      --blog-badge-weight: {{ section.settings.badge_font_weight | default: '700' }};
+      --blog-badge-transform: {{ section.settings.badge_text_transform | default: 'uppercase' }};
+
       --blog-date-bg: {{ section.settings.date_bg_color }};
       --blog-date-num: {{ section.settings.date_number_color }};
       --blog-date-mon: {{ section.settings.date_month_color }};
 
       --blog-title-color: {{ section.settings.title_color }};
       --blog-title-hover: {{ section.settings.title_hover_color }};
+      --blog-title-weight: {{ section.settings.title_font_weight | default: '700' }};
+      --blog-title-size-desktop: {{ section.settings.title_font_size_desktop | default: 20 }}px;
+      --blog-title-size-mobile: {{ section.settings.title_font_size_mobile | default: 18 }}px;
+
+      --blog-meta-color: {{ section.settings.meta_text_color | default: '#4b5563' }};
+      --blog-avatar-bg: {{ section.settings.meta_avatar_bg | default: '#e5e7eb' }};
+      --blog-avatar-icon: {{ section.settings.meta_avatar_icon | default: '#9ca3af' }};
+
+      --blog-share-color: {{ section.settings.share_btn_color | default: '#6b7280' }};
+      --blog-share-hover: {{ section.settings.share_btn_hover_color | default: '#062e67' }};
+      --blog-share-border: {{ section.settings.share_btn_border_color | default: '#e5e7eb' }};
+      --blog-share-hover-border: {{ section.settings.share_btn_hover_border_color | default: '#062e67' }};
 
       --blog-excerpt-color: {{ section.settings.excerpt_color }};
+      --blog-excerpt-size: {{ section.settings.excerpt_font_size | default: 14 }}px;
+      --blog-excerpt-height: {{ section.settings.excerpt_line_height | default: '1.5' }};
+
       --blog-readmore-color: {{ section.settings.read_more_color }};
       --blog-readmore-hover: {{ section.settings.read_more_hover_color }};
+      --blog-readmore-size: {{ section.settings.read_more_font_size | default: 14 }}px;
+      --blog-readmore-weight: {{ section.settings.read_more_font_weight | default: '700' }};
 
       /* Sidebar Customizations */
       --blog-sidebar-bg: {{ section.settings.sidebar_widget_bg }};
@@ -470,7 +491,7 @@
       }
     }
 
-    /* Card styling */
+    /* Card Layout Styling */
     .custom-blog-card {
       background-color: var(--blog-card-bg);
       border: 1px solid var(--blog-card-border);
@@ -502,6 +523,8 @@
     .custom-blog-card:hover .custom-blog-card__img {
       transform: scale(1.05);
     }
+    
+    /* Date Badge */
     .custom-blog-card__date-badge {
       position: absolute;
       top: 15px;
@@ -532,6 +555,8 @@
       margin-top: 2px;
       font-family: 'Inter', sans-serif;
     }
+
+    /* Content & Details */
     .custom-blog-card__body {
       padding: 24px;
       display: flex;
@@ -545,21 +570,31 @@
       display: inline-block;
       background-color: var(--blog-badge-bg);
       color: var(--blog-badge-text);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
+      font-size: var(--blog-badge-size);
+      font-weight: var(--blog-badge-weight);
+      text-transform: var(--blog-badge-transform);
       padding: 6px 16px;
       border-radius: 50px;
       text-decoration: none;
       letter-spacing: 0.5px;
+      transition: opacity 0.2s ease;
       font-family: 'Outfit', sans-serif;
     }
+    .custom-blog-card__category-badge:hover {
+      opacity: 0.9;
+      color: var(--blog-badge-text);
+    }
     .custom-blog-card__title {
-      font-size: 18px;
-      font-weight: 700;
+      font-size: var(--blog-title-size-mobile);
+      font-weight: var(--blog-title-weight);
       margin-bottom: 16px;
       line-height: 1.35;
       font-family: 'Outfit', sans-serif;
+    }
+    @media (min-width: 768px) {
+      .custom-blog-card__title {
+        font-size: var(--blog-title-size-desktop);
+      }
     }
     .custom-blog-card__title-link {
       color: var(--blog-title-color);
@@ -569,18 +604,132 @@
     .custom-blog-card__title-link:hover {
       color: var(--blog-title-hover);
     }
+
+    /* Meta: Author & Share Row */
+    .custom-blog-card__meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .custom-blog-card__author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .custom-blog-card__avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background-color: var(--blog-avatar-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blog-avatar-icon);
+      font-size: 14px;
+    }
+    .custom-blog-card__author-text {
+      font-size: 13px;
+      color: var(--blog-meta-color);
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Social Share Button & Popover */
+    .custom-blog-card__share {
+      position: relative;
+    }
+    .custom-blog-card__share-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--blog-share-border);
+      background-color: transparent;
+      color: var(--blog-share-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .custom-blog-card__share:hover .custom-blog-card__share-btn {
+      color: var(--blog-share-hover);
+      border-color: var(--blog-share-hover-border);
+      background-color: rgba(6, 46, 103, 0.05);
+    }
+    .custom-blog-card__share-tooltip {
+      position: absolute;
+      bottom: calc(100% + 12px);
+      right: 0;
+      transform: translateY(10px);
+      background-color: #ffffff;
+      border-radius: 30px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      padding: 6px 12px;
+      display: flex;
+      gap: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      z-index: 100;
+    }
+    .custom-blog-card__share-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      right: 14px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: #ffffff transparent transparent transparent;
+    }
+    .custom-blog-card__share:hover .custom-blog-card__share-tooltip,
+    .custom-blog-card__share-btn:focus + .custom-blog-card__share-tooltip,
+    .custom-blog-card__share-tooltip:hover {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .custom-blog-card__social-link {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff !important;
+      font-size: 12px;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+    .custom-blog-card__social-link:hover {
+      transform: scale(1.15);
+    }
+    .custom-blog-card__social-link--facebook { background-color: #1877f2; }
+    .custom-blog-card__social-link--twitter { background-color: #000000; }
+    .custom-blog-card__social-link--pinterest { background-color: #e60023; }
+    .custom-blog-card__social-link--linkedin { background-color: #0077b5; }
+    .custom-blog-card__social-link--telegram { background-color: #0088cc; }
+
+    /* Divider */
+    .custom-blog-card__divider {
+      border: 0;
+      border-top: 1px solid #f1f5f9;
+      margin: 0 0 16px 0;
+    }
+
+    /* Excerpt and Read More */
     .custom-blog-card__excerpt {
       color: var(--blog-excerpt-color);
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: var(--blog-excerpt-size);
+      line-height: var(--blog-excerpt-height);
       margin-bottom: 20px;
       flex-grow: 1;
       font-family: 'Inter', sans-serif;
     }
     .custom-blog-card__read-more-link {
       color: var(--blog-readmore-color);
-      font-size: 14px;
-      font-weight: 700;
+      font-size: var(--blog-readmore-size);
+      font-weight: var(--blog-readmore-weight);
       text-decoration: none;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -788,7 +937,7 @@
             <h2 class="toc-title"><i class="fa-solid fa-list"></i> Table of Contents</h2>
             <i class="fa-solid fa-chevron-down toc-chevron" id="toc-chevron"></i>
           </div>
-          <div class="toc-body" id="toc-body">
+          <div class="toc-body collapsed" id="toc-body">
             <ul class="toc-list" id="toc-list"></ul>
           </div>
         </div>
@@ -1317,6 +1466,41 @@
       "default": "#ffffff"
     },
     {
+      "type": "range",
+      "id": "badge_font_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge Font Size",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "badge_font_weight",
+      "label": "Badge Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-Bold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "select",
+      "id": "badge_text_transform",
+      "label": "Badge Text Transform",
+      "options": [
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "lowercase", "label": "Lowercase" },
+        { "value": "capitalize", "label": "Capitalize" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "uppercase"
+    },
+    {
       "type": "color",
       "id": "date_bg_color",
       "label": "Date Badge Background",
@@ -1347,10 +1531,111 @@
       "default": "#062e67"
     },
     {
+      "type": "range",
+      "id": "title_font_size_desktop",
+      "min": 16,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Font Size (Desktop)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "title_font_size_mobile",
+      "min": 14,
+      "max": 26,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Font Size (Mobile)",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Title Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-Bold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "header",
+      "content": "Author & Share Button Styles"
+    },
+    {
+      "type": "color",
+      "id": "meta_text_color",
+      "label": "Author Text Color",
+      "default": "#4b5563"
+    },
+    {
+      "type": "color",
+      "id": "meta_avatar_bg",
+      "label": "Avatar Circle Background",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "meta_avatar_icon",
+      "label": "Avatar Icon Color",
+      "default": "#9ca3af"
+    },
+    {
+      "type": "color",
+      "id": "share_btn_color",
+      "label": "Share Button Color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "color",
+      "id": "share_btn_hover_color",
+      "label": "Share Button Hover Color",
+      "default": "#062e67"
+    },
+    {
+      "type": "color",
+      "id": "share_btn_border_color",
+      "label": "Share Button Border Color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "share_btn_hover_border_color",
+      "label": "Share Button Hover Border Color",
+      "default": "#062e67"
+    },
+    {
       "type": "color",
       "id": "excerpt_color",
       "label": "Card Excerpt Color",
       "default": "#4b5563"
+    },
+    {
+      "type": "range",
+      "id": "excerpt_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Excerpt Font Size",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "excerpt_line_height",
+      "label": "Excerpt Line Height",
+      "options": [
+        { "value": "1.2", "label": "1.2" },
+        { "value": "1.4", "label": "1.4" },
+        { "value": "1.5", "label": "1.5" },
+        { "value": "1.6", "label": "1.6" }
+      ],
+      "default": "1.5"
     },
     {
       "type": "color",
@@ -1363,6 +1648,29 @@
       "id": "read_more_hover_color",
       "label": "Read More Hover Color",
       "default": "#004b93"
+    },
+    {
+      "type": "range",
+      "id": "read_more_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Link Font Size",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "read_more_font_weight",
+      "label": "Link Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-Bold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra Bold" }
+      ],
+      "default": "700"
     },
     {
       "type": "header",
