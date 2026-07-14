@@ -29,15 +29,48 @@
                   <li class="page-item"><a class="page-link rounded-circle px-3 py-2 me-2" href="{{ paginate.previous.url }}"><i class="fa-solid fa-chevron-left"></i></a></li>
                 {% endif %}
                 
+                {% assign last_rendered_page = 0 %}
                 {% for part in paginate.parts %}
-                  {% if part.is_link %}
-                    <li class="page-item"><a class="page-link rounded-circle px-3 py-2 me-2" href="{{ part.url }}">{{ part.title }}</a></li>
+                  {% if part.title == '...' %}
+                    {% continue %}
+                  {% endif %}
+
+                  {% assign part_num = part.title | plus: 0 %}
+                  {% assign show_part = false %}
+
+                  {% if part_num == 1 or part_num == paginate.pages %}
+                    {% assign show_part = true %}
+                  {% elsif part_num == paginate.current_page %}
+                    {% assign show_part = true %}
                   {% else %}
-                    {% if part.title == paginate.current_page %}
-                      <li class="page-item active"><span class="page-link rounded-circle px-3 py-2 me-2">{{ part.title }}</span></li>
-                    {% else %}
-                      <li class="page-item disabled"><span class="page-link rounded-circle px-3 py-2 me-2">{{ part.title }}</span></li>
+                    {% assign prev_page = paginate.current_page | minus: 1 %}
+                    {% assign next_page = paginate.current_page | plus: 1 %}
+                    {% if part_num == prev_page or part_num == next_page %}
+                      {% assign show_part = true %}
                     {% endif %}
+                  {% endif %}
+
+                  {% if show_part %}
+                    {% if last_rendered_page > 0 %}
+                      {% assign gap = part_num | minus: last_rendered_page %}
+                      {% if gap > 1 %}
+                        <li class="page-item disabled">
+                          <span class="page-link rounded-circle px-3 py-2 me-2">...</span>
+                        </li>
+                      {% endif %}
+                    {% endif %}
+
+                    {% if part.is_link %}
+                      <li class="page-item"><a class="page-link rounded-circle px-3 py-2 me-2" href="{{ part.url }}">{{ part.title }}</a></li>
+                    {% else %}
+                      {% if part.title == paginate.current_page %}
+                        <li class="page-item active"><span class="page-link rounded-circle px-3 py-2 me-2">{{ part.title }}</span></li>
+                      {% else %}
+                        <li class="page-item disabled"><span class="page-link rounded-circle px-3 py-2 me-2">{{ part.title }}</span></li>
+                      {% endif %}
+                    {% endif %}
+
+                    {% assign last_rendered_page = part_num %}
                   {% endif %}
                 {% endfor %}
 

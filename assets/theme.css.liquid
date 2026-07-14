@@ -665,6 +665,11 @@ a:hover {
 }
 
 /* Rounded Circle Pagination Styling overrides */
+.pagination {
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+}
+
 .pagination .page-item .page-link {
   width: 40px;
   height: 40px;
@@ -677,8 +682,26 @@ a:hover {
   border: 1px solid #e2e8f0;
   background-color: #ffffff;
   font-weight: 600;
-  margin: 0 4px;
+  margin: 4px 4px !important;
   transition: all 0.2s ease;
+}
+
+@media (max-width: 575px) {
+  .pagination .page-item .page-link {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 13px !important;
+    margin: 3px 2px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .pagination .page-item .page-link {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
+    margin: 2px 1px !important;
+  }
 }
 
 .pagination .page-item.active .page-link,

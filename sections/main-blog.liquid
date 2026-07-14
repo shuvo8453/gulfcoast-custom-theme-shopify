@@ -421,6 +421,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-wrap: wrap;
       gap: 8px;
       margin-top: 48px;
       padding: 0;
@@ -440,6 +441,26 @@
       text-decoration: none;
       transition: all 0.2s ease;
       font-family: 'Outfit', sans-serif;
+    }
+    @media (max-width: 575px) {
+      .custom-pagination {
+        gap: 6px;
+      }
+      .custom-pagination__item-link {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+      }
+    }
+    @media (max-width: 375px) {
+      .custom-pagination {
+        gap: 4px;
+      }
+      .custom-pagination__item-link {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+      }
     }
     .custom-pagination__item-link:hover {
       background-color: var(--blog-pagination-active-bg);
@@ -622,25 +643,58 @@
                     </li>
                   {% endif %}
 
+                  {% assign last_rendered_page = 0 %}
                   {% for part in paginate.parts %}
-                    {% if part.is_link %}
-                      <li>
-                        <a class="custom-pagination__item-link" href="{{ part.url }}">{{ part.title }}</a>
-                      </li>
+                    {% if part.title == '...' %}
+                      {% continue %}
+                    {% endif %}
+
+                    {% assign part_num = part.title | plus: 0 %}
+                    {% assign show_part = false %}
+
+                    {% if part_num == 1 or part_num == paginate.pages %}
+                      {% assign show_part = true %}
+                    {% elsif part_num == paginate.current_page %}
+                      {% assign show_part = true %}
                     {% else %}
-                      {% if part.title == paginate.current_page %}
+                      {% assign prev_page = paginate.current_page | minus: 1 %}
+                      {% assign next_page = paginate.current_page | plus: 1 %}
+                      {% if part_num == prev_page or part_num == next_page %}
+                        {% assign show_part = true %}
+                      {% endif %}
+                    {% endif %}
+
+                    {% if show_part %}
+                      {% if last_rendered_page > 0 %}
+                        {% assign gap = part_num | minus: last_rendered_page %}
+                        {% if gap > 1 %}
+                          <li>
+                            <span class="custom-pagination__item-link custom-pagination__item-link--disabled">...</span>
+                          </li>
+                        {% endif %}
+                      {% endif %}
+
+                      {% if part.is_link %}
                         <li>
-                          <span class="custom-pagination__item-link custom-pagination__item-link--active">
-                            {{- part.title -}}
-                          </span>
+                          <a class="custom-pagination__item-link" href="{{ part.url }}">{{ part.title }}</a>
                         </li>
                       {% else %}
-                        <li>
-                          <span class="custom-pagination__item-link custom-pagination__item-link--disabled">
-                            {{- part.title -}}
-                          </span>
-                        </li>
+                        {% if part.title == paginate.current_page %}
+                          <li>
+                            <span class="custom-pagination__item-link custom-pagination__item-link--active">
+                              {{- part.title -}}
+                            </span>
+                          </li>
+                        {% else %}
+                          <li>
+                            <span class="custom-pagination__item-link custom-pagination__item-link--disabled">
+                              {{- part.title -}}
+                            </span>
+                          </li>
+                        {% endif %}
                       {% endif %}
+
+                      {% assign last_rendered_page = part_num %}
                     {% endif %}
                   {% endfor %}
 
