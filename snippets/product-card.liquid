@@ -20,14 +20,14 @@
     {% if product.available %}
       <span
         class="badge bg-success position-absolute top-0 start-0 m-3 rounded-pill px-3 py-2 text-uppercase fw-bold"
-        style="z-index: 2; background-color: #10b981 !important;"
+        style="z-index: 2; background-color: #009f3d !important;"
       >
         In Stock
       </span>
     {% else %}
       <span
         class="badge bg-danger position-absolute top-0 start-0 m-3 rounded-pill px-3 py-2 text-uppercase fw-bold"
-        style="z-index: 2; background-color: #ef4444 !important;"
+        style="z-index: 2; background-color: #dc3545 !important;"
       >
         Out of Stock
       </span>
@@ -89,13 +89,23 @@
     <div class="product-card-stock mb-2">
       {% if product.available %}
         {% assign card_variant = product.selected_or_first_available_variant %}
-        {% if card_variant.inventory_management != blank and card_variant.inventory_quantity > 0 and card_variant.inventory_quantity <= 10 %}
+        {% if card_variant.inventory_management != blank
+          and card_variant.inventory_quantity > 0
+          and card_variant.inventory_quantity <= 10
+        %}
           {% if card_variant.inventory_quantity <= 5 %}
-            <span class="stock-status-pill" style="background-color: #fee2e2 !important; color: #dc2626 !important; border: 1px solid #fee2e2 !important; border-radius: 60px; padding: 4px 12px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-              <i class="fa-solid fa-triangle-exclamation"></i> Only {{ card_variant.inventory_quantity }} left – order soon!
+            <span
+              class="stock-status-pill"
+              style="background-color: #ffeff1 !important; color: #b31b1b !important; border: 1px solid #ffcfd6 !important; border-radius: 60px; padding: 4px 12px; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;"
+            >
+              <i class="fa-solid fa-triangle-exclamation"></i> Only {{ card_variant.inventory_quantity }} left – order
+              soon!
             </span>
           {% else %}
-            <span class="stock-status-pill" style="background-color: #ffedd5 !important; color: #ea580c !important; border: 1px solid #ffedd5 !important; border-radius: 60px; padding: 4px 12px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+            <span
+              class="stock-status-pill"
+              style="background-color: #ffedd5 !important; color: #ea580c !important; border: 1px solid #ffedd5 !important; border-radius: 60px; padding: 4px 12px; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;"
+            >
               <i class="fa-solid fa-bolt-lightning"></i> Low stock – selling fast
             </span>
           {% endif %}
@@ -115,13 +125,19 @@
           <span class="text-muted text-decoration-line-through small">{{ product.compare_at_price | money }}</span>
         {% endif %}
       </div>
-      
+
       {% assign admin_email = settings.admin_email | default: 'tfl8453@gmail.com' %}
       {% if customer and customer.email == admin_email %}
-        {% if product.metafields.custom.purchase_price.value != blank or product.metafields.custom.purchase_price != blank %}
-          <div class="purchase-price-admin-card text-warning-emphasis d-flex align-items-center gap-1" style="font-size: 11px; font-weight: 600; border: 1px dashed #ffc107; padding: 2px 6px; border-radius: 4px; background-color: #fffdf5; width: fit-content;">
+        {% if product.metafields.custom.purchase_price.value != blank
+          or product.metafields.custom.purchase_price != blank
+        %}
+          <div
+            class="purchase-price-admin-card text-warning-emphasis d-flex align-items-center gap-1"
+            style="font-size: 11px; font-weight: 600; border: 1px dashed #ffc107; padding: 2px 6px; border-radius: 4px; background-color: #fffdf5; width: fit-content;"
+          >
             <i class="fa-solid fa-user-shield" style="font-size: 10px;"></i>
-            <span>P. Price: 
+            <span
+              >P. Price:
               {% if product.metafields.custom.purchase_price.value != blank %}
                 {{ product.metafields.custom.purchase_price.value | times: 100 | money }}
               {% else %}
@@ -167,7 +183,7 @@
         <button
           type="button"
           class="btn btn-danger product-card-btn-notify flex-grow-1 py-2 d-flex align-items-center justify-content-center gap-2 text-white border-0"
-          style="background-color: var(--color-error); border-radius: 60px;"
+          style="background-color: #ff0000; border-radius: 60px;"
           data-bs-toggle="modal"
           data-bs-target="#notifyModal"
         >

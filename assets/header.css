@@ -697,7 +697,7 @@
     color: #ffffff !important;
   }
   .sticky-header-bar .nav-linkslist-link:hover {
-    color: var(--header-accent-hover-color, #f8fafc) !important;
+    opacity: 0.86;
   }
 }
 

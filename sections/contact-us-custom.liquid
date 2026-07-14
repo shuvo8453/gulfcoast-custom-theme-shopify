@@ -3,6 +3,7 @@
     background-color: {{ section.settings.background_color }};
     padding-top: {{ section.settings.padding_top_mobile }}px;
     padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    background-image: linear-gradient(180deg, #FFFFFF 0%, #E6EFFD 100%);
   }
 
   @media screen and (min-width: 768px) {
@@ -67,7 +68,7 @@
   .contact-form-{{ section.id }} {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
   }
 
   .form-group-{{ section.id }} {
@@ -176,7 +177,6 @@
 <section id="contact-section-{{ section.id }}">
   <div class="contact-wrapper-{{ section.id }}">
     <div class="contact-grid-{{ section.id }}">
-      
       <!-- Image Section -->
       <div class="contact-image-wrapper-{{ section.id }}">
         {%- if section.settings.image != blank -%}
@@ -228,7 +228,12 @@
             {%- if error_heading contains 'translation missing' or error_heading == blank -%}
               {%- assign error_heading = 'Please adjust the following:' -%}
             {%- endif -%}
-            <div class="form-status-{{ section.id }} form-status--error-{{ section.id }}" role="alert" tabindex="-1" autofocus>
+            <div
+              class="form-status-{{ section.id }} form-status--error-{{ section.id }}"
+              role="alert"
+              tabindex="-1"
+              autofocus
+            >
               <i class="fa-solid fa-circle-exclamation me-2"></i>{{ error_heading }}
               <ul class="errors-list-{{ section.id }} mt-2 mb-0">
                 {%- for field in form.errors -%}
@@ -237,7 +242,8 @@
                       {{ form.errors.messages[field] }}
                     {%- else -%}
                       <a href="#ContactForm-{{ field }}" class="text-danger">
-                        {{ form.errors.translated_fields[field] | capitalize }} {{ form.errors.messages[field] }}
+                        {{ form.errors.translated_fields[field] | capitalize }}
+                        {{ form.errors.messages[field] }}
                       </a>
                     {%- endif -%}
                   </li>
@@ -303,12 +309,9 @@
           </div>
 
           <!-- Submit Button -->
-          <button type="submit" class="form-submit-{{ section.id }}">
-            Send Message
-          </button>
+          <button type="submit" class="form-submit-{{ section.id }}">Send Message</button>
         {%- endform -%}
       </div>
-
     </div>
   </div>
 </section>

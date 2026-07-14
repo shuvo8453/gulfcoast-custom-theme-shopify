@@ -12,8 +12,8 @@
   --color-success: {{ settings.color_success | default: '#10b981' }};
   --color-error: {{ settings.color_error | default: '#ef4444' }};
   
-  --font-family-body: 'Inter', sans-serif;
-  --font-family-heading: 'Outfit', sans-serif;
+  --font-family-body: 'Cabin', sans-serif;
+  --font-family-heading: 'Cabin', sans-serif;
   
   --border-radius-desktop: 60px;
   --border-radius-mobile: 40px;
@@ -366,7 +366,7 @@ a:hover {
 }
 .product-card-title {
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 600 !important;
   margin-bottom: 8px;
   height: 44px;
   overflow: hidden;
@@ -596,21 +596,21 @@ a:hover {
   align-items: center;
   padding: 6px 14px;
   border-radius: 30px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1;
 }
 
 .stock-status-pill.stock-in {
-  background-color: rgba(16, 185, 129, 0.08);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  background-color: #e6f6f0;
+  color: #0e6245;
+  border: 1px solid #b2f5d9;
 }
 
 .stock-status-pill.stock-out {
-  background-color: rgba(239, 68, 68, 0.08);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background-color: #ffeff1;
+  color: #b31b1b;
+  border: 1px solid #ffcfd6;
 }
 
 .stock-status-pill i {
@@ -660,7 +660,7 @@ a:hover {
 }
 
 .product-card-btn-notify:hover {
-  background-color: #dc2626 !important;
+  background-color: #f86868 !important;
   box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
 }
 
@@ -872,5 +872,21 @@ a.compare-btn-toggle.is-active {
   transition: all 0.2s ease;
 }
 
+/* Global Font Override to standardise to 'Cabin', sans-serif */
+body, h1, h2, h3, h4, h5, h6, p, a, input, select, textarea, td, th, li, label, strong, em, b,
+span:not([class*="fa"]):not(.fa), 
+div:not([class*="fa"]):not(.fa) {
+  font-family: 'Cabin', sans-serif !important;
+}
 
-
+/* Button Font Override to standardise to 'Roboto', sans-serif */
+button,
+.btn,
+.button,
+[class*="-btn"],
+[class*="--btn"],
+input[type="submit"],
+input[type="button"],
+input[type="reset"] {
+  font-family: 'Roboto', sans-serif !important;
+}
