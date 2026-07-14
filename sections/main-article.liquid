@@ -377,7 +377,7 @@
     .article-body h6 { font-size: 14px; }
 
     .article-body p {
-      font-size: 15px;
+      font-size: 16px;
       line-height: 1.75;
       color: var(--art-text-color);
       margin-bottom: 1.5rem;
@@ -523,7 +523,7 @@
     .custom-blog-card:hover .custom-blog-card__img {
       transform: scale(1.05);
     }
-    
+
     /* Date Badge */
     .custom-blog-card__date-badge {
       position: absolute;
@@ -890,170 +890,171 @@
         <div class="article-card">
           <!-- Post Header -->
           <header class="article-header mb-4">
-          {% if article.tags.size > 0 %}
-            <div class="article-tags mb-3 d-flex gap-2">
-              {% for tag in article.tags %}
-                <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="custom-blog-card__category-badge">
-                  {{- tag -}}
-                </a>
-              {% endfor %}
+            {% if article.tags.size > 0 %}
+              <div class="article-tags mb-3 d-flex gap-2">
+                {% for tag in article.tags %}
+                  <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="custom-blog-card__category-badge">
+                    {{- tag -}}
+                  </a>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <h1 class="article-title fw-bold text-dark mb-3">{{ article.title }}</h1>
+
+            <div class="article-meta text-muted d-flex align-items-center gap-3 border-bottom pb-3">
+              <div class="author-info d-flex align-items-center gap-2">
+                <div class="article-meta-avatar">
+                  <i class="fa-solid fa-user"></i>
+                </div>
+                <span class="small fw-semibold">Posted by {{ article.author }}</span>
+              </div>
+              <span>&bull;</span>
+              <div class="publish-date d-flex align-items-center gap-2">
+                <i class="fa-regular fa-calendar text-primary"></i>
+                <span class="small">{{ article.published_at | time_tag: format: 'date' }}</span>
+              </div>
+            </div>
+          </header>
+
+          <!-- Article Featured Image -->
+          {% if article.image %}
+            <div class="article-featured-image rounded overflow-hidden mb-5 shadow-sm">
+              <img
+                src="{{ article.image | image_url: width: 1000 }}"
+                class="img-fluid w-100"
+                alt="{{ article.title | escape }}"
+                loading="eager"
+                width="auto"
+                height="auto"
+              >
             </div>
           {% endif %}
 
-          <h1 class="article-title fw-bold text-dark mb-3">{{ article.title }}</h1>
-
-          <div class="article-meta text-muted d-flex align-items-center gap-3 border-bottom pb-3">
-            <div class="author-info d-flex align-items-center gap-2">
-              <div class="article-meta-avatar">
-                <i class="fa-solid fa-user"></i>
-              </div>
-              <span class="small fw-semibold">Posted by {{ article.author }}</span>
+          <!-- Collapsible Table of Contents Card -->
+          <div class="toc-container" id="toc-container">
+            <div class="toc-header" id="toc-header">
+              <h2 class="toc-title"><i class="fa-solid fa-list"></i> Table of Contents</h2>
+              <i class="fa-solid fa-chevron-down toc-chevron" id="toc-chevron"></i>
             </div>
-            <span>&bull;</span>
-            <div class="publish-date d-flex align-items-center gap-2">
-              <i class="fa-regular fa-calendar text-primary"></i>
-              <span class="small">{{ article.published_at | time_tag: format: 'date' }}</span>
+            <div class="toc-body collapsed" id="toc-body">
+              <ul class="toc-list" id="toc-list"></ul>
             </div>
           </div>
-        </header>
 
-        <!-- Article Featured Image -->
-        {% if article.image %}
-          <div class="article-featured-image rounded overflow-hidden mb-5 shadow-sm">
-            <img
-              src="{{ article.image | image_url: width: 1000 }}"
-              class="img-fluid w-100"
-              alt="{{ article.title | escape }}"
-              loading="eager"
-              width="auto"
-              height="auto"
-            >
+          <!-- Article Main Content -->
+          <div class="article-body leading-relaxed mb-5">
+            {{ article.content }}
+          </div>
+        </div>
+
+        <!-- Author Bio Box -->
+        <div class="article-author-box">
+          <div class="article-author-box__avatar">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div class="article-author-box__content">
+            <h3 class="article-author-box__name">About {{ article.author }}</h3>
+            <p class="article-author-box__bio">
+              {% if article.user.bio != blank %}
+                {{ article.user.bio }}
+              {% else %}
+                A marine enthusiast, 15 years outfitting Gulf Coast anglers, 400+ installations across Florida
+                coastlines.
+              {% endif %}
+            </p>
+            <a href="{{ blog.url }}" class="article-author-box__link">View all posts by {{ article.author }}</a>
+          </div>
+        </div>
+
+        <!-- Prev / Next Navigation -->
+        {% if blog.next_article or blog.previous_article %}
+          <div class="article-nav-row">
+            {% if blog.previous_article %}
+              <a href="{{ blog.previous_article.url }}" class="article-nav-card">
+                <i class="fa-solid fa-chevron-left article-nav-card__chevron"></i>
+                <div class="article-nav-card__content">
+                  <span class="article-nav-card__label">Older</span>
+                  <h4 class="article-nav-card__title">{{ blog.previous_article.title }}</h4>
+                </div>
+              </a>
+            {% else %}
+              <div class="article-nav-card" style="visibility: hidden; opacity: 0; pointer-events: none;"></div>
+            {% endif %}
+
+            <a href="{{ blog.url }}" class="article-nav-grid-btn" title="Back to Blog Archive">
+              <i class="fa-solid fa-th-large"></i>
+            </a>
+
+            {% if blog.next_article %}
+              <a href="{{ blog.next_article.url }}" class="article-nav-card">
+                <div class="article-nav-card__content text-end">
+                  <span class="article-nav-card__label">Newer</span>
+                  <h4 class="article-nav-card__title">{{ blog.next_article.title }}</h4>
+                </div>
+                <i class="fa-solid fa-chevron-right article-nav-card__chevron"></i>
+              </a>
+            {% else %}
+              <div class="article-nav-card" style="visibility: hidden; opacity: 0; pointer-events: none;"></div>
+            {% endif %}
           </div>
         {% endif %}
 
-        <!-- Collapsible Table of Contents Card -->
-        <div class="toc-container" id="toc-container">
-          <div class="toc-header" id="toc-header">
-            <h2 class="toc-title"><i class="fa-solid fa-list"></i> Table of Contents</h2>
-            <i class="fa-solid fa-chevron-down toc-chevron" id="toc-chevron"></i>
-          </div>
-          <div class="toc-body collapsed" id="toc-body">
-            <ul class="toc-list" id="toc-list"></ul>
-          </div>
-        </div>
+        <!-- Social Share Box -->
+        <div class="article-share-box">
+          <span class="article-share-box__label">Share:</span>
+          <div class="article-share-box__list">
+            {% assign article_full_url = shop.url | append: article.url %}
+            {% assign article_encoded_url = article_full_url | url_encode %}
+            {% assign article_encoded_title = article.title | escape | url_encode %}
 
-        <!-- Article Main Content -->
-        <div class="article-body leading-relaxed mb-5">
-          {{ article.content }}
-        </div>
-      </div>
-
-      <!-- Author Bio Box -->
-      <div class="article-author-box">
-        <div class="article-author-box__avatar">
-          <i class="fa-solid fa-user"></i>
-        </div>
-        <div class="article-author-box__content">
-          <h3 class="article-author-box__name">About {{ article.author }}</h3>
-          <p class="article-author-box__bio">
-            {% if article.user.bio != blank %}
-              {{ article.user.bio }}
-            {% else %}
-              A marine enthusiast, 15 years outfitting Gulf Coast anglers, 400+ installations across Florida coastlines.
-            {% endif %}
-          </p>
-          <a href="{{ blog.url }}" class="article-author-box__link">View all posts by {{ article.author }}</a>
-        </div>
-      </div>
-
-      <!-- Prev / Next Navigation -->
-      {% if blog.next_article or blog.previous_article %}
-        <div class="article-nav-row">
-          {% if blog.previous_article %}
-            <a href="{{ blog.previous_article.url }}" class="article-nav-card">
-              <i class="fa-solid fa-chevron-left article-nav-card__chevron"></i>
-              <div class="article-nav-card__content">
-                <span class="article-nav-card__label">Older</span>
-                <h4 class="article-nav-card__title">{{ blog.previous_article.title }}</h4>
-              </div>
+            <a
+              href="https://www.facebook.com/sharer/sharer.php?u={{ article_encoded_url }}"
+              target="_blank"
+              rel="noopener"
+              class="article-share-box__link article-share-box__link--facebook"
+              title="Share on Facebook"
+            >
+              <i class="fab fa-facebook-f"></i>
             </a>
-          {% else %}
-            <div class="article-nav-card" style="visibility: hidden; opacity: 0; pointer-events: none;"></div>
-          {% endif %}
-
-          <a href="{{ blog.url }}" class="article-nav-grid-btn" title="Back to Blog Archive">
-            <i class="fa-solid fa-th-large"></i>
-          </a>
-
-          {% if blog.next_article %}
-            <a href="{{ blog.next_article.url }}" class="article-nav-card">
-              <div class="article-nav-card__content text-end">
-                <span class="article-nav-card__label">Newer</span>
-                <h4 class="article-nav-card__title">{{ blog.next_article.title }}</h4>
-              </div>
-              <i class="fa-solid fa-chevron-right article-nav-card__chevron"></i>
+            <a
+              href="https://twitter.com/intent/tweet?text={{ article_encoded_title }}&url={{ article_encoded_url }}"
+              target="_blank"
+              rel="noopener"
+              class="article-share-box__link article-share-box__link--twitter"
+              title="Share on X"
+            >
+              <i class="fab fa-x-twitter"></i>
             </a>
-          {% else %}
-            <div class="article-nav-card" style="visibility: hidden; opacity: 0; pointer-events: none;"></div>
-          {% endif %}
+            <a
+              href="https://pinterest.com/pin/create/button/?url={{ article_encoded_url }}&media={{ article.image | image_url: width: 1000 | url_encode }}&description={{ article_encoded_title }}"
+              target="_blank"
+              rel="noopener"
+              class="article-share-box__link article-share-box__link--pinterest"
+              title="Pin it"
+            >
+              <i class="fab fa-pinterest-p"></i>
+            </a>
+            <a
+              href="https://www.linkedin.com/sharing/share-offsite/?url={{ article_encoded_url }}"
+              target="_blank"
+              rel="noopener"
+              class="article-share-box__link article-share-box__link--linkedin"
+              title="Share on LinkedIn"
+            >
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a
+              href="https://t.me/share/url?url={{ article_encoded_url }}&text={{ article_encoded_title }}"
+              target="_blank"
+              rel="noopener"
+              class="article-share-box__link article-share-box__link--telegram"
+              title="Share on Telegram"
+            >
+              <i class="fab fa-telegram-plane"></i>
+            </a>
+          </div>
         </div>
-      {% endif %}
-
-      <!-- Social Share Box -->
-      <div class="article-share-box">
-        <span class="article-share-box__label">Share:</span>
-        <div class="article-share-box__list">
-          {% assign article_full_url = shop.url | append: article.url %}
-          {% assign article_encoded_url = article_full_url | url_encode %}
-          {% assign article_encoded_title = article.title | escape | url_encode %}
-
-          <a
-            href="https://www.facebook.com/sharer/sharer.php?u={{ article_encoded_url }}"
-            target="_blank"
-            rel="noopener"
-            class="article-share-box__link article-share-box__link--facebook"
-            title="Share on Facebook"
-          >
-            <i class="fab fa-facebook-f"></i>
-          </a>
-          <a
-            href="https://twitter.com/intent/tweet?text={{ article_encoded_title }}&url={{ article_encoded_url }}"
-            target="_blank"
-            rel="noopener"
-            class="article-share-box__link article-share-box__link--twitter"
-            title="Share on X"
-          >
-            <i class="fab fa-x-twitter"></i>
-          </a>
-          <a
-            href="https://pinterest.com/pin/create/button/?url={{ article_encoded_url }}&media={{ article.image | image_url: width: 1000 | url_encode }}&description={{ article_encoded_title }}"
-            target="_blank"
-            rel="noopener"
-            class="article-share-box__link article-share-box__link--pinterest"
-            title="Pin it"
-          >
-            <i class="fab fa-pinterest-p"></i>
-          </a>
-          <a
-            href="https://www.linkedin.com/sharing/share-offsite/?url={{ article_encoded_url }}"
-            target="_blank"
-            rel="noopener"
-            class="article-share-box__link article-share-box__link--linkedin"
-            title="Share on LinkedIn"
-          >
-            <i class="fab fa-linkedin-in"></i>
-          </a>
-          <a
-            href="https://t.me/share/url?url={{ article_encoded_url }}&text={{ article_encoded_title }}"
-            target="_blank"
-            rel="noopener"
-            class="article-share-box__link article-share-box__link--telegram"
-            title="Share on Telegram"
-          >
-            <i class="fab fa-telegram-plane"></i>
-          </a>
-        </div>
-      </div>
 
         <!-- Related Posts Slider -->
         {% assign current_article_id = article.id %}

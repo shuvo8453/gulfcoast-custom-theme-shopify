@@ -96,7 +96,7 @@
     .custom-blog-card:hover .custom-blog-card__img {
       transform: scale(1.05);
     }
-    
+
     /* Date Badge */
     .custom-blog-card__date-badge {
       position: absolute;
@@ -433,14 +433,15 @@
       justify-content: center;
       width: 40px;
       height: 40px;
-      border-radius: 50%;
-      background-color: var(--blog-pagination-bg);
-      color: var(--blog-pagination-text);
+      border-radius: 12px;
+      background-color: #ffffff;
+      color: var(--color-heading, #1f2937);
+      border: 1px solid #e2e8f0;
       font-weight: 600;
       font-size: 14px;
       text-decoration: none;
       transition: all 0.2s ease;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Cabin', sans-serif;
     }
     @media (max-width: 575px) {
       .custom-pagination {
@@ -463,12 +464,14 @@
       }
     }
     .custom-pagination__item-link:hover {
-      background-color: var(--blog-pagination-active-bg);
-      color: var(--blog-pagination-active-text);
+      background-color: #f1f5f9;
+      color: var(--color-primary, #062e67);
+      border-color: #cbd5e1;
     }
     .custom-pagination__item-link--active {
-      background-color: var(--blog-pagination-active-bg) !important;
-      color: var(--blog-pagination-active-text) !important;
+      background-color: var(--color-primary, #062e67) !important;
+      color: #ffffff !important;
+      border-color: var(--color-primary, #062e67) !important;
       cursor: default;
     }
     .custom-pagination__item-link--disabled {
