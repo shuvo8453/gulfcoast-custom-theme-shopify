@@ -1,12 +1,12 @@
 <section class="wishlist-grid-section py-5">
   <div class="container">
     {% render 'breadcrumb' %}
-    
+
     <div class="row mt-4">
       <div class="col-12">
         <h1 class="fw-bold text-dark mb-4"><i class="fa-regular fa-heart text-danger me-2"></i>{{ page.title }}</h1>
-        
-        <div id="wishlist-grid-items" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mt-2">
+
+        <div id="wishlist-grid-items" class="row m-0 row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mt-2">
           <!-- Loaded dynamically via client-side storage -->
           <div class="col-12 text-center py-5" id="wishlist-preloader">
             <i class="fa-solid fa-spinner fa-spin fa-3x text-primary mb-3"></i>
@@ -23,9 +23,9 @@
     const list = JSON.parse(localStorage.getItem('gcf_wishlist') || '[]');
     const grid = document.getElementById('wishlist-grid-items');
     const preloader = document.getElementById('wishlist-preloader');
-    
+
     if (!grid) return;
-    
+
     if (list.length === 0) {
       if (preloader) preloader.remove();
       grid.innerHTML = `
@@ -38,20 +38,21 @@
       return;
     }
 
-    const promises = list.map(handle => 
-      fetch(`/products/${handle}.js`)
-        .then(res => {
-          if (!res.ok) throw new Error();
-          return res.json();
-        })
-        .catch(() => null) // Ignore missing products
+    const promises = list.map(
+      (handle) =>
+        fetch(`/products/${handle}.js`)
+          .then((res) => {
+            if (!res.ok) throw new Error();
+            return res.json();
+          })
+          .catch(() => null) // Ignore missing products
     );
 
     Promise.all(promises)
-      .then(products => {
+      .then((products) => {
         if (preloader) preloader.remove();
-        
-        const validProducts = products.filter(p => p !== null);
+
+        const validProducts = products.filter((p) => p !== null);
         if (validProducts.length === 0) {
           grid.innerHTML = `
             <div class="col-12 text-center py-5 border rounded bg-light">
@@ -63,13 +64,17 @@
           return;
         }
 
-        grid.innerHTML = validProducts.map(product => {
-          const formattedPrice = formatMoney(product.price);
-          const comparePriceHtml = product.compare_at_price > product.price 
-            ? `<span class="text-muted text-decoration-line-through small ms-2">${formatMoney(product.compare_at_price)}</span>` 
-            : '';
-          
-          return `
+        grid.innerHTML = validProducts
+          .map((product) => {
+            const formattedPrice = formatMoney(product.price);
+            const comparePriceHtml =
+              product.compare_at_price > product.price
+                ? `<span class="text-muted text-decoration-line-through small ms-2">${formatMoney(
+                    product.compare_at_price
+                  )}</span>`
+                : '';
+
+            return `
             <div class="col">
               <div class="product-card">
                 <div class="product-card-image">
@@ -93,21 +98,22 @@
               </div>
             </div>
           `;
-        }).join('');
+          })
+          .join('');
       })
-      .catch(err => {
+      .catch((err) => {
         console.error('Failed to load wishlist items:', err);
         if (preloader) preloader.remove();
         grid.innerHTML = '<p class="text-danger text-center">An error occurred while loading your wishlist.</p>';
       });
 
     function formatMoney(cents) {
-      const formatString = window.theme ? window.theme.moneyFormat : "$ {{amount}}";
+      const formatString = window.theme ? window.theme.moneyFormat : '$ {{amount}}';
       const placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
 
-      if (isNaN(cents) || cents == null) return "$0.00";
+      if (isNaN(cents) || cents == null) return '$0.00';
       let formatted = (cents / 100.0).toFixed(2);
-      
+
       return formatString.replace(placeholderRegex, formatted);
     }
   });
