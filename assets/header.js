@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const textWidth = tempSpan.getBoundingClientRect().width;
       document.body.removeChild(tempSpan);
       
-      categorySelect.style.width = `${textWidth + 18}px`;
+      categorySelect.style.width = `${textWidth + 30}px`;
     };
 
     adjustSelectWidth();

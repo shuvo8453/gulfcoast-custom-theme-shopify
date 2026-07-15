@@ -158,7 +158,7 @@
   background-size: 12px;
   
   padding-right: 18px; /* space for arrow: arrow is 12px wide, so ~6px gap from text */
-  padding-left: 0;
+  padding-left: 10px;
   margin: 0 10px;
 }
 
