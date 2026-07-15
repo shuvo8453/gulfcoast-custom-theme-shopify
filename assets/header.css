@@ -139,11 +139,26 @@
 }
 
 .search-bar-form .category-select {
-  font-size: var(--search-category-font-size, 15px);
-  font-weight: 600;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-size: 15px !important;
+  font-weight: 400;
+  text-transform: uppercase;
   color: var(--search-category-text-color, #4b5563);
   outline: none !important;
   cursor: pointer;
+  border: 0;
+  background-color: transparent;
+  
+  /* Custom arrow to prevent gap and ensure consistent styling across browsers */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0px center;
+  background-size: 12px;
+  
+  padding-right: 18px; /* space for arrow: arrow is 12px wide, so ~6px gap from text */
+  padding-left: 0;
   margin: 0 10px;
 }
 
@@ -257,6 +272,8 @@
   background: var(--categories-dropdown-bg, #ffffff);
   z-index: 1001;
   padding: 8px 0;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .browse-categories-dropdown-wrapper:hover .categories-menu-dropdown-list {
@@ -380,6 +397,12 @@
 .drawer-tab-btn.active {
   color: var(--header-accent-color, #0d6efd);
   border-bottom: 2px solid var(--header-accent-color, #0d6efd) !important;
+}
+
+.drawer-tabs-content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .drawer-tab-content-pane {

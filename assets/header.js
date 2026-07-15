@@ -62,6 +62,36 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchResultsInner = document.querySelector('[data-gcf-live-search-results-inner="true"]');
   const categorySelect = document.querySelector('.category-select');
 
+  if (categorySelect) {
+    const adjustSelectWidth = () => {
+      const selectedText = categorySelect.options[categorySelect.selectedIndex]?.text || '';
+      
+      const tempSpan = document.createElement('span');
+      tempSpan.style.visibility = 'hidden';
+      tempSpan.style.position = 'absolute';
+      tempSpan.style.whiteSpace = 'nowrap';
+      
+      const style = window.getComputedStyle(categorySelect);
+      tempSpan.style.fontFamily = style.fontFamily || 'sans-serif';
+      tempSpan.style.fontSize = style.fontSize || '15px';
+      tempSpan.style.fontWeight = style.fontWeight || '600';
+      tempSpan.style.textTransform = style.textTransform || 'uppercase';
+      
+      tempSpan.textContent = selectedText;
+      document.body.appendChild(tempSpan);
+      const textWidth = tempSpan.getBoundingClientRect().width;
+      document.body.removeChild(tempSpan);
+      
+      categorySelect.style.width = `${textWidth + 18}px`;
+    };
+
+    adjustSelectWidth();
+    if (document.fonts) {
+      document.fonts.ready.then(adjustSelectWidth);
+    }
+    categorySelect.addEventListener('change', adjustSelectWidth);
+  }
+
   if (searchForm && searchInput && searchDropdown && searchResultsInner) {
     let debounceTimeout;
 
