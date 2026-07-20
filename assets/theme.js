@@ -239,14 +239,59 @@ function initCollectionFiltersMobileDrawer() {
 // Back-in-Stock Notification Form handler
 function initNotifyModal() {
   const notifyForm = document.getElementById('notify-form');
-  if (!notifyForm) return;
+  const modalEl = document.getElementById('notifyModal');
+  if (!notifyForm || !modalEl) return;
 
-  notifyForm.addEventListener('submit', (e) => {
+  // Listen to modal open event to capture the product details from the clicked button
+  modalEl.addEventListener('show.bs.modal', (e) => {
+    const button = e.relatedTarget;
+    if (!button) return;
+
+    // Capture product data attributes and store on the form
+    notifyForm.dataset.productSku = button.getAttribute('data-product-sku') || '';
+    notifyForm.dataset.productTitle = button.getAttribute('data-product-title') || '';
+    notifyForm.dataset.productUrl = button.getAttribute('data-product-url') || '';
+  });
+
+  notifyForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const emailInput = notifyForm.querySelector('input[type="email"]');
-    if (emailInput && emailInput.value) {
-      const modalEl = document.getElementById('notifyModal');
-      
+    const submitBtn = notifyForm.querySelector('button[type="submit"]');
+    
+    if (!emailInput || !emailInput.value) return;
+
+    const email = emailInput.value;
+    const sku = notifyForm.dataset.productSku || '';
+    const title = notifyForm.dataset.productTitle || '';
+    const url = notifyForm.dataset.productUrl || '';
+
+    // UI Loading state
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+
+    try {
+      const apiKey = (window.theme && window.theme.backorderApiKey) || '19fbe914177e43b396d23c0ef8971367';
+      const apiUrl = (window.theme && window.theme.backorderApiUrl) || '/api/v1/backorders/public/subscribe';
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-KEY': apiKey,
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          sku: sku,
+          product_title: title,
+          product_url: url,
+          customer_email: email
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('API subscription failed');
+      }
+
       // Bootstrap 5 modal hide
       if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
         const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
@@ -262,7 +307,18 @@ function initNotifyModal() {
       if (typeof window.showGcfToast === 'function') {
         window.showGcfToast('Thank you! We will notify you when this item is back in stock.', 'success');
       }
+      
+      // Clear form inputs
       emailInput.value = '';
+    } catch (error) {
+      console.error('Error subscribing to backorder notifications:', error);
+      if (typeof window.showGcfToast === 'function') {
+        window.showGcfToast('Something went wrong. Please check your email and try again.', 'error');
+      }
+    } finally {
+      // Restore button UI state
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
     }
   });
 }

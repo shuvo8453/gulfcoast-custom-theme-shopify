@@ -188,5 +188,24 @@
         "info": "The email address of the customer allowed to see the purchase price metafield."
       }
     ]
+  },
+  {
+    "name": "Backorder API Settings",
+    "settings": [
+      {
+        "type": "text",
+        "id": "backorder_api_url",
+        "label": "Backorder API URL",
+        "default": "/api/v1/backorders/public/subscribe",
+        "info": "The full API URL for backorder notification subscriptions."
+      },
+      {
+        "type": "text",
+        "id": "backorder_api_key",
+        "label": "Backorder API Key",
+        "default": "19fbe914177e43b396d23c0ef8971367",
+        "info": "The API key used to authenticate request."
+      }
+    ]
   }
 ]

@@ -186,6 +186,9 @@
           style="background-color: #ff0000; border-radius: 60px;"
           data-bs-toggle="modal"
           data-bs-target="#notifyModal"
+          data-product-sku="{{ product.selected_or_first_available_variant.sku | default: '' }}"
+          data-product-title="{{ product.title | escape }}"
+          data-product-url="{{ shop.url }}{{ product.url }}"
         >
           <i class="fa-regular fa-bell"></i> <span class="d-none d-sm-inline">Notify</span>
         </button>

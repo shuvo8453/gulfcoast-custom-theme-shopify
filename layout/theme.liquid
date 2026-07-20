@@ -64,7 +64,9 @@
           soldOut: {{ 'products.product.sold_out' | t | json }},
           unavailable: {{ 'products.product.unavailable' | t | json }}
         },
-        moneyFormat: {{ shop.money_format | json }}
+        moneyFormat: {{ shop.money_format | json }},
+        backorderApiUrl: {{ settings.backorder_api_url | json }},
+        backorderApiKey: {{ settings.backorder_api_key | json }}
       };
     </script>
 
@@ -298,6 +300,45 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back in Stock Modal -->
+    <div
+      class="modal fade"
+      id="notifyModal"
+      tabindex="-1"
+      aria-labelledby="notifyModalLabel"
+      aria-hidden="true"
+      style="z-index: 1060;"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+          <div class="modal-header border-0 pb-0">
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body px-4 pb-4 pt-2 text-center">
+            <h4 class="mb-3" id="notifyModalLabel" style="font-size: 20px; font-weight: 600;">Get Notified When This Product Is Back In Stock</h4>
+            <form
+              id="notify-form"
+              class="d-flex flex-row gap-2 justify-content-center align-items-center mt-3 w-100"
+            >
+              <input
+                type="email"
+                class="form-control rounded-pill px-3 flex-grow-1"
+                placeholder="Enter your email"
+                required
+                style="height: 48px; max-width: 320px; min-width: 0;"
+              >
+              <button
+                type="submit"
+                class="notify-submit-btn"
+              >
+                Notify Me
+              </button>
+            </form>
           </div>
         </div>
       </div>
